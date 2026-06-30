@@ -116,6 +116,7 @@ export default function LaptopMockup({ src }) {
               loop
               muted
               playsInline
+              preload="none"
               style={{
                 display:    'block',
                 width:      '100%',

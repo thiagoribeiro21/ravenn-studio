@@ -128,8 +128,11 @@ export default function Navbar() {
           <img
             src="/logos-ravenn/logo-raven-white-horizontal1.png"
             alt="Ravenn Studio"
+            width={200}
+            height={50}
             style={{
               height:     pill ? 30 : 'clamp(44px,4vw,60px)',
+              width:      'auto',
               objectFit:  'contain',
               display:    'block',
               transition: 'height 400ms cubic-bezier(0.16,1,0.3,1)',

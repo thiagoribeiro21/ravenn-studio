@@ -170,6 +170,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
           loop
           muted
           playsInline
+          preload="metadata"
           className={`${MEDIA_CLASSES} transition-opacity duration-300 ${videoOpacity}`}
           style={{ mixBlendMode: 'screen' }}
         />

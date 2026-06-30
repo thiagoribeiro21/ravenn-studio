@@ -94,7 +94,9 @@ export default function Footer() {
               <img
                 src="/logos-ravenn/logo-raven-white-horizontal1.png"
                 alt="Ravenn Studio"
-                style={{ height: 72, objectFit: 'contain', opacity: 0.85 }}
+                width={200}
+                height={50}
+                style={{ height: 72, width: 'auto', objectFit: 'contain', opacity: 0.85 }}
                 draggable={false}
               />
             </a>
