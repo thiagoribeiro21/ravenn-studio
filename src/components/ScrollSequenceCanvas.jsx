@@ -1,16 +1,16 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
-import { useMenu } from '../context/MenuContext';
+import { useRef, useEffect, useState, useCallback } from "react";
+import { useMenu } from "../context/MenuContext";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const TOTAL_FRAMES = 121;
 
-const pad    = (n) => String(n).padStart(3, '0');
+const pad = (n) => String(n).padStart(3, "0");
 const getUrl = (n) => `/frame-raven/frame_${pad(n)}.webp`;
 
 // Classes idênticas para <video> e <canvas> — posicionamento extremo desktop
 const MEDIA_CLASSES =
-  'absolute top-0 w-full h-full object-cover ' +
-  'lg:object-contain lg:left-[48vw] lg:w-[85vw] lg:scale-[1.35]';
+  "absolute top-0 w-full h-full object-cover " +
+  "lg:object-contain lg:left-[48vw] lg:w-[85vw] lg:scale-[1.35]";
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 //
@@ -31,19 +31,19 @@ export default function ScrollSequenceCanvas({ endRef }) {
 
   // Canvas só no desktop real (≥ 1024px)
   const isSmallRef = useRef(
-    typeof window !== 'undefined' && window.innerWidth < 1024,
+    typeof window !== "undefined" && window.innerWidth < 1024,
   );
   const isSmall = isSmallRef.current;
 
   // Estado que aciona o crossfade via CSS
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const innerRef       = useRef(null);
-  const videoRef       = useRef(null);
-  const canvasRef      = useRef(null);
-  const framesRef      = useRef([]);
-  const sizedRef       = useRef(false);
-  const rafRef         = useRef(null);
+  const innerRef = useRef(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const framesRef = useRef([]);
+  const sizedRef = useRef(false);
+  const rafRef = useRef(null);
   // Frames só começam a baixar na primeira vez que o usuário scrolla —
   // evita competição com recursos críticos no carregamento inicial.
   const framesLoadedRef = useRef(false);
@@ -56,12 +56,12 @@ export default function ScrollSequenceCanvas({ endRef }) {
     if (!img?.complete || !img.naturalWidth) return;
 
     if (!sizedRef.current) {
-      canvas.width  = img.naturalWidth;
+      canvas.width = img.naturalWidth;
       canvas.height = img.naturalHeight;
       sizedRef.current = true;
     }
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   }, []);
@@ -74,7 +74,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
     const video = videoRef.current;
 
     const handleScroll = () => {
-      const scrollTop   = container.scrollTop;
+      const scrollTop = container.scrollTop;
       const nowScrolled = scrollTop > 20;
 
       setIsScrolled(nowScrolled);
@@ -92,10 +92,12 @@ export default function ScrollSequenceCanvas({ endRef }) {
         framesLoadedRef.current = true;
         const imgs = new Array(TOTAL_FRAMES);
         for (let i = 0; i < TOTAL_FRAMES; i++) {
-          const img  = new Image();
-          img.src    = getUrl(i + 1);
-          img.onload = () => { if (i === 0) drawFrame(0); };
-          imgs[i]    = img;
+          const img = new Image();
+          img.src = getUrl(i + 1);
+          img.onload = () => {
+            if (i === 0) drawFrame(0);
+          };
+          imgs[i] = img;
         }
         framesRef.current = imgs;
       }
@@ -104,7 +106,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
         ? endRef.current.getBoundingClientRect().top + container.scrollTop
         : container.clientHeight * 3;
 
-      const progress   = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
+      const progress = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
       const frameIndex = Math.floor(progress * (TOTAL_FRAMES - 1));
 
       const inner = innerRef.current;
@@ -117,9 +119,9 @@ export default function ScrollSequenceCanvas({ endRef }) {
       rafRef.current = requestAnimationFrame(() => drawFrame(frameIndex));
     };
 
-    container.addEventListener('scroll', handleScroll, { passive: true });
+    container.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
-      container.removeEventListener('scroll', handleScroll);
+      container.removeEventListener("scroll", handleScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [drawFrame, isSmall, endRef, scrollContainerRef]);
@@ -129,25 +131,38 @@ export default function ScrollSequenceCanvas({ endRef }) {
   // Mobile (isSmall): sem vídeo, sem canvas — fundo sólido do SiteShell.
   // Desktop: vídeo (opacity-[0.38]) → canvas (opacity-[0.38]) no crossfade.
   //
-  const videoOpacity  = isScrolled ? 'opacity-0' : 'opacity-[0.38]';
-  const canvasOpacity = isScrolled ? 'opacity-[0.38]' : 'opacity-0';
+  const videoOpacity = isScrolled ? "opacity-0" : "opacity-[0.38]";
+  const canvasOpacity = isScrolled ? "opacity-[0.38]" : "opacity-0";
 
-  // Mobile: vídeo simples sem scroll-sequence nem canvas (150KB, sem frames).
+  // Mobile: imagem estática + vídeo em loop por cima (150KB).
   if (isSmall) {
     return (
       <div
         aria-hidden
         style={{
-          position:      'fixed',
-          top:           0,
-          left:          0,
-          width:         '100%',
-          height:        '100vh',
-          overflow:      'hidden',
-          pointerEvents: 'none',
-          zIndex:        0,
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100vh",
+          overflow: "hidden",
+          pointerEvents: "none",
+          zIndex: 0,
         }}
       >
+        <img
+          src="/bg-teste-ravenn.webp"
+          alt=""
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            opacity: 0.55,
+          }}
+        />
         <video
           src="/raven-loop-video.webm"
           autoPlay
@@ -156,14 +171,14 @@ export default function ScrollSequenceCanvas({ endRef }) {
           playsInline
           preload="none"
           style={{
-            position:     'absolute',
-            top:          0,
-            left:         0,
-            width:        '100%',
-            height:       '100%',
-            objectFit:    'cover',
-            opacity:      0.35,
-            mixBlendMode: 'screen',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            opacity: 0.08,
+            mixBlendMode: "screen",
           }}
         >
           <track kind="captions" />
@@ -176,19 +191,19 @@ export default function ScrollSequenceCanvas({ endRef }) {
     <div
       aria-hidden
       style={{
-        position:      'fixed',
-        top:           0,
-        left:          0,
-        width:         '100%',
-        height:        '100vh',
-        overflow:      'hidden',
-        pointerEvents: 'none',
-        zIndex:        0,
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100vh",
+        overflow: "hidden",
+        pointerEvents: "none",
+        zIndex: 0,
       }}
     >
       <div
         ref={innerRef}
-        style={{ position: 'absolute', inset: 0, willChange: 'transform' }}
+        style={{ position: "absolute", inset: 0, willChange: "transform" }}
       >
         {/* Vídeo hero (desktop) — preload=none: só carrega ao dar play */}
         <video
@@ -200,7 +215,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
           playsInline
           preload="none"
           className={`${MEDIA_CLASSES} transition-opacity duration-300 ${videoOpacity}`}
-          style={{ mixBlendMode: 'screen' }}
+          style={{ mixBlendMode: "screen" }}
         >
           <track kind="captions" />
         </video>
@@ -209,7 +224,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
         <canvas
           ref={canvasRef}
           className={`${MEDIA_CLASSES} transition-opacity duration-300 ${canvasOpacity}`}
-          style={{ mixBlendMode: 'screen', display: 'block' }}
+          style={{ mixBlendMode: "screen", display: "block" }}
         />
       </div>
     </div>
