@@ -102,19 +102,12 @@ export default function HeroSection() {
         <motion.div variants={item} className="flex flex-wrap gap-4 mt-11">
           <a
             href="#contact"
-            className="inline-flex"
+            className="inline-flex items-center whitespace-nowrap gap-2 h-12 md:h-14 px-5 md:px-9 text-[11px] md:text-[13px] tracking-[0.08em] md:tracking-[0.12em] rounded"
             style={{
-              alignItems:     'center',
-              gap:            10,
-              height:         56,
-              padding:        '0 36px',
-              fontSize:       13,
               fontWeight:     500,
               textTransform:  'uppercase',
-              letterSpacing:  '0.12em',
               background:     '#7C3AED',
               color:          '#fff',
-              borderRadius:   4,
               border:         '1px solid #7C3AED',
               textDecoration: 'none',
               transition:     'background 280ms ease, box-shadow 280ms ease',
