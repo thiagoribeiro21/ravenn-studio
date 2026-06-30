@@ -131,8 +131,8 @@ export default function ScrollSequenceCanvas({ endRef }) {
   // Mobile (isSmall): sem vídeo, sem canvas — fundo sólido do SiteShell.
   // Desktop: vídeo (opacity-[0.38]) → canvas (opacity-[0.38]) no crossfade.
   //
-  const videoOpacity = isScrolled ? "opacity-0" : "opacity-[0.38]";
-  const canvasOpacity = isScrolled ? "opacity-[0.38]" : "opacity-0";
+  const videoOpacity = isScrolled ? "opacity-0" : "opacity-[0.35]";
+  const canvasOpacity = isScrolled ? "opacity-[0.35]" : "opacity-0";
 
   // Mobile: imagem estática + vídeo em loop por cima (150KB).
   if (isSmall) {
@@ -151,7 +151,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
         }}
       >
         <img
-          src="/bg-teste-ravenn.webp"
+          src="/bg-mobile-ravenn-hero.webp"
           alt=""
           style={{
             position: "absolute",
@@ -201,6 +201,20 @@ export default function ScrollSequenceCanvas({ endRef }) {
         zIndex: 0,
       }}
     >
+      {/* Camada base estática — fica parada enquanto o scroll-sequence se move */}
+      <img
+        src="/bg-hero-desktop.webp"
+        alt=""
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          opacity: 0.42,
+        }}
+      />
+
       <div
         ref={innerRef}
         style={{ position: "absolute", inset: 0, willChange: "transform" }}
