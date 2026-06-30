@@ -1,0 +1,57 @@
+/* Ravenn Studio — Color System
+   "Dark Violet Premium". Strictly dark-mode. Purple is an accent, not a fill:
+   follow the 5% rule — purple touches no more than ~5% of any composition. */
+:root {
+  /* ── Base palette ─────────────────────────────────────────── */
+  --rv-space-black:   #03000A; /* deep dark space-black — the canvas        */
+  --rv-purple:        #7C3AED; /* sleek tech purple — primary / action      */
+  --rv-violet-aura:   #4C1D95; /* deep violet — glow / aura blur            */
+  --rv-titanium:      #F8F9FA; /* titanium white — headings & key text      */
+  --rv-slate:         #94A3B8; /* clean slate gray — secondary / body       */
+  --rv-line:          #1E1B4B; /* subtle dark purple — borders / dividers   */
+
+  /* ── Elevated surfaces (very subtle lifts off the void) ───── */
+  --rv-surface-1:     #08060F; /* card / panel one step up                  */
+  --rv-surface-2:     #0D0A18; /* raised card, popover                      */
+  --rv-surface-3:     #120E22; /* hover / active surface                    */
+
+  /* ── Purple ramp (for hover/active glow tuning only) ──────── */
+  --rv-purple-700:    #6D28D9;
+  --rv-purple-600:    #7C3AED;
+  --rv-purple-500:    #8B5CF6;
+  --rv-purple-400:    #A78BFA;
+
+  /* ── Text ramp ────────────────────────────────────────────── */
+  --rv-text-strong:   #F8F9FA; /* titanium white                            */
+  --rv-text-muted:    #94A3B8; /* slate body                                */
+  --rv-text-faint:    #5B6472; /* captions, disabled, metadata              */
+  --rv-text-on-purple:#FFFFFF; /* text sitting on a purple fill             */
+
+  /* ── Lines ────────────────────────────────────────────────── */
+  --rv-line-subtle:   #16142E; /* faintest hairline                         */
+  --rv-line-strong:   #2A2560; /* emphasised border                         */
+
+  /* ── Semantic status ──────────────────────────────────────── */
+  --rv-success:       #34D399;
+  --rv-warning:       #FBBF24;
+  --rv-danger:        #F87171;
+
+  /* ── Semantic aliases (use these in components) ───────────── */
+  --bg-base:          var(--rv-space-black);
+  --bg-surface:       var(--rv-surface-1);
+  --bg-surface-raised:var(--rv-surface-2);
+  --bg-surface-hover: var(--rv-surface-3);
+
+  --text-heading:     var(--rv-text-strong);
+  --text-body:        var(--rv-text-muted);
+  --text-faint:       var(--rv-text-faint);
+
+  --action:           var(--rv-purple);
+  --action-hover:     var(--rv-purple-500);
+  --action-press:     var(--rv-purple-700);
+  --glow:             var(--rv-violet-aura);
+
+  --border:           var(--rv-line);
+  --border-subtle:    var(--rv-line-subtle);
+  --border-strong:    var(--rv-line-strong);
+}

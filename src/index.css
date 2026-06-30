@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens do menu Push 3D ─────────────────────────────────────── */
+:root {
+  --menu-push-x: -80vw;   /* mobile: SiteShell recua 80 vw; painel ocupa 80% da tela */
+  --menu-scale:  0.95;
+}
+@media (min-width: 768px) {
+  :root {
+    --menu-push-x: -30vw;  /* desktop: SiteShell recua 30 vw; painel ocupa 30% à direita */
+    --menu-scale:  0.95;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/*
+  body/html com overflow:hidden — o scroll acontece no div[data-scroll-content]
+  dentro do SiteShell. Qualquer componente com parallax/scroll deve consumir
+  scrollContainerRef do useMenu() ao invés de window.scrollY.
+*/
+html, body {
+  overflow:         hidden;
+  height:           100dvh;
+  background-color: #03000A;
+  color:            #94A3B8;
+  font-family:      'ClashGrotesk-Variable', ui-sans-serif, system-ui, sans-serif;
+  font-weight:      200;
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering:   optimizeLegibility;
+}
+
+body { background: #03000A; }
+
+::selection { background: rgba(124, 58, 237, 0.35); color: #F8F9FA; }
+
+:focus-visible { outline: none; box-shadow: 0 0 0 1px #03000A, 0 0 0 3px rgba(124,58,237,0.55); }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #03000A; }
+::-webkit-scrollbar-thumb { background: #1E1B4B; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #2A2560; }
+
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }

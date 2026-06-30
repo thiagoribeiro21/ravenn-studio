@@ -1,0 +1,33 @@
+/* Ravenn Studio — Effects
+   Borders are 1px and almost invisible until hovered, when a soft violet glow
+   blooms. No drop shadows in the conventional sense — depth comes from glow and
+   surface lifts. Motion is slow, eased, and restrained. */
+:root {
+  /* Border widths */
+  --bw: 1px;
+
+  /* Glow / aura (the signature hover effect) */
+  --glow-sm:  0 0 0 1px rgba(124, 58, 237, 0.25);
+  --glow-md:  0 0 24px -4px rgba(124, 58, 237, 0.45);
+  --glow-lg:  0 0 60px -8px rgba(124, 58, 237, 0.55);
+  --glow-aura: 0 0 120px -20px rgba(76, 29, 149, 0.6);
+
+  /* Focus ring */
+  --ring: 0 0 0 1px var(--rv-space-black), 0 0 0 3px rgba(124, 58, 237, 0.55);
+
+  /* Elevation — subtle, cool, almost black */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-3: 0 24px 60px rgba(0, 0, 0, 0.6);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur: 280ms;
+  --dur-slow: 520ms;
+
+  /* Blur (glass surfaces) */
+  --blur: 16px;
+  --blur-strong: 28px;
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Geometric raven mark — Ravenn Studio brand icon -->
+  <g fill="#F8F9FA">
+    <!-- Body -->
+    <polygon points="30,90 55,30 75,55 95,20 100,85 70,100 50,95" opacity="0.95"/>
+    <!-- Wing highlight -->
+    <polygon points="55,30 75,55 65,38" fill="#7C3AED" opacity="0.8"/>
+    <!-- Eye -->
+    <circle cx="88" cy="32" r="4" fill="#7C3AED"/>
+    <!-- Beak tip -->
+    <polygon points="95,20 108,14 100,28" opacity="0.9"/>
+  </g>
+</svg>

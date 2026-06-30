@@ -1,0 +1,56 @@
+/* Ravenn Studio — Base / reset
+   Minimal, dark-mode element defaults so any consuming page inherits the brand
+   canvas. Component styling lives in components, not here. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg-base);
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  color: var(--text-heading);
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+}
+
+p { margin: 0; }
+
+a {
+  color: var(--rv-purple-400);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+a:hover { color: var(--rv-purple-500); }
+
+/* Eyebrow / kicker — the brand's signature wide-tracked uppercase label */
+.rv-eyebrow {
+  font-size: var(--fs-overline);
+  font-weight: var(--fw-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
+  color: var(--text-faint);
+}
+
+::selection { background: rgba(124, 58, 237, 0.35); color: var(--rv-titanium); }
+
+:focus-visible { outline: none; box-shadow: var(--ring); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--rv-line); border-radius: var(--radius-pill); }
+::-webkit-scrollbar-thumb:hover { background: var(--rv-line-strong); }

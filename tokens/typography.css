@@ -1,0 +1,46 @@
+/* Ravenn Studio — Typography
+   One typeface: Clash Grotesk. The luxury signal is WIDE TRACKING on uppercase
+   labels and headers, thin weights, and generous line-height on body. */
+:root {
+  /* Family */
+  --font-sans: 'ClashGrotesk-Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: 'ClashGrotesk-Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Weights */
+  --fw-light:    300;
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  /* Type scale (rem, 16px base) */
+  --fs-display:  clamp(3rem, 6vw, 5.5rem);
+  --fs-h1:       3rem;     /* 48 */
+  --fs-h2:       2.25rem;  /* 36 */
+  --fs-h3:       1.5rem;   /* 24 */
+  --fs-h4:       1.25rem;  /* 20 */
+  --fs-body-lg:  1.125rem; /* 18 */
+  --fs-body:     1rem;     /* 16 */
+  --fs-body-sm:  0.875rem; /* 14 */
+  --fs-caption:  0.75rem;  /* 12 */
+  --fs-overline: 0.6875rem;/* 11 — eyebrow / kicker labels */
+
+  /* Line heights */
+  --lh-tight:    1.05;
+  --lh-snug:     1.2;
+  --lh-normal:   1.6;
+  --lh-relaxed:  1.75;
+
+  /* Letter-spacing — the brand's defining signal */
+  --ls-tightest: -0.03em;
+  --ls-tight:    -0.01em;
+  --ls-normal:   0em;
+  --ls-wide:     0.12em;
+  --ls-wider:    0.22em;
+  --ls-widest:   0.35em;
+
+  /* Semantic aliases */
+  --tracking-label: var(--ls-wide);
+  --tracking-eyebrow: var(--ls-wider);
+}

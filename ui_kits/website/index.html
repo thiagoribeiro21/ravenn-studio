@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ravenn Studio — Digital ecosystems that command authority</title>
+<link rel="stylesheet" href="../../styles.css" />
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>
+  html, body { height: 100%; margin: 0; }
+  #rv-scroll { height: 100vh; overflow-y: auto; scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+  <div id="rv-scroll"><div id="root"></div></div>
+
+  <!-- SiteNav -->
+  <script type="text/babel" data-presets="react">
+    function SiteNav({ active, onNav }) {
+      const { Button, Logo } = window.RavennStudioDesignSystem_41bd5d;
+      const [scrolled, setScrolled] = React.useState(false);
+      React.useEffect(() => {
+        const el = document.querySelector('#rv-scroll');
+        const onScroll = () => setScrolled((el ? el.scrollTop : window.scrollY) > 20);
+        const target = el || window;
+        target.addEventListener('scroll', onScroll);
+        return () => target.removeEventListener('scroll', onScroll);
+      }, []);
+      const links = ['Work', 'Services', 'Studio', 'Journal'];
+      return (
+        <header style={{
+          position: 'sticky', top: 0, zIndex: 50,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0 clamp(24px, 5vw, 64px)', height: 76,
+          borderBottom: `1px solid ${scrolled ? 'var(--border)' : 'transparent'}`,
+          background: scrolled ? 'rgba(3,0,10,0.72)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(16px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
+          transition: 'background 280ms ease, border-color 280ms ease',
+        }}>
+          <div style={{ cursor: 'pointer' }} onClick={() => onNav('top')}>
+            <Logo iconSrc="../../assets/logos/raven-logo.svg" size="sm" />
+          </div>
+          <nav style={{ display: 'flex', gap: 36 }}>
+            {links.map((l) => (
+              <a key={l} onClick={() => onNav(l.toLowerCase())} style={{
+                fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
+                letterSpacing: '0.18em',
+                color: active === l.toLowerCase() ? 'var(--text-heading)' : 'var(--text-faint)',
+                cursor: 'pointer', transition: 'color 200ms ease',
+              }}>{l}</a>
+            ))}
+          </nav>
+          <Button variant="secondary" size="sm" onClick={() => onNav('contact')}>Start a Project</Button>
+        </header>
+      );
+    }
+    window.SiteNav = SiteNav;
+  </script>
+
+  <!-- Hero -->
+  <script type="text/babel" data-presets="react">
+    function Hero({ onNav }) {
+      const { Button, Eyebrow, Badge } = window.RavennStudioDesignSystem_41bd5d;
+      return (
+        <section style={{
+          position: 'relative',
+          minHeight: 'calc(100vh - 76px)',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          padding: '0 clamp(24px, 5vw, 64px)', overflow: 'hidden',
+        }}>
+          <div style={{
+            position: 'absolute', top: '14%', right: '-6%', width: 620, height: 620,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(76,29,149,0.55) 0%, rgba(76,29,149,0) 68%)',
+            filter: 'blur(40px)', pointerEvents: 'none',
+          }} />
+          <img src="../../assets/logos/raven-logo.svg" alt="" style={{
+            position: 'absolute', right: 'clamp(24px,8vw,160px)', top: '50%',
+            transform: 'translateY(-50%)', height: 'min(64vh, 560px)',
+            opacity: 0.05, pointerEvents: 'none',
+          }} />
+          <div style={{ position: 'relative', maxWidth: 880 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
+              <Eyebrow marker="—">Selected Digital Studio</Eyebrow>
+              <Badge variant="soft" tone="success" dot>Accepting 2 clients · Q3</Badge>
+            </div>
+            <h1 style={{ fontSize: 'clamp(44px, 7vw, 92px)', fontWeight: 500, letterSpacing: '-0.03em', lineHeight: 1.02, color: 'var(--text-heading)' }}>
+              Digital ecosystems<br />that command<br />
+              <span style={{ color: 'var(--rv-purple-400)' }}>authority.</span>
+            </h1>
+            <p style={{ marginTop: 32, fontSize: 'clamp(16px,1.4vw,19px)', lineHeight: 1.6, color: 'var(--text-body)', maxWidth: 560 }}>
+              A boutique studio crafting bespoke institutional websites, intelligent automations and AI-driven integrations for a select few. Cutting-edge engineering, dressed in restraint.
+            </p>
+            <div style={{ display: 'flex', gap: 16, marginTop: 44, flexWrap: 'wrap' }}>
+              <Button variant="primary" size="lg" onClick={() => onNav('contact')}>Start a Project</Button>
+              <Button variant="secondary" size="lg" iconRight="→" onClick={() => onNav('work')}>View Selected Work</Button>
+            </div>
+            <div style={{ display: 'flex', gap: 48, marginTop: 72, flexWrap: 'wrap' }}>
+              {[['12', 'Years compounding'], ['40+', 'Institutions served'], ['5%', 'Of inbound accepted']].map(([n, l]) => (
+                <div key={l}>
+                  <div style={{ fontSize: 40, fontWeight: 400, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}>{n}</div>
+                  <div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-faint)', marginTop: 6 }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+    window.Hero = Hero;
+  </script>
+
+  <!-- Services -->
+  <script type="text/babel" data-presets="react">
+    function ServiceCell({ n, t, d }) {
+      const [hover, setHover] = React.useState(false);
+      return (
+        <div
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          style={{
+            background: hover ? 'var(--bg-surface-raised)' : 'var(--bg-base)',
+            padding: 'clamp(28px,3vw,44px)', minHeight: 280,
+            display: 'flex', flexDirection: 'column',
+            transition: 'background 280ms ease', cursor: 'default',
+          }}
+        >
+          <div style={{ fontSize: 12, letterSpacing: '0.2em', color: hover ? 'var(--rv-purple-400)' : 'var(--text-faint)', transition: 'color 280ms ease' }}>{n}</div>
+          <h3 style={{ fontSize: 22, fontWeight: 500, color: 'var(--text-heading)', marginTop: 'auto', marginBottom: 14 }}>{t}</h3>
+          <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text-body)' }}>{d}</p>
+          <div style={{ marginTop: 24, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.18em', color: hover ? 'var(--text-heading)' : 'var(--text-faint)', transition: 'color 280ms ease' }}>
+            Explore →
+          </div>
+        </div>
+      );
+    }
+    function Services() {
+      const { Eyebrow } = window.RavennStudioDesignSystem_41bd5d;
+      const services = [
+        { n: '01', t: 'Institutional Websites', d: 'Bespoke, high-end corporate sites engineered to project market authority and convert discerning audiences.' },
+        { n: '02', t: 'Workflow Automation', d: 'Intelligent internal systems that remove friction, compress timelines and let teams operate above their weight.' },
+        { n: '03', t: 'AI Integrations', d: 'Practical, sophisticated AI woven into your product and operations — assistants, retrieval, generation.' },
+        { n: '04', t: 'Traffic Performance', d: 'Strategic acquisition and conversion programmes built for sustained, compounding growth.' },
+      ];
+      return (
+        <section id="services" style={{ padding: 'clamp(80px,12vw,160px) clamp(24px,5vw,64px)', borderTop: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 24, marginBottom: 64 }}>
+            <div>
+              <Eyebrow marker="—">Capabilities</Eyebrow>
+              <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 500, letterSpacing: '-0.02em', color: 'var(--text-heading)', marginTop: 18, maxWidth: 620 }}>
+                Four disciplines, one standard
+              </h2>
+            </div>
+            <p style={{ fontSize: 15, lineHeight: 1.6, color: 'var(--text-body)', maxWidth: 320 }}>
+              We engage on a small number of engagements at a time — each treated as the studio's only client.
+            </p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 1, background: 'var(--border)', border: '1px solid var(--border)', borderRadius: 'var(--radius-3)', overflow: 'hidden' }}>
+            {services.map((s) => <ServiceCell key={s.n} {...s} />)}
+          </div>
+        </section>
+      );
+    }
+    window.Services = Services;
+  </script>
+
+  <!-- Work -->
+  <script type="text/babel" data-presets="react">
+    function WorkRow({ client, cat, year, tag, first }) {
+      const { Badge } = window.RavennStudioDesignSystem_41bd5d;
+      const [hover, setHover] = React.useState(false);
+      return (
+        <div
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          style={{
+            display: 'grid', gridTemplateColumns: '1.6fr 1fr auto auto',
+            alignItems: 'center', gap: 24,
+            padding: 'clamp(24px,3vw,40px) 8px',
+            borderTop: first ? '1px solid var(--border)' : 'none',
+            borderBottom: '1px solid var(--border)',
+            cursor: 'pointer', position: 'relative',
+            transition: 'padding-left 280ms ease',
+            paddingLeft: hover ? 24 : 8,
+          }}
+        >
+          {hover ? <span style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', width: 3, height: '60%', background: 'var(--action)', boxShadow: 'var(--glow-md)' }} /> : null}
+          <div style={{ fontSize: 'clamp(20px,2.4vw,30px)', fontWeight: 500, color: hover ? 'var(--rv-purple-400)' : 'var(--text-heading)', transition: 'color 280ms ease', letterSpacing: '-0.01em' }}>{client}</div>
+          <div style={{ fontSize: 14, color: 'var(--text-body)' }}>{cat}</div>
+          <Badge variant="outline" tone="neutral">{tag}</Badge>
+          <div style={{ fontSize: 13, color: 'var(--text-faint)', letterSpacing: '0.08em', minWidth: 80, textAlign: 'right' }}>
+            {hover ? '↗ View' : year}
+          </div>
+        </div>
+      );
+    }
+    function Work() {
+      const { Eyebrow } = window.RavennStudioDesignSystem_41bd5d;
+      const projects = [
+        { client: 'Meridian Capital', cat: 'Institutional Website', year: '2025', tag: 'Finance' },
+        { client: 'Atelier Noir', cat: 'Brand + Commerce', year: '2025', tag: 'Luxury' },
+        { client: 'Vantage Health', cat: 'AI Integration', year: '2024', tag: 'Healthcare' },
+        { client: 'Orbital Logistics', cat: 'Workflow Automation', year: '2024', tag: 'Industry' },
+      ];
+      return (
+        <section id="work" style={{ padding: 'clamp(80px,12vw,160px) clamp(24px,5vw,64px)', borderTop: '1px solid var(--border)' }}>
+          <Eyebrow marker="—">Selected Work</Eyebrow>
+          <h2 style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 500, letterSpacing: '-0.02em', color: 'var(--text-heading)', marginTop: 18, marginBottom: 56, maxWidth: 620 }}>
+            Quietly engineered, plainly effective
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {projects.map((p, i) => <WorkRow key={p.client} {...p} first={i === 0} />)}
+          </div>
+        </section>
+      );
+    }
+    window.Work = Work;
+  </script>
+
+  <!-- Contact + Footer -->
+  <script type="text/babel" data-presets="react">
+    function Contact() {
+      const { Button, Input, Select, Eyebrow, Logo, Checkbox } = window.RavennStudioDesignSystem_41bd5d;
+      const [sent, setSent] = React.useState(false);
+      const [nda, setNda] = React.useState(false);
+      return (
+        <React.Fragment>
+          <section id="contact" style={{ position: 'relative', padding: 'clamp(80px,12vw,160px) clamp(24px,5vw,64px)', borderTop: '1px solid var(--border)', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', bottom: '-30%', left: '20%', width: 700, height: 700, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.18) 0%, rgba(124,58,237,0) 70%)', filter: 'blur(30px)', pointerEvents: 'none' }} />
+            <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px,1fr))', gap: 'clamp(40px,6vw,96px)', alignItems: 'start' }}>
+              <div>
+                <Eyebrow marker="—">Start a Project</Eyebrow>
+                <h2 style={{ fontSize: 'clamp(36px,5vw,68px)', fontWeight: 500, letterSpacing: '-0.03em', lineHeight: 1.04, color: 'var(--text-heading)', marginTop: 20 }}>
+                  Let's build something<br />worth guarding.
+                </h2>
+                <p style={{ fontSize: 16, lineHeight: 1.6, color: 'var(--text-body)', marginTop: 28, maxWidth: 400 }}>
+                  Tell us about the work. We reply to every serious enquiry within one business day.
+                </p>
+                <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  <a href="mailto:studio@ravenn.co" style={{ fontSize: 15, color: 'var(--text-body)' }}>studio@ravenn.co</a>
+                  <span style={{ fontSize: 13, color: 'var(--text-faint)', letterSpacing: '0.08em' }}>WORLDWIDE · REMOTE-FIRST</span>
+                </div>
+              </div>
+              <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-3)', padding: 'clamp(28px,3vw,40px)' }}>
+                {sent ? (
+                  <div style={{ minHeight: 360, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: 16 }}>
+                    <img src="../../assets/logos/raven-logo.svg" alt="" style={{ height: 64, opacity: 0.9 }} />
+                    <h3 style={{ fontSize: 24, color: 'var(--text-heading)' }}>Enquiry received</h3>
+                    <p style={{ fontSize: 14, color: 'var(--text-body)', maxWidth: 280 }}>Thank you. A studio principal will be in touch within one business day.</p>
+                    <Button variant="ghost" size="sm" onClick={() => setSent(false)}>Send another</Button>
+                  </div>
+                ) : (
+                  <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                    <Input label="Full Name" placeholder="Ada Lovelace" required />
+                    <Input label="Work Email" type="email" placeholder="you@company.com" required />
+                    <Select label="Engagement" options={['Institutional Website','Workflow Automation','AI Integration','Traffic Performance','Something else']} />
+                    <Input label="Indicative Budget" placeholder="e.g. $50k–$150k" />
+                    <Checkbox checked={nda} onChange={setNda} label="An NDA is required before we speak" />
+                    <Button variant="primary" size="lg" fullWidth type="submit" iconRight="→">Send Enquiry</Button>
+                  </form>
+                )}
+              </div>
+            </div>
+          </section>
+          <footer style={{ borderTop: '1px solid var(--border)', padding: 'clamp(40px,5vw,64px) clamp(24px,5vw,64px)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 24 }}>
+              <Logo iconSrc="../../assets/logos/raven-logo.svg" size="sm" />
+              <div style={{ display: 'flex', gap: 28 }}>
+                {['LinkedIn', 'Dribbble', 'X', 'Journal'].map((l) => (
+                  <a key={l} style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-faint)', cursor: 'pointer' }}>{l}</a>
+                ))}
+              </div>
+              <span style={{ fontSize: 11, color: 'var(--text-faint)', letterSpacing: '0.12em' }}>© MMXXV RAVENN STUDIO</span>
+            </div>
+          </footer>
+        </React.Fragment>
+      );
+    }
+    window.Contact = Contact;
+  </script>
+
+  <!-- App root -->
+  <script type="text/babel" data-presets="react">
+    function App() {
+      const [active, setActive] = React.useState('');
+      const onNav = (id) => {
+        const scroller = document.querySelector('#rv-scroll');
+        if (id === 'top') { scroller.scrollTo({ top: 0, behavior: 'smooth' }); setActive(''); return; }
+        if (id === 'studio' || id === 'journal') { id = 'work'; }
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - 76;
+          scroller.scrollTo({ top, behavior: 'smooth' });
+          setActive(id);
+        }
+      };
+      return (
+        <React.Fragment>
+          <SiteNav active={active} onNav={onNav} />
+          <main>
+            <Hero onNav={onNav} />
+            <Services />
+            <Work />
+            <Contact />
+          </main>
+        </React.Fragment>
+      );
+    }
+    function mount() {
+      if (!window.SiteNav || !window.Hero || !window.Services || !window.Work || !window.Contact) {
+        return setTimeout(mount, 30);
+      }
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    }
+    mount();
+  </script>
+</body>
+</html>
