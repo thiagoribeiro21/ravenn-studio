@@ -132,9 +132,45 @@ export default function ScrollSequenceCanvas({ endRef }) {
   const videoOpacity  = isScrolled ? 'opacity-0' : 'opacity-[0.38]';
   const canvasOpacity = isScrolled ? 'opacity-[0.38]' : 'opacity-0';
 
-  // Mobile: não renderiza nenhum elemento de mídia — economiza CPU, rede e
-  // evita download do webm (959 KiB) em dispositivos com conexão limitada.
-  if (isSmall) return null;
+  // Mobile: vídeo simples sem scroll-sequence nem canvas (150KB, sem frames).
+  if (isSmall) {
+    return (
+      <div
+        aria-hidden
+        style={{
+          position:      'fixed',
+          top:           0,
+          left:          0,
+          width:         '100%',
+          height:        '100vh',
+          overflow:      'hidden',
+          pointerEvents: 'none',
+          zIndex:        0,
+        }}
+      >
+        <video
+          src="/raven-loop-video.webm"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="none"
+          style={{
+            position:     'absolute',
+            top:          0,
+            left:         0,
+            width:        '100%',
+            height:       '100%',
+            objectFit:    'cover',
+            opacity:      0.35,
+            mixBlendMode: 'screen',
+          }}
+        >
+          <track kind="captions" />
+        </video>
+      </div>
+    );
+  }
 
   return (
     <div
