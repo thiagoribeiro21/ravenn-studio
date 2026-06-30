@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 // ── LaptopMockup ──────────────────────────────────────────────────────────────
@@ -10,10 +10,17 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 //   • Box-shadow com glow violeta → âncora de profundidade
 //
 // Props:
-//   src   — caminho do vídeo (autoplay loop muted playsInline)
+//   src    — caminho do vídeo (loop muted playsInline)
+//   poster — imagem leve (webp) exibida antes do vídeo carregar
 //
-export default function LaptopMockup({ src }) {
+// Carregamento: o <video> não recebe `src` no markup inicial (preload="none"
+// sozinho não impede o browser de buscar o arquivo quando há autoplay).
+// Um IntersectionObserver atribui `video.src` e chama `.play()` apenas quando
+// o card entra no viewport, e pausa quando sai — zero download fora de tela.
+export default function LaptopMockup({ src, poster }) {
   const containerRef = useRef(null);
+  const videoRef      = useRef(null);
+  const startedRef    = useRef(false);
 
   // Posição raw do mouse normalizada de -1 a 1
   const rawX = useMotionValue(0);
@@ -38,6 +45,31 @@ export default function LaptopMockup({ src }) {
     rawY.set(0);
     lift.set(0);
   }, [rawX, rawY, lift]);
+
+  // ── Lazy load + play/pause baseado em visibilidade ─────────────────────────
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (!startedRef.current) {
+            video.src = src;
+            video.load();
+            startedRef.current = true;
+          }
+          video.play().catch(() => {});
+        } else if (startedRef.current) {
+          video.pause();
+        }
+      },
+      { threshold: 0.25 },
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [src]);
 
   return (
     <div
@@ -111,8 +143,8 @@ export default function LaptopMockup({ src }) {
             }}
           >
             <video
-              src={src}
-              autoPlay
+              ref={videoRef}
+              poster={poster}
               loop
               muted
               playsInline
@@ -122,8 +154,11 @@ export default function LaptopMockup({ src }) {
                 width:      '100%',
                 height:     '100%',
                 objectFit:  'contain',
+                background: '#000',
               }}
-            />
+            >
+              <track kind="captions" />
+            </video>
             {/* Reflexo de glare */}
             <div
               aria-hidden

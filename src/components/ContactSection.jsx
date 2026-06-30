@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 // ── Input / Textarea ──────────────────────────────────────────────────────────
-function Field({ tag: Tag = 'input', label, ...props }) {
+function Field({ tag: Tag = 'input', label, name, ...props }) {
   const [focused, setFocused] = useState(false);
   const isTextarea = Tag === 'textarea';
+  const id = `field-${name}`;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       {label && (
-        <label style={{
+        <label htmlFor={id} style={{
           fontSize: 10, fontWeight: 500, textTransform: 'uppercase',
           letterSpacing: '0.18em', color: '#5B6472',
         }}>
@@ -16,6 +17,8 @@ function Field({ tag: Tag = 'input', label, ...props }) {
         </label>
       )}
       <Tag
+        id={id}
+        name={name}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         style={{
@@ -42,12 +45,13 @@ function Field({ tag: Tag = 'input', label, ...props }) {
 }
 
 // ── Select ────────────────────────────────────────────────────────────────────
-function SelectField({ label, options, ...props }) {
+function SelectField({ label, options, name, ...props }) {
   const [focused, setFocused] = useState(false);
+  const id = `field-${name}`;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       {label && (
-        <label style={{
+        <label htmlFor={id} style={{
           fontSize: 10, fontWeight: 500, textTransform: 'uppercase',
           letterSpacing: '0.18em', color: '#5B6472',
         }}>
@@ -55,6 +59,9 @@ function SelectField({ label, options, ...props }) {
         </label>
       )}
       <select
+        id={id}
+        name={name}
+        aria-label={label || 'Selecione o serviço'}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         style={{

@@ -90,17 +90,26 @@ export default function PortfolioSection() {
         >
           {/* Estética — destaque (primeiro) */}
           <div className="flex-shrink-0 snap-center" style={{ width: '80vw' }}>
-            <LaptopMockup src="/videos-raven-portfolio/pele-raven.mp4" />
+            <LaptopMockup
+              src="/videos-raven-portfolio/pele-raven.mp4"
+              poster="/videos-raven-portfolio/pele-raven-poster.webp"
+            />
           </div>
 
           {/* Advocacia */}
           <div className="flex-shrink-0 snap-center" style={{ width: '80vw' }}>
-            <LaptopMockup src="/videos-raven-portfolio/advogado-raven.mp4" />
+            <LaptopMockup
+              src="/videos-raven-portfolio/advogado-raven.mp4"
+              poster="/videos-raven-portfolio/advogado-raven-poster.webp"
+            />
           </div>
 
           {/* Imóvel / Arquitetura */}
           <div className="flex-shrink-0 snap-center" style={{ width: '80vw' }}>
-            <LaptopMockup src="/videos-raven-portfolio/imovel-raven.mp4" />
+            <LaptopMockup
+              src="/videos-raven-portfolio/imovel-raven.mp4"
+              poster="/videos-raven-portfolio/imovel-raven-poster.webp"
+            />
           </div>
         </div>
       </motion.div>
@@ -131,7 +140,10 @@ export default function PortfolioSection() {
             whileHover={{ opacity: 1, scale: 1.05 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
           >
-            <LaptopMockup src="/videos-raven-portfolio/advogado-raven.mp4" />
+            <LaptopMockup
+              src="/videos-raven-portfolio/advogado-raven.mp4"
+              poster="/videos-raven-portfolio/advogado-raven-poster.webp"
+            />
           </motion.div>
         </div>
 
@@ -149,7 +161,10 @@ export default function PortfolioSection() {
             whileHover={{ opacity: 1, scale: 1.05 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
           >
-            <LaptopMockup src="/videos-raven-portfolio/imovel-raven.mp4" />
+            <LaptopMockup
+              src="/videos-raven-portfolio/imovel-raven.mp4"
+              poster="/videos-raven-portfolio/imovel-raven-poster.webp"
+            />
           </motion.div>
         </div>
 

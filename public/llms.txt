@@ -1,0 +1,23 @@
+# Ravenn Studio
+
+> Agência de web design e automação de IA para negócios locais. Criação de sites de alta conversão e soluções de inteligência artificial para empresas que querem escalar lucros sem escalar equipe.
+
+Ravenn Studio é uma agência digital especializada em desenvolvimento de sites institucionais, landing pages de alta conversão, experiências web sob medida e automação de atendimento com IA (n8n). Atende negócios locais que querem vender mesmo fora do horário comercial.
+
+## Serviços
+
+- [Landing Pages](https://www.ravennstudio.com/#hero): páginas de alta conversão para campanhas e captação de leads.
+- [Sites Institucionais](https://www.ravennstudio.com/#portfolio): presença digital completa para empresas e profissionais liberais.
+- [Sites Experienciais](https://www.ravennstudio.com/#capabilities): experiências web sob medida com animação e interatividade.
+- [Automação n8n & IA](https://www.ravennstudio.com/#capabilities): automação de atendimento e fluxos de negócio com inteligência artificial.
+- [Gestão de Tráfego Pago](https://www.ravennstudio.com/#capabilities): campanhas de aquisição pagas integradas ao funil do site.
+
+## Contato
+
+- E-mail: contato@ravennstudio.com
+- Formulário de contato: https://www.ravennstudio.com/#contact
+
+## Notes
+
+- Este arquivo segue o formato llms.txt (https://llmstxt.org/) para orientar agentes de IA sobre o conteúdo do site.
+- Não há API pública; todas as informações factuais sobre serviços, processo e contato estão nas seções do site principal.

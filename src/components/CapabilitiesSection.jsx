@@ -1,6 +1,7 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import ThreeServicesCanvas from './ThreeServicesCanvas';
+
+const ThreeServicesCanvas = lazy(() => import('./ThreeServicesCanvas'));
 
 const WA_LINK =
   'https://wa.me/5521999999999?text=Olá%2C%20gostaria%20de%20agendar%20um%20diagnóstico%20gratuito%20com%20a%20Ravenn%20Studio.';
@@ -543,7 +544,9 @@ export default function CapabilitiesSection() {
           }}>
             <div className="w-48 h-48 md:w-56 md:h-56 relative">
               <div aria-hidden style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'radial-gradient(circle, rgba(76,29,149,0.28) 0%, transparent 70%)', pointerEvents: 'none' }} />
-              <ThreeServicesCanvas activeIndex={activeIdx} />
+              <Suspense fallback={<div className="w-full h-full rounded-full" style={{ background: '#03000A' }} />}>
+                <ThreeServicesCanvas activeIndex={activeIdx} />
+              </Suspense>
             </div>
             <span style={{ fontSize: 9, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#5B6472' }}>
               — {SERVICES[activeIdx]?.category ?? ''} —
@@ -565,7 +568,9 @@ export default function CapabilitiesSection() {
             }}>
               <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(76,29,149,0.18) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div style={{ width: 'min(88%, 620px)', aspectRatio: '1 / 1', position: 'relative', zIndex: 1 }}>
-                <ThreeServicesCanvas activeIndex={activeIdx} />
+                <Suspense fallback={<div className="w-full h-full" style={{ background: '#03000A' }} />}>
+                  <ThreeServicesCanvas activeIndex={activeIdx} />
+                </Suspense>
               </div>
               <div aria-hidden style={{ position: 'absolute', bottom: 40, left: 0, right: 0, textAlign: 'center', pointerEvents: 'none' }}>
                 <span style={{ fontSize: 9, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#5B6472' }}>

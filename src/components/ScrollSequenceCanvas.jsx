@@ -173,7 +173,9 @@ export default function ScrollSequenceCanvas({ endRef }) {
           preload="metadata"
           className={`${MEDIA_CLASSES} transition-opacity duration-300 ${videoOpacity}`}
           style={{ mixBlendMode: 'screen' }}
-        />
+        >
+          <track kind="captions" />
+        </video>
 
         {/* Canvas (desktop only) — classes idênticas ao vídeo */}
         {!isSmall && (
