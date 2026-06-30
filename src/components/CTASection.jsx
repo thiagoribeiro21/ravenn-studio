@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const CTACanvas = lazy(() => import('./CTACanvas'));
@@ -8,8 +8,25 @@ const WA_LINK =
 
 // ── Seção CTA ─────────────────────────────────────────────────────────────────
 export default function CTASection() {
+  const sectionRef    = useRef(null);
+  const [entered, setEntered] = useState(false);
+
+  // Só monta o Canvas 3D (e dispara o download do Three.js) quando a seção
+  // está a 300 px do viewport — evita bloquear o thread durante o load inicial.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setEntered(true); io.disconnect(); } },
+      { rootMargin: '300px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="cta"
       style={{
         position:   'relative',
@@ -19,11 +36,13 @@ export default function CTASection() {
       }}
     >
 
-      {/* z-0 — Canvas de partículas (lazy: não bloqueia o carregamento inicial) */}
+      {/* z-0 — Canvas de partículas: só renderiza quando próximo do viewport */}
       <div aria-hidden style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-        <Suspense fallback={<div />}>
-          <CTACanvas />
-        </Suspense>
+        {entered && (
+          <Suspense fallback={<div style={{ width: '100%', height: '100%', background: '#03000A' }} />}>
+            <CTACanvas />
+          </Suspense>
+        )}
       </div>
 
       {/* z-5 — Vinheta perimetral: partículas dissolvem antes das bordas */}

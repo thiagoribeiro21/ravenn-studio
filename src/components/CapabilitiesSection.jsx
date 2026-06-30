@@ -495,11 +495,26 @@ export default function CapabilitiesSection() {
   const isDesktop       = useIsDesktop();
   const [activeIdx,     setActiveIdx]     = useState(0);
   const [activeService, setActiveService] = useState(null);
+  const [canvas3D,      setCanvas3D]      = useState(false);
+  const sectionRef = useRef(null);
   const onActive = useCallback((i) => setActiveIdx(i), []);
+
+  // Só monta o ThreeServicesCanvas (e dispara o download do Three.js) quando a
+  // seção está a 400 px do viewport — o bundle R3F não compete com o load inicial.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setCanvas3D(true); io.disconnect(); } },
+      { rootMargin: '400px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <>
-      <section id="services" style={{ borderTop: '1px solid #1E1B4B' }}>
+      <section ref={sectionRef} id="services" style={{ borderTop: '1px solid #1E1B4B' }}>
 
         {/* Header full-width */}
         <motion.div
@@ -544,9 +559,11 @@ export default function CapabilitiesSection() {
           }}>
             <div className="w-48 h-48 md:w-56 md:h-56 relative">
               <div aria-hidden style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'radial-gradient(circle, rgba(76,29,149,0.28) 0%, transparent 70%)', pointerEvents: 'none' }} />
-              <Suspense fallback={<div className="w-full h-full rounded-full" style={{ background: '#03000A' }} />}>
-                <ThreeServicesCanvas activeIndex={activeIdx} />
-              </Suspense>
+              {canvas3D && (
+                <Suspense fallback={<div className="w-full h-full rounded-full" style={{ background: '#03000A' }} />}>
+                  <ThreeServicesCanvas activeIndex={activeIdx} />
+                </Suspense>
+              )}
             </div>
             <span style={{ fontSize: 9, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#5B6472' }}>
               — {SERVICES[activeIdx]?.category ?? ''} —
@@ -568,9 +585,11 @@ export default function CapabilitiesSection() {
             }}>
               <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(76,29,149,0.18) 0%, transparent 70%)', pointerEvents: 'none' }} />
               <div style={{ width: 'min(88%, 620px)', aspectRatio: '1 / 1', position: 'relative', zIndex: 1 }}>
-                <Suspense fallback={<div className="w-full h-full" style={{ background: '#03000A' }} />}>
-                  <ThreeServicesCanvas activeIndex={activeIdx} />
-                </Suspense>
+                {canvas3D && (
+                  <Suspense fallback={<div className="w-full h-full" style={{ background: '#03000A' }} />}>
+                    <ThreeServicesCanvas activeIndex={activeIdx} />
+                  </Suspense>
+                )}
               </div>
               <div aria-hidden style={{ position: 'absolute', bottom: 40, left: 0, right: 0, textAlign: 'center', pointerEvents: 'none' }}>
                 <span style={{ fontSize: 9, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#5B6472' }}>

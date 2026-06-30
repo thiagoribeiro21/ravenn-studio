@@ -38,16 +38,17 @@ export default function ScrollSequenceCanvas({ endRef }) {
   // Estado que aciona o crossfade via CSS
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const innerRef  = useRef(null);
-  const videoRef  = useRef(null);
-  const canvasRef = useRef(null);
-  const framesRef = useRef([]);
-  const sizedRef  = useRef(false);
-  const rafRef    = useRef(null);
+  const innerRef       = useRef(null);
+  const videoRef       = useRef(null);
+  const canvasRef      = useRef(null);
+  const framesRef      = useRef([]);
+  const sizedRef       = useRef(false);
+  const rafRef         = useRef(null);
+  // Frames só começam a baixar na primeira vez que o usuário scrolla —
+  // evita competição com recursos críticos no carregamento inicial.
+  const framesLoadedRef = useRef(false);
 
   // ── drawFrame ──────────────────────────────────────────────────────────────
-  // Canvas internal size = resolução natural da imagem (setado uma única vez).
-  // Cobre 100% do canvas — CSS object-contain escala igual ao vídeo.
   const drawFrame = useCallback((idx) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -65,24 +66,8 @@ export default function ScrollSequenceCanvas({ endRef }) {
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   }, []);
 
-  // ── Pré-carga dos frames WebP ──────────────────────────────────────────────
-  useEffect(() => {
-    if (isSmall) return;
-    const imgs = new Array(TOTAL_FRAMES);
-    for (let i = 0; i < TOTAL_FRAMES; i++) {
-      const img  = new Image();
-      img.src    = getUrl(i + 1);
-      // Frame 0 pintado logo que carrega (canvas ainda invisível → sem flash)
-      img.onload = () => { if (i === 0) drawFrame(0); };
-      imgs[i]    = img;
-    }
-    framesRef.current = imgs;
-    return () => { framesRef.current = []; };
-  }, [drawFrame, isSmall]);
-
   // ── Listener de scroll no container do SiteShell ──────────────────────────
   useEffect(() => {
-    // No mobile mostramos apenas o vídeo em loop — sem lógica de frames
     const container = scrollContainerRef.current;
     if (!container) return;
 
@@ -92,7 +77,6 @@ export default function ScrollSequenceCanvas({ endRef }) {
       const scrollTop   = container.scrollTop;
       const nowScrolled = scrollTop > 20;
 
-      // ── Crossfade bidirecional via state ────────────────────────────────────
       setIsScrolled(nowScrolled);
 
       if (nowScrolled) {
@@ -101,10 +85,21 @@ export default function ScrollSequenceCanvas({ endRef }) {
         if (video && video.paused) video.play().catch(() => {});
       }
 
-      // ── Animação de frames (só desktop e quando há scroll) ─────────────────
       if (isSmall || !nowScrolled) return;
 
-      // maxScroll: distância total até o fim da sequência
+      // ── Carga lazy dos frames: só inicia no primeiro scroll ────────────────
+      if (!framesLoadedRef.current) {
+        framesLoadedRef.current = true;
+        const imgs = new Array(TOTAL_FRAMES);
+        for (let i = 0; i < TOTAL_FRAMES; i++) {
+          const img  = new Image();
+          img.src    = getUrl(i + 1);
+          img.onload = () => { if (i === 0) drawFrame(0); };
+          imgs[i]    = img;
+        }
+        framesRef.current = imgs;
+      }
+
       const maxScroll = endRef?.current
         ? endRef.current.getBoundingClientRect().top + container.scrollTop
         : container.clientHeight * 3;
@@ -112,14 +107,12 @@ export default function ScrollSequenceCanvas({ endRef }) {
       const progress   = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
       const frameIndex = Math.floor(progress * (TOTAL_FRAMES - 1));
 
-      // Parallax horizontal leve no wrapper interno
       const inner = innerRef.current;
       if (inner) {
         const xT = Math.min(1, Math.max(0, (progress - 0.05) / 0.75));
         inner.style.transform = `translateX(${8 * xT}vw)`;
       }
 
-      // Desenha dentro de um requestAnimationFrame para sincronizar com o display
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => drawFrame(frameIndex));
     };
@@ -133,16 +126,15 @@ export default function ScrollSequenceCanvas({ endRef }) {
 
   // ── Render ─────────────────────────────────────────────────────────────────
   //
-  // Opacidades controladas por Tailwind via isScrolled:
-  //   vídeo : opacity-[0.38] → opacity-0  (some ao scrollar)
-  //   canvas: opacity-0      → opacity-[0.38]  (surge ao scrollar)
-  //   mobile : vídeo fixo em opacity-[0.18], sem canvas
+  // Mobile (isSmall): sem vídeo, sem canvas — fundo sólido do SiteShell.
+  // Desktop: vídeo (opacity-[0.38]) → canvas (opacity-[0.38]) no crossfade.
   //
-  const videoOpacity  = isSmall
-    ? 'opacity-[0.18]'
-    : isScrolled ? 'opacity-0' : 'opacity-[0.38]';
-
+  const videoOpacity  = isScrolled ? 'opacity-0' : 'opacity-[0.38]';
   const canvasOpacity = isScrolled ? 'opacity-[0.38]' : 'opacity-0';
+
+  // Mobile: não renderiza nenhum elemento de mídia — economiza CPU, rede e
+  // evita download do webm (959 KiB) em dispositivos com conexão limitada.
+  if (isSmall) return null;
 
   return (
     <div
@@ -153,7 +145,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
         left:          0,
         width:         '100%',
         height:        '100vh',
-        overflow:      'hidden', // clipa o sangramento sem criar scrollbar
+        overflow:      'hidden',
         pointerEvents: 'none',
         zIndex:        0,
       }}
@@ -162,7 +154,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
         ref={innerRef}
         style={{ position: 'absolute', inset: 0, willChange: 'transform' }}
       >
-        {/* Vídeo — crossfade via CSS, classes de dimensionamento idênticas ao canvas */}
+        {/* Vídeo hero (desktop) — preload=none: só carrega ao dar play */}
         <video
           ref={videoRef}
           src="/raven-loop-video.webm"
@@ -170,21 +162,19 @@ export default function ScrollSequenceCanvas({ endRef }) {
           loop
           muted
           playsInline
-          preload="metadata"
+          preload="none"
           className={`${MEDIA_CLASSES} transition-opacity duration-300 ${videoOpacity}`}
           style={{ mixBlendMode: 'screen' }}
         >
           <track kind="captions" />
         </video>
 
-        {/* Canvas (desktop only) — classes idênticas ao vídeo */}
-        {!isSmall && (
-          <canvas
-            ref={canvasRef}
-            className={`${MEDIA_CLASSES} transition-opacity duration-300 ${canvasOpacity}`}
-            style={{ mixBlendMode: 'screen', display: 'block' }}
-          />
-        )}
+        {/* Canvas de frames WebP (desktop) */}
+        <canvas
+          ref={canvasRef}
+          className={`${MEDIA_CLASSES} transition-opacity duration-300 ${canvasOpacity}`}
+          style={{ mixBlendMode: 'screen', display: 'block' }}
+        />
       </div>
     </div>
   );
