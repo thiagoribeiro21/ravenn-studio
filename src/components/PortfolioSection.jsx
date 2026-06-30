@@ -1,7 +1,17 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import LaptopMockup from './LaptopMockup';
 
 export default function PortfolioSection() {
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 768);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const handler = (e) => setIsDesktop(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
   return (
     <section
       id="portfolio"
@@ -54,12 +64,12 @@ export default function PortfolioSection() {
       </motion.div>
 
       {/* ── MOBILE: carrossel com peeking ──────────────────────────────────── */}
-      <motion.div
+      {!isDesktop && <motion.div
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         viewport={{ once: false, amount: 0.15 }}
-        className="md:hidden w-full relative"
+        className="w-full relative"
       >
         {/*
           Glow estático fora do container de scroll.
@@ -112,15 +122,15 @@ export default function PortfolioSection() {
             />
           </div>
         </div>
-      </motion.div>
+      </motion.div>}
 
       {/* ── DESKTOP: composição sobreposta tridimensional ───────────────────── */}
-      <motion.div
+      {isDesktop && <motion.div
         initial={{ opacity: 0, y: 48 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.05, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
         viewport={{ once: false, amount: 0.15 }}
-        className="hidden md:block relative w-full"
+        className="relative w-full"
         style={{
           maxWidth: '100rem',
           height:   'clamp(320px, 62vh, 640px)',
@@ -180,7 +190,7 @@ export default function PortfolioSection() {
         }}>
           <LaptopMockup src="/videos-raven-portfolio/pele-raven.mp4" />
         </div>
-      </motion.div>
+      </motion.div>}
 
       {/* ── CTA único ──────────────────────────────────────────────────────────── */}
       <motion.div

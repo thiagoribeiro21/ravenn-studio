@@ -92,7 +92,7 @@ export default function Footer() {
           >
             <a href="#hero" style={{ lineHeight: 0, display: 'inline-block' }}>
               <img
-                src="/logos-ravenn/logo-raven-white-horizontal1.png"
+                src="/logos-ravenn/logo-raven-white-horizontal1.webp"
                 alt="Ravenn Studio"
                 width={200}
                 height={50}

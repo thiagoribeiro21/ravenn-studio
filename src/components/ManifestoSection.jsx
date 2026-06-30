@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import TextReveal from './TextReveal';
+import { useMenu } from '../context/MenuContext';
 
 const PRINCIPLES = [
   {
@@ -20,6 +21,7 @@ const PRINCIPLES = [
 ];
 
 export default function ManifestoSection() {
+  const { scrollContainerRef } = useMenu();
   return (
     <section
       id="manifesto"
@@ -51,7 +53,7 @@ export default function ManifestoSection() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: false, amount: 0.15 }}
+          viewport={{ once: true, amount: 0.05, root: scrollContainerRef }}
           style={{ display: 'block', marginBottom: 36 }}
         >
         <span style={{
@@ -94,7 +96,7 @@ export default function ManifestoSection() {
             initial={{ opacity: 0, y: 40, filter: 'blur(6px)' }}
             whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 1.2, delay: i * 0.2, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: false, amount: 0.15 }}
+            viewport={{ once: true, amount: 0.05, root: scrollContainerRef }}
             className="flex flex-col items-start gap-3 px-6 py-7 md:grid md:items-center md:px-[clamp(32px,5vw,96px)] md:py-[clamp(28px,3.5vw,44px)] md:gap-[clamp(20px,3vw,48px)]"
             style={{
               gridTemplateColumns: 'clamp(52px, 8vw, 100px) 1fr 1fr',
@@ -147,7 +149,7 @@ export default function ManifestoSection() {
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-        viewport={{ once: false, amount: 0.15 }}
+        viewport={{ once: true, amount: 0.05, root: scrollContainerRef }}
         style={{
           padding:        'clamp(40px, 5vh, 64px) clamp(32px, 5vw, 96px)',
           display:        'flex',

@@ -9,7 +9,7 @@ export default function TextReveal({ text, style, className }) {
   const { scrollYProgress } = useScroll({
     target:    containerRef,
     container: scrollContainerRef,
-    offset:    ['start 0.92', 'start 0.15'],
+    offset:    ['start 0.9', 'start 0.42'],
   });
 
   const words = text.split(' ');
