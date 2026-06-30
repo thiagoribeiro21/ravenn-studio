@@ -118,19 +118,12 @@ export default function CTASection() {
           href={WA_LINK}
           target="_blank"
           rel="noopener noreferrer"
+          className="inline-flex items-center whitespace-nowrap gap-2 md:gap-3 h-12 md:h-16 px-5 md:px-12 text-[11px] md:text-[13px] tracking-[0.09em] md:tracking-[0.14em] rounded"
           style={{
-            display:        'inline-flex',
-            alignItems:     'center',
-            gap:            12,
-            height:         64,
-            padding:        '0 48px',
-            fontSize:       13,
             fontWeight:     500,
             textTransform:  'uppercase',
-            letterSpacing:  '0.14em',
             background:     '#7C3AED',
             color:          '#fff',
-            borderRadius:   4,
             border:         '1px solid #7C3AED',
             textDecoration: 'none',
             transition:     'background 280ms ease, box-shadow 280ms ease, transform 120ms ease',

@@ -153,11 +153,12 @@ export default function Navbar() {
             gap:        pill ? 10 : 13,
             background: 'none',
             border:     'none',
-            padding:    '4px 0',
+            padding:    pill ? '4px 10px' : '4px 14px',
             cursor:     'pointer',
             color:      '#F8F9FA',
             flexShrink: 0,
-            transition: 'gap 420ms cubic-bezier(0.16,1,0.3,1)',
+            whiteSpace: 'nowrap',
+            transition: 'gap 420ms cubic-bezier(0.16,1,0.3,1), padding 420ms cubic-bezier(0.16,1,0.3,1)',
           }}
         >
           <MenuIcon isOpen={isOpen} large={!pill} />
