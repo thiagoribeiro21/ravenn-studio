@@ -153,7 +153,7 @@ export default function Navbar() {
             gap:        pill ? 10 : 13,
             background: 'none',
             border:     'none',
-            padding:    pill ? '4px 10px' : '4px 14px',
+            padding:    pill ? '6px 14px' : '8px 20px',
             cursor:     'pointer',
             color:      '#F8F9FA',
             flexShrink: 0,

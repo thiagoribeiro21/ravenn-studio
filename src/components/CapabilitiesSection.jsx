@@ -554,10 +554,10 @@ export default function CapabilitiesSection() {
             flexDirection:  'column',
             alignItems:     'center',
             justifyContent: 'center',
-            padding:        '12px 0 10px',
-            gap:            6,
+            padding:        '8px 0 6px',
+            gap:            0,
           }}>
-            <div className="w-48 h-48 md:w-56 md:h-56 relative">
+            <div className="w-28 h-28 md:w-36 md:h-36 relative">
               <div aria-hidden style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'radial-gradient(circle, rgba(76,29,149,0.28) 0%, transparent 70%)', pointerEvents: 'none' }} />
               {canvas3D && (
                 <Suspense fallback={<div className="w-full h-full rounded-full" style={{ background: '#03000A' }} />}>
@@ -565,9 +565,6 @@ export default function CapabilitiesSection() {
                 </Suspense>
               )}
             </div>
-            <span style={{ fontSize: 9, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#5B6472' }}>
-              — {SERVICES[activeIdx]?.category ?? ''} —
-            </span>
           </div>
         )}
 
