@@ -126,7 +126,7 @@ export default function Navbar() {
           style={{ display: 'flex', alignItems: 'center', lineHeight: 0 }}
         >
           <img
-            src="/logos-ravenn/logo-horizontal-ravenn.svg"
+            src="/logos-ravenn/logo-raven-white-horizontal1.webp"
             alt="Ravenn Studio"
             width={200}
             height={50}
