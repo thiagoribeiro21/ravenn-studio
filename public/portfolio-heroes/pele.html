@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lumini Estética</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    #bg-clip {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      clip-path: inset(50% 0 50% 0);
+      will-change: clip-path;
+      overflow: hidden;
+    }
+    #bg-clip video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transform: scale(1.15);
+      transform-origin: center;
+      will-change: transform;
+    }
+  </style>
+</head>
+<body class="h-screen w-full overflow-hidden relative">
+
+  <!-- BACKGROUND VIDEO -->
+  <div id="bg-clip">
+    <video autoplay loop muted playsinline src="/portfolio-ravenn/pele_otimizado.webm"></video>
+  </div>
+
+  <!-- OVERLAY -->
+  <div class="absolute inset-0 z-10 bg-gradient-to-r from-black/65 via-black/25 to-transparent"></div>
+
+  <!-- MAIN WRAPPER -->
+  <div class="absolute inset-0 z-20 flex flex-col justify-between max-w-[1600px] mx-auto p-12 md:p-16 w-full">
+
+    <!-- HEADER -->
+    <header id="el-header" class="flex justify-between items-center w-full">
+      <span class="text-white text-3xl font-medium tracking-tight">Lumini Estética</span>
+
+      <div class="flex items-center gap-10">
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="#" class="text-base font-medium text-white/80 hover:text-white transition">A Clínica</a>
+          <a href="#" class="text-base font-medium text-white/80 hover:text-white transition">Tratamentos</a>
+          <a href="#" class="text-base font-medium text-white/80 hover:text-white transition">Ciência</a>
+          <a href="#" class="text-base font-medium text-white/80 hover:text-white transition">Contato</a>
+        </nav>
+        <button class="bg-black text-white px-7 py-3 rounded-full text-base font-medium flex items-center gap-2 hover:bg-white hover:text-black transition-all duration-300 border border-white/20">
+          Agendar
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H5M13 1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- SPACER -->
+    <div class="flex-1"></div>
+
+    <!-- BOTTOM ROW -->
+    <div class="flex justify-between items-end w-full gap-8">
+
+      <!-- LEFT: H1 above card -->
+      <div class="flex flex-col gap-10">
+
+        <div id="el-title">
+          <h1 class="text-6xl md:text-[5.5rem] font-medium text-white tracking-tight leading-[1.05]">
+            Confiança radiante.<br/>Guiada pela ciência.
+          </h1>
+        </div>
+
+        <div id="el-card" class="backdrop-blur-md bg-white/10 border border-white/20 p-4 rounded-2xl flex gap-4 max-w-sm">
+          <img
+            src="/portfolio-ravenn/frasco_luxo_estetica.png"
+            alt="Sérum Lumini Drops"
+            class="w-20 h-20 object-cover rounded-lg flex-shrink-0"
+            onerror="this.style.opacity='0'"
+          />
+          <div class="flex flex-col justify-center gap-1">
+            <p class="text-lg font-medium text-white">Sérum Lumini Drops</p>
+            <p class="text-sm text-white/70 leading-relaxed">Fórmula exclusiva com ácido hialurônico para uso diário</p>
+            <p class="text-xl text-white mt-1">R$ 290,00</p>
+          </div>
+        </div>
+
+      </div><!-- /left col -->
+
+      <!-- RIGHT: Description + CTA -->
+      <div id="el-cta" class="flex flex-col items-end text-right max-w-md gap-6">
+        <p class="text-base md:text-lg text-white/90 leading-relaxed">
+          Desenvolvido por especialistas em Niterói, nossos protocolos unem tecnologia de ponta e precisão médica para resultados naturais.
+        </p>
+        <button class="bg-black text-white px-7 py-3 rounded-full text-base font-medium flex items-center gap-2 hover:bg-white hover:text-black transition-all duration-300 border border-white/20">
+          Agendar Avaliação
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H5M13 1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof gsap === 'undefined') return;
+
+      gsap.set(['#el-header', '#el-title', '#el-card', '#el-cta'], { opacity: 0, y: 40 });
+
+      gsap.timeline()
+        .to('#bg-clip', { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.5, ease: 'power4.inOut' }, 0)
+        .to('#bg-clip video', { scale: 1, duration: 2, ease: 'power4.out' }, 0)
+        .to(['#el-header', '#el-title', '#el-card', '#el-cta'], {
+          opacity: 1, y: 0, duration: 1.1, stagger: 0.15, ease: 'power3.out',
+        }, 1.0);
+    });
+  </script>
+</body>
+</html>

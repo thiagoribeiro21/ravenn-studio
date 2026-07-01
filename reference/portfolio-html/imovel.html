@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURUM & TORRES</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    :root {
+      --gold: #C5A059;
+      --gold-dim: rgba(197,160,89,0.35);
+      --bg: #0A0A0A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: #fff;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- TYPOGRAPHY --- */
+    .font-playfair { font-family: 'Playfair Display', serif; }
+    .font-montserrat { font-family: 'Montserrat', sans-serif; }
+
+    /* --- HEADER --- */
+    #site-header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 32px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 50;
+      /* subtle gradient so it lifts off the video */
+      background: linear-gradient(to bottom, rgba(10,10,10,0.85) 0%, transparent 100%);
+      opacity: 0;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px; font-weight: 600;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: #fff;
+    }
+    .logo span { color: var(--gold); }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 40px;
+    }
+    .nav-links a {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    .btn-pill {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--gold-dim);
+      border-radius: 100px;
+      padding: 10px 24px;
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .btn-pill:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #0A0A0A;
+    }
+
+    /* --- HERO SCENE --- */
+    .hero-scene {
+      position: relative;
+      width: 100%; height: 100vh;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    video#video-bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; z-index: 0;
+      opacity: 0; /* GSAP animates this */
+    }
+
+    /* Layered overlays for depth */
+    .overlay-left {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(
+        105deg,
+        rgba(10,10,10,0.97) 0%,
+        rgba(10,10,10,0.88) 38%,
+        rgba(10,10,10,0.55) 62%,
+        rgba(10,10,10,0.10) 100%
+      );
+    }
+    .overlay-bottom {
+      position: absolute; inset: 0; z-index: 2;
+      background: linear-gradient(
+        to top,
+        rgba(10,10,10,0.80) 0%,
+        transparent 45%
+      );
+    }
+
+    /* --- MAIN CONTENT GRID --- */
+    .hero-content {
+      position: relative; z-index: 10;
+      max-width: 1400px;
+      margin: 0 auto;
+      height: 100vh;
+      padding: 0 48px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding-bottom: 80px;
+      gap: 40px;
+    }
+
+    /* LEFT COLUMN */
+    .hero-left {
+      display: flex; flex-direction: column;
+      gap: 32px;
+      max-width: 720px;
+      flex: 1;
+      opacity: 0; /* GSAP */
+    }
+
+    .eyebrow {
+      display: flex; align-items: center; gap: 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--gold);
+    }
+    .eyebrow::before {
+      content: '';
+      display: block; width: 32px; height: 1px;
+      background: var(--gold); flex-shrink: 0;
+    }
+
+    h1.headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(56px, 7vw, 96px);
+      font-weight: 500;
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+    h1.headline em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-desc {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px; font-weight: 400;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.52);
+      max-width: 360px;
+    }
+
+    .hero-actions {
+      display: flex; align-items: center; gap: 32px;
+      padding-top: 8px;
+    }
+    .cta-primary {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: #0A0A0A; background: var(--gold);
+      border: none; padding: 16px 36px;
+      cursor: pointer; transition: opacity 0.3s, transform 0.2s;
+    }
+    .cta-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .cta-link {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none; display: flex; align-items: center; gap: 8px;
+      transition: color 0.3s;
+    }
+    .cta-link .arrow { display: inline-block; transition: transform 0.3s; }
+    .cta-link:hover { color: var(--gold); }
+    .cta-link:hover .arrow { transform: translateX(4px); }
+
+    /* STATS ROW */
+    .stats-row {
+      display: flex; align-items: center; gap: 36px;
+      padding-top: 36px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px; font-weight: 500;
+      color: #fff; line-height: 1;
+    }
+    .stat-num span { color: var(--gold); }
+    .stat-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 5px;
+    }
+    .stat-sep {
+      width: 1px; height: 32px;
+      background: rgba(197,160,89,0.2);
+      flex-shrink: 0;
+    }
+
+    /* RIGHT CARD */
+    .impact-card {
+      width: 340px; flex-shrink: 0;
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid rgba(255,255,255,0.10);
+      padding: 36px;
+      display: flex; flex-direction: column; gap: 28px;
+      opacity: 0; /* GSAP */
+    }
+
+    .card-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between;
+    }
+    .card-icon {
+      width: 36px; height: 36px;
+      border: 1px solid var(--gold-dim);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .card-icon svg { width: 14px; height: 14px; color: var(--gold); }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 500;
+      color: #fff; line-height: 1.25;
+      max-width: 180px;
+    }
+
+    .card-divider {
+      width: 100%; height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .card-list {
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .card-list a {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex; align-items: center; justify-content: space-between;
+      transition: color 0.3s;
+    }
+    .card-list a:last-child { border-bottom: none; }
+    .card-list a:hover { color: var(--gold); }
+    .card-list a .link-arrow {
+      font-size: 14px; opacity: 0.4;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .card-list a:hover .link-arrow { transform: translateX(3px); opacity: 1; }
+
+    .card-cta {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold);
+      background: transparent;
+      border: 1px solid var(--gold-dim);
+      padding: 13px 0;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    .card-cta:hover { background: var(--gold); color: #0A0A0A; }
+
+    /* SCROLL HINT */
+    .scroll-hint {
+      position: absolute; bottom: 36px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      opacity: 0; /* GSAP */
+    }
+    .scroll-hint span {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+    .scroll-line {
+      width: 1px; height: 36px;
+      background: linear-gradient(to bottom, rgba(197,160,89,0.6), transparent);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════════════ -->
+  <header id="site-header">
+    <div class="logo">Aurum <span>&</span> Torres</div>
+
+    <nav class="nav-links">
+      <a href="#">Prática</a>
+      <a href="#">Resultados</a>
+      <a href="#">Estúdio</a>
+      <a href="#">Publicações</a>
+      <button class="btn-pill">Consulta Inicial</button>
+    </nav>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════
+       HERO SCENE
+  ══════════════════════════════════════════════════ -->
+  <section class="hero-scene">
+
+    <!-- Video -->
+    <video id="video-bg" autoplay loop muted playsinline>
+      <source src="./kling_20260628_VIDEO_Cinematic__660_0.mp4" type="video/mp4" />
+    </video>
+
+    <!-- Overlays -->
+    <div class="overlay-left"></div>
+    <div class="overlay-bottom"></div>
+
+    <!-- ── CONTENT GRID ── -->
+    <div class="hero-content">
+
+      <!-- LEFT -->
+      <div class="hero-left" id="hero-left">
+        <div class="eyebrow">Direito de Alto Padrão · Região Oceânica</div>
+
+        <h1 class="headline">
+          Justiça<br />
+          com precisão.<br />
+          <em>Legado</em><br />
+          com visão.
+        </h1>
+
+        <p class="hero-desc">
+          Atuamos na estruturação jurídica de grandes projetos na Região Oceânica, unindo discrição, técnica apurada e visão estratégica para resultados que transcendem o tempo.
+        </p>
+
+        <div class="hero-actions">
+          <button class="cta-primary">Conhecer a Firma</button>
+          <a href="#" class="cta-link">Ver Resultados <span class="arrow">→</span></a>
+        </div>
+
+        <div class="stats-row">
+          <div>
+            <div class="stat-num">28<span>+</span></div>
+            <div class="stat-label">Anos de Prática</div>
+          </div>
+          <div class="stat-sep"></div>
+          <div>
+            <div class="stat-num">400<span>+</span></div>
+            <div class="stat-label">Casos Concluídos</div>
+          </div>
+          <div class="stat-sep"></div>
+          <div>
+            <div class="stat-num">98<span>%</span></div>
+            <div class="stat-label">Taxa de Êxito</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT CARD -->
+      <div class="impact-card" id="impact-card">
+        <div class="card-header">
+          <div class="card-title">Áreas de<br />Atuação</div>
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M7 17L17 7M17 7H7M17 7v10"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card-divider"></div>
+
+        <nav class="card-list">
+          <a href="#">Direito Societário <span class="link-arrow">→</span></a>
+          <a href="#">Planejamento Sucessório <span class="link-arrow">→</span></a>
+          <a href="#">Contratos e Negócios <span class="link-arrow">→</span></a>
+          <a href="#">Direito Imobiliário <span class="link-arrow">→</span></a>
+          <a href="#">Gestão de Patrimônio <span class="link-arrow">→</span></a>
+        </nav>
+
+        <button class="card-cta">Todas as Especialidades →</button>
+      </div>
+
+    </div><!-- /hero-content -->
+
+    <!-- Scroll hint -->
+    <div class="scroll-hint" id="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+
+  </section><!-- /hero-scene -->
+
+  <!-- ═══════════════════════════════════════════════
+       GSAP
+  ══════════════════════════════════════════════════ -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      // 1. Video fade in (2s)
+      tl.to('#video-bg', { opacity: 1, duration: 2 })
+
+      // 2. Header slides down
+      .fromTo('#site-header',
+        { y: -16, opacity: 0 },
+        { y: 0,   opacity: 1, duration: 1 },
+        '-=1.4'
+      )
+
+      // 3. Hero left — children stagger up
+      .fromTo('#hero-left',
+        { opacity: 0 },
+        { opacity: 1, duration: 0 },
+        '-=0.8'
+      )
+      .from('#hero-left > *', {
+        y: 40, opacity: 0,
+        duration: 1.8, stagger: 0.15, ease: 'power3.out'
+      }, '<')
+
+      // 4. Impact card slides in from right
+      .fromTo('#impact-card',
+        { x: 48, opacity: 0 },
+        { x: 0,  opacity: 1, duration: 1.4, ease: 'power3.out' },
+        '-=1.6'
+      )
+
+      // 5. Scroll hint fades in last
+      .fromTo('#scroll-hint',
+        { opacity: 0, y: 8 },
+        { opacity: 1, y: 0, duration: 1 },
+        '-=0.6'
+      );
+    });
+  </script>
+
+</body>
+</html>

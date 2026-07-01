@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SALGADO & MONTENEGRO — Advocacia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%; width: 100%;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      background: #0a0d14;
+    }
+
+    #hero {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── IMAGE ── */
+    #video-container {
+      position: absolute;
+      inset: 0;
+      transform: scaleX(0);
+      transform-origin: center center;
+      will-change: transform;
+    }
+
+    #bg-img {
+      position: absolute;
+      top: 0; right: 0;
+      width: 80%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+    }
+
+    /* ── OVERLAY ── */
+    #overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right,
+          #0a0d14 0%,
+          rgba(10,13,20,0.94) 22%,
+          rgba(10,13,20,0.60) 48%,
+          rgba(10,13,20,0.15) 72%,
+          transparent 100%
+        ),
+        linear-gradient(to top,    rgba(10,13,20,0.68) 0%, transparent 38%),
+        linear-gradient(to bottom, rgba(10,13,20,0.42) 0%, transparent 16%);
+      z-index: 2;
+    }
+
+    /* ── UI ── */
+    #ui { position: absolute; inset: 0; z-index: 10; }
+
+    /* ── FLOATING HEADER ── */
+    header {
+      position: absolute;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 3.5rem);
+      max-width: 1320px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 24px 11px 28px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 9999px;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 0; }
+
+    .logo {
+      font-size: 12.5px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      color: #fff;
+      text-decoration: none;
+      white-space: nowrap;
+      margin-right: 36px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+
+    nav a {
+      font-size: 10.5px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.58);
+      text-decoration: none;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: color 0.22s;
+      white-space: nowrap;
+      position: relative;
+      padding-bottom: 2px;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -1px;
+      width: 0; height: 1px;
+      background: rgba(255,255,255,0.55);
+      transition: width 0.25s ease;
+    }
+    nav a:hover { color: #fff; }
+    nav a:hover::after { width: 100%; }
+
+    .btn-pill {
+      font-size: 11px;
+      font-weight: 400;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.32);
+      border-radius: 9999px;
+      padding: 8px 20px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      letter-spacing: 0.04em;
+      transition: background 0.22s, border-color 0.22s;
+      white-space: nowrap;
+    }
+    .btn-pill:hover {
+      background: rgba(255,255,255,0.10);
+      border-color: rgba(255,255,255,0.75);
+    }
+
+    /* ── SOCIAL — left edge ── */
+    #social-bar {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .s-icon {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.46);
+      text-decoration: none;
+      transition: border-color 0.22s, color 0.22s, background 0.22s;
+      flex-shrink: 0;
+    }
+    .s-icon:hover {
+      border-color: rgba(255,255,255,0.62);
+      color: #fff;
+      background: rgba(255,255,255,0.05);
+    }
+    .s-icon svg { width: 15px; height: 15px; }
+
+    /* ── MAIN CONTENT ── */
+    #content {
+      position: absolute;
+      bottom: 58px;
+      left: 200px;
+      max-width: 620px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(52px, 6.2vw, 88px);
+      font-weight: 400;
+      font-style: italic;
+      color: #fff;
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      margin-bottom: 22px;
+    }
+
+    .subtitle {
+      font-size: clamp(14px, 1.2vw, 17px);
+      color: rgba(255,255,255,0.60);
+      line-height: 1.72;
+      font-weight: 400;
+      margin-bottom: 28px;
+      max-width: 420px;
+    }
+
+    .btn-hero {
+      font-size: clamp(11.5px, 0.9vw, 13.5px);
+      font-weight: 500;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.30);
+      border-radius: 9999px;
+      padding: 11px 26px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.02em;
+      transition: background 0.22s, border-color 0.22s;
+      white-space: nowrap;
+    }
+    .btn-hero:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(255,255,255,0.75);
+    }
+
+    /* ── CORNER LINK ── */
+    #corner-link {
+      position: absolute;
+      bottom: 58px;
+      right: 36px;
+      font-size: clamp(12px, 0.95vw, 14px);
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.02em;
+      transition: color 0.22s;
+      white-space: nowrap;
+    }
+    #corner-link:hover { color: #fff; }
+
+    /* ── INITIAL HIDDEN STATE ── */
+    header, #social-bar, #content, #corner-link {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    /* header has its own transform-origin, override */
+    header {
+      transform: translateX(-50%) translateY(-10px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #video-container { transform: none !important; }
+      header { transform: translateX(-50%) !important; opacity: 1 !important; }
+      #social-bar, #content, #corner-link { opacity: 1 !important; transform: none !important; }
+    }
+  </style>
+</head>
+<body>
+<div id="hero">
+
+  <div id="video-container">
+    <img id="bg-img" src="/portfolio-ravenn/law_partner_1920x1080.webp" alt="Salgado & Montenegro" />
+  </div>
+
+  <div id="overlay"></div>
+
+  <div id="ui">
+
+    <header>
+      <div class="header-left">
+        <a href="#" class="logo">SALGADO & MONTENEGRO</a>
+        <nav>
+          <a href="#">O Escritório</a>
+          <a href="#">Áreas de Atuação</a>
+          <a href="#">Sócios</a>
+          <a href="#">Contato</a>
+        </nav>
+      </div>
+      <a href="#" class="btn-pill">Falar com um Sócio &thinsp;↗</a>
+    </header>
+
+    <div id="social-bar">
+      <a href="#" class="s-icon" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+      <a href="#" class="s-icon" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+          <circle cx="4" cy="4" r="2"/><rect x="2" y="9" width="4" height="12"/>
+        </svg>
+      </a>
+      <a href="#" class="s-icon" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+        </svg>
+      </a>
+      <a href="#" class="s-icon" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+        </svg>
+      </a>
+      <a href="#" class="s-icon" aria-label="Telegram">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21.8 3.1L2.4 10.6c-1.3.5-1.3 1.3-.2 1.6l4.9 1.5 1.9 5.8c.3.7.6.9 1 .9.5 0 .7-.2 1-.5l2.4-2.3 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.5c.3-1.3-.5-1.9-1.2-1.7z"/>
+        </svg>
+      </a>
+    </div>
+
+    <div id="content">
+      <h1>Segurança jurídica<br>para empresas<br>que lideram.</h1>
+      <p class="subtitle">Blindagem estratégica e estruturação societária de alto padrão para negócios exigentes na Região Oceânica.</p>
+      <a href="#" class="btn-hero">Agendar Consultoria Estratégica &thinsp;↗</a>
+    </div>
+
+    <a href="#" id="corner-link">Ver Casos de Sucesso &thinsp;↗</a>
+
+  </div>
+</div>
+
+<script>
+  const tl = gsap.timeline();
+
+  // 1. Image wipe
+  tl.to('#video-container', {
+    scaleX: 1,
+    duration: 1.65,
+    ease: 'expo.inOut'
+  })
+  // 2. Floating header drops and settles
+  .to('header', {
+    opacity: 1,
+    y: 0,
+    duration: 0.80,
+    ease: 'power3.out',
+    // keep the translateX(-50%) while animating y
+    onStart() {
+      gsap.set('header', { transform: 'translateX(-50%) translateY(-10px)' });
+    }
+  }, '-=0.35')
+  // 3. Social bar
+  .to('#social-bar', {
+    opacity: 1, y: 0,
+    duration: 0.65,
+    ease: 'power3.out'
+  }, '-=0.55')
+  // 4. Main content rises
+  .to('#content', {
+    opacity: 1, y: 0,
+    duration: 0.85,
+    ease: 'power3.out'
+  }, '-=0.50')
+  // 5. Corner link
+  .to('#corner-link', {
+    opacity: 1, y: 0,
+    duration: 0.60,
+    ease: 'power2.out'
+  }, '-=0.60');
+</script>
+</body>
+</html>
