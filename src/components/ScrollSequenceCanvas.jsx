@@ -2,29 +2,67 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { useMenu } from "../context/MenuContext";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
-const TOTAL_FRAMES = 121;
+const VIDEO_SRC = "/raven-loop-fly.webm"; // usado só no overlay leve do mobile
+const TOTAL_FRAMES = 151;
+const IDLE_FRAME_MS = 35; // ~28fps do loop ping-pong parado no topo (~10.6s ida-e-volta)
 
 const pad = (n) => String(n).padStart(3, "0");
-const getUrl = (n) => `/frame-raven/frame_${pad(n)}.webp`;
+const getUrl = (n) => `/raven-voador-pasta/frame_${pad(n)}.webp`;
 
-// Classes idênticas para <video> e <canvas> — posicionamento extremo desktop
-const MEDIA_CLASSES =
-  "absolute top-0 w-full h-full object-cover " +
-  "lg:object-contain lg:left-[48vw] lg:w-[85vw] lg:scale-[1.35]";
+// Classe do canvas — posicionamento extremo desktop.
+// mix-blend-screen fecha o fundo preto de cada frame contra o fundo escuro do
+// site (screen com preto = transparente); contrast/brightness compensam o
+// "quase preto" residual da compressão do codec, e a máscara radial (ver
+// MASK_STYLE) esconde a borda quadrada do bounding box com um fade suave.
+const CANVAS_CLASSES =
+  "absolute top-0 w-full h-full object-cover mix-blend-screen contrast-125 brightness-110 " +
+  "lg:object-contain lg:left-[38vw] lg:w-[50vw] lg:scale-[1.75]";
+
+// Fade radial nas bordas do canvas — mata o limite quadrado que sobra mesmo
+// com mix-blend-screen. Duas pegadinhas aqui:
+//   1. "closest-side" mede a caixa CSS do elemento (50vw x 100vh), não a área
+//      real ocupada pelo vídeo dentro dela — object-contain faz letterbox, então
+//      o conteúdo visível é bem menor que a caixa.
+//   2. mask-image é aplicado NO MESMO elemento que tem o scale: os raios em
+//      vw/vh do gradiente são calculados no espaço local (pré-transform) e depois
+//      AMPLIADOS pela mesma escala do elemento na tela — por isso os valores
+//      abaixo já vêm proporcionais ao conteúdo (25vw ≈ metade da largura da
+//      caixa pré-escala, 21vh ≈ 93% da metade da altura do conteúdo), não a um
+//      scale fixo: a razão se mantém válida mesmo se o scale mudar (validado
+//      pixel a pixel via screenshot, não só por cálculo).
+const MASK_STYLE = {
+  WebkitMaskImage:
+    "radial-gradient(ellipse 25vw 21vh at center, black 45%, transparent 88%)",
+  maskImage:
+    "radial-gradient(ellipse 25vw 21vh at center, black 45%, transparent 88%)",
+};
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 //
-//  O scroll do site vive dentro do scrollContainerRef do SiteShell —
-//  não no window. Por isso o listener é adicionado nesse container.
+//  O scroll do site vive dentro do scrollContainerRef do SiteShell (Lenis) —
+//  não no window. Por isso o listener é adicionado nesse container, e por
+//  isso a solução usa RAF customizado em vez de GSAP ScrollTrigger: GSAP
+//  precisaria de um scrollerProxy manual pra rastrear esse container interno,
+//  enquanto o listener nativo já resolve isso de graça. Sem dependência nova
+//  também evita inflar ainda mais os chunks do bundle (Three.js já é grande).
 //
-//  Crossfade via React state (isScrolled):
-//    scrollTop === 0  → vídeo visível, canvas opacity-0
-//    scrollTop > 20   → vídeo opacity-0, canvas visível
-//  CSS transition-opacity duration-300 cuida da suavidade.
+//  Sem vídeo no desktop: os próprios 151 frames fazem as duas funções.
+//    scrollTop === 0  → "loop RAF": avança os frames sozinho em ping-pong
+//                        (1→151→1→...) pra simular a sensação de vídeo em
+//                        loop. Ping-pong em vez de reiniciar do frame 1 evita
+//                        qualquer pulo visual — não sabemos se o frame 151
+//                        bate visualmente com o frame 1, então ida-e-volta é
+//                        sempre suave, ao contrário de um corte 151→1.
+//    scrollTop  >  0  → o loop RAF para e o scroll assume o controle do
+//                        índice do frame (lógica já existente).
+//  Ao voltar pro topo, o loop retoma de onde parou (idleFrameRef), não do
+//  frame 1 — sem "pulo" perceptível na transição scroll→loop.
 //
-//  Frames calculados por RAF:
-//    progress = scrollTop / maxScroll
-//    frameIndex = Math.floor(progress * (TOTAL_FRAMES - 1))
+//  Preload: as 151 imagens (~3MB no total) começam a baixar assim que o
+//  componente monta, mas fora do caminho crítico de renderização — agendado
+//  via requestIdleCallback (cai pra setTimeout em navegadores sem suporte,
+//  ex. Safari) pra não competir com LCP/hero. O frame_001 é pintado no canvas
+//  assim que termina de carregar e o loop ping-pong só começa depois disso.
 //
 export default function ScrollSequenceCanvas({ endRef }) {
   const { scrollContainerRef } = useMenu();
@@ -35,18 +73,16 @@ export default function ScrollSequenceCanvas({ endRef }) {
   );
   const isSmall = isSmallRef.current;
 
-  // Estado que aciona o crossfade via CSS
   const [isScrolled, setIsScrolled] = useState(false);
+  const [ready, setReady] = useState(false); // frame 1 carregado e pintado
 
   const innerRef = useRef(null);
-  const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const framesRef = useRef([]);
   const sizedRef = useRef(false);
   const rafRef = useRef(null);
-  // Frames só começam a baixar na primeira vez que o usuário scrolla —
-  // evita competição com recursos críticos no carregamento inicial.
-  const framesLoadedRef = useRef(false);
+  const idleFrameRef = useRef(0);
+  const idleDirRef = useRef(1);
 
   // ── drawFrame ──────────────────────────────────────────────────────────────
   const drawFrame = useCallback((idx) => {
@@ -66,41 +102,84 @@ export default function ScrollSequenceCanvas({ endRef }) {
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   }, []);
 
+  // ── Preload dos 151 frames — dispara no mount, fora do caminho crítico ────
+  useEffect(() => {
+    if (isSmall) return;
+    let cancelled = false;
+
+    const startPreload = () => {
+      if (cancelled) return;
+      const imgs = new Array(TOTAL_FRAMES);
+      for (let i = 0; i < TOTAL_FRAMES; i++) {
+        const img = new Image();
+        img.decoding = "async";
+        if (i === 0) {
+          img.onload = () => {
+            drawFrame(0);
+            setReady(true);
+          };
+        }
+        img.src = getUrl(i + 1);
+        imgs[i] = img;
+      }
+      framesRef.current = imgs;
+    };
+
+    const ric = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
+    const cic = window.cancelIdleCallback || clearTimeout;
+    const handle = ric(startPreload);
+
+    return () => {
+      cancelled = true;
+      cic(handle);
+    };
+  }, [isSmall, drawFrame]);
+
+  // ── Loop ping-pong: roda enquanto parado no topo, simulando vídeo em loop ──
+  useEffect(() => {
+    if (isSmall || isScrolled || !ready) return;
+
+    let rafId;
+    let lastTime = performance.now();
+    let acc = 0;
+
+    const tick = (now) => {
+      acc += now - lastTime;
+      lastTime = now;
+
+      while (acc >= IDLE_FRAME_MS) {
+        acc -= IDLE_FRAME_MS;
+        let idx = idleFrameRef.current + idleDirRef.current;
+        if (idx >= TOTAL_FRAMES - 1) {
+          idx = TOTAL_FRAMES - 1;
+          idleDirRef.current = -1;
+        } else if (idx <= 0) {
+          idx = 0;
+          idleDirRef.current = 1;
+        }
+        idleFrameRef.current = idx;
+      }
+
+      drawFrame(idleFrameRef.current);
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [isSmall, isScrolled, ready, drawFrame]);
+
   // ── Listener de scroll no container do SiteShell ──────────────────────────
   useEffect(() => {
     const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const video = videoRef.current;
+    if (!container || isSmall) return;
 
     const handleScroll = () => {
       const scrollTop = container.scrollTop;
-      const nowScrolled = scrollTop > 20;
+      const nowScrolled = scrollTop > 0;
 
-      setIsScrolled(nowScrolled);
+      setIsScrolled((prev) => (prev === nowScrolled ? prev : nowScrolled));
 
-      if (nowScrolled) {
-        if (video && !video.paused) video.pause();
-      } else {
-        if (video && video.paused) video.play().catch(() => {});
-      }
-
-      if (isSmall || !nowScrolled) return;
-
-      // ── Carga lazy dos frames: só inicia no primeiro scroll ────────────────
-      if (!framesLoadedRef.current) {
-        framesLoadedRef.current = true;
-        const imgs = new Array(TOTAL_FRAMES);
-        for (let i = 0; i < TOTAL_FRAMES; i++) {
-          const img = new Image();
-          img.src = getUrl(i + 1);
-          img.onload = () => {
-            if (i === 0) drawFrame(0);
-          };
-          imgs[i] = img;
-        }
-        framesRef.current = imgs;
-      }
+      if (!nowScrolled) return;
 
       const maxScroll = endRef?.current
         ? endRef.current.getBoundingClientRect().top + container.scrollTop
@@ -108,6 +187,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
 
       const progress = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
       const frameIndex = Math.floor(progress * (TOTAL_FRAMES - 1));
+      idleFrameRef.current = frameIndex; // continuidade se voltar ao topo
 
       const inner = innerRef.current;
       if (inner) {
@@ -128,11 +208,11 @@ export default function ScrollSequenceCanvas({ endRef }) {
 
   // ── Render ─────────────────────────────────────────────────────────────────
   //
-  // Mobile (isSmall): sem vídeo, sem canvas — fundo sólido do SiteShell.
-  // Desktop: vídeo (opacity-[0.38]) → canvas (opacity-[0.38]) no crossfade.
+  // Mobile (isSmall): sem canvas — fundo sólido do SiteShell + vídeo leve.
+  // Desktop: só o canvas, sempre visível — loop ping-pong parado, scroll
+  // durante a rolagem. Fade-in único quando o frame 1 termina de carregar.
   //
-  const videoOpacity = isScrolled ? "opacity-0" : "opacity-[0.35]";
-  const canvasOpacity = isScrolled ? "opacity-[0.35]" : "opacity-0";
+  const canvasOpacity = ready ? "opacity-[0.6]" : "opacity-0";
 
   // Mobile: imagem estática + vídeo em loop por cima (150KB).
   if (isSmall) {
@@ -164,7 +244,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
           }}
         />
         <video
-          src="/raven-loop-video.webm"
+          src={VIDEO_SRC}
           autoPlay
           loop
           muted
@@ -219,26 +299,11 @@ export default function ScrollSequenceCanvas({ endRef }) {
         ref={innerRef}
         style={{ position: "absolute", inset: 0, willChange: "transform" }}
       >
-        {/* Vídeo hero (desktop) — preload=none: só carrega ao dar play */}
-        <video
-          ref={videoRef}
-          src="/raven-loop-video.webm"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="none"
-          className={`${MEDIA_CLASSES} transition-opacity duration-300 ${videoOpacity}`}
-          style={{ mixBlendMode: "screen" }}
-        >
-          <track kind="captions" />
-        </video>
-
-        {/* Canvas de frames WebP (desktop) */}
+        {/* Único elemento: loop ping-pong parado, scroll durante a rolagem */}
         <canvas
           ref={canvasRef}
-          className={`${MEDIA_CLASSES} transition-opacity duration-300 ${canvasOpacity}`}
-          style={{ mixBlendMode: "screen", display: "block" }}
+          className={`${CANVAS_CLASSES} transition-opacity duration-300 ${canvasOpacity}`}
+          style={{ display: "block", ...MASK_STYLE }}
         />
       </div>
     </div>

@@ -98,13 +98,14 @@ function SelectField({ label, options, name, ...props }) {
 }
 
 const SERVICE_OPTIONS = [
-  { value: '',        label: 'Selecione o serviço de interesse' },
-  { value: 'landing', label: 'Landing Page' },
-  { value: 'site',    label: 'Site Institucional' },
-  { value: 'exp',     label: 'Site Experiencial' },
-  { value: 'auto',    label: 'Automação n8n & IA' },
-  { value: 'trafego', label: 'Gestão de Tráfego Pago' },
-  { value: 'outro',   label: 'Outro' },
+  { value: '',              label: 'Selecione o serviço de interesse' },
+  { value: 'institucional', label: 'Sites Institucionais de Alta Autoridade' },
+  { value: 'landing',       label: 'Landing Pages de Alta Conversão' },
+  { value: 'experiencial',  label: 'Sites Experienciais e Imersivos' },
+  { value: 'cardapio',      label: 'Cardápios Digitais' },
+  { value: 'trafego',       label: 'Google Ads de Alta Performance' },
+  { value: 'automacao',     label: 'Agentes de IA e Automação de Atendimento' },
+  { value: 'outro',         label: 'Outro' },
 ];
 
 const CONTACT_INFO = [

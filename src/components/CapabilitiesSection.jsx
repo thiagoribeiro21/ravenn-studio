@@ -23,11 +23,11 @@ const SERVICES = [
   {
     id:          '01',
     category:    'Posicionamento Digital',
-    title:       'Sites e Plataformas\nInstitucionais\nPremium',
-    description: 'Design premium que impõe autoridade e coloca sua empresa no topo do Google. Agência de web design em Niterói especializada em criação de sites de alta conversão com SEO técnico, PageSpeed 90+ e estrutura de dados para buscas locais.',
+    title:       'Sites Institucionais\nde Alta Autoridade',
+    description: 'Presença digital que impõe respeito antes da primeira reunião. Design premium, estrutura técnica de SEO Local e velocidade que colocam sua empresa no topo do Google — exatamente onde decisões de alto valor são tomadas.',
     tags:        ['SEO Local', 'Google Business', 'Core Web Vitals'],
     longDescription:
-      'Velocidade que o Google premia. Design que o cliente confia. Estrutura que transforma visita em agenda cheia.',
+      'Autoridade não se declara, se constrói em cada detalhe: hierarquia visual, copywriting institucional e uma arquitetura técnica pensada para dominar buscas locais. O resultado é um site que fecha negócio antes mesmo do primeiro contato.',
     deliverables: [
       'SEO técnico com auditoria de palavras-chave de alto valor local',
       'Google Business Profile otimizado para buscas "perto de mim"',
@@ -38,41 +38,56 @@ const SERVICES = [
   {
     id:          '02',
     category:    'Alta Conversão',
-    title:       'Landing Pages\nde Alta\nConversão',
-    description: 'Páginas projetadas para transformar cliques em clientes pagantes. Copywriting estratégico, design premium exclusivo e rastreamento pixel-perfeito para Google Ads e Meta Ads. Nenhum template. Nenhum WordPress. Entrega em 7 dias úteis.',
-    tags:        ['Google Ads', 'Meta Ads', 'CRO'],
+    title:       'Landing Pages\nde Alta Conversão',
+    description: 'Cada real investido em tráfego pago merece uma página que converte, não que apenas existe. Copywriting orientado a vendas, design exclusivo sem templates e rastreamento pixel-perfeito — entrega em 7 dias úteis.',
+    tags:        ['Google Ads', 'CRO', 'Copywriting'],
     longDescription:
-      'Cada seção com hierarquia de conversão: headline que prende, prova social que convence e CTA que fecha. Rastreamento completo incluso.',
+      'Cada seção com hierarquia de conversão: headline que prende, prova social que convence e CTA que fecha. Nenhum template, nenhum WordPress — só estrutura pensada para maximizar o retorno da sua campanha.',
     deliverables: [
       'Copywriting AIDA com estrutura de conversão por nicho',
       'Design premium personalizado sem templates ou WordPress',
-      'GA4, Meta Pixel e UTMs configurados do zero',
+      'GA4 e UTMs configurados do zero para rastreamento completo',
       'Entrega em 7 dias úteis com 2 rodadas de revisão',
     ],
   },
   {
     id:          '03',
-    category:    'Comércio Premium',
-    title:       'Lojas Virtuais\n(E-commerce)\nde Alto Padrão',
-    description: 'Lojas com velocidade extrema, design exclusivo e experiência de compra que converte. Para marcas que recusam templates genéricos e precisam de diferenciação visual que justifique o preço cobrado e reduza o abandono de carrinho.',
-    tags:        ['Performance', 'UI/UX Premium', 'Conversão'],
+    category:    'Experiência Imersiva',
+    title:       'Sites Experienciais\ne Imersivos',
+    description: 'Imagine um site que se comporta como um filme: cenas em 3D que reagem ao scroll, transições cinematográficas e uma navegação que parece mágica — como os efeitos visuais deste nosso próprio site. Para marcas de luxo, estúdios de arquitetura e design que não podem se dar ao luxo de parecer comuns.',
+    tags:        ['WebGL', 'Three.js', 'Motion Design'],
     longDescription:
-      'Checkout em menos de 3 cliques. Gateways nativos integrados. UX que converte antes do cliente precisar pensar.',
+      'Aqui, cada rolagem de tela conta uma história. Construímos experiências em WebGL e animações 3D que transformam a navegação em espetáculo — elevando o valor percebido da sua marca a um patamar que nenhum concorrente alcança.',
     deliverables: [
-      'Design system exclusivo com componentes de produto para conversão',
-      'Checkout com Stripe, Mercado Pago e PIX nativo integrados',
-      'Frete automático com Correios e transportadoras em tempo real',
-      'Mobile-First testado em 12 dispositivos com taxa de abandono monitorada',
+      'Cenas 3D interativas construídas com Three.js e WebGL',
+      'Animações cinematográficas sincronizadas ao scroll do usuário',
+      'Performance otimizada mesmo com gráficos avançados (60fps)',
+      'Direção de arte exclusiva para marcas de altíssimo padrão',
     ],
   },
   {
     id:          '04',
-    category:    'Performance Digital',
-    title:       'Google Ads e\nGestão de\nTráfego Pago',
-    description: 'Google Ads em Niterói com foco em custo por aquisição real. Colocamos sua empresa no topo das buscas no exato momento em que o cliente local está pronto para comprar. Cada centavo gerenciado com otimização semanal e relatório claro de retorno.',
-    tags:        ['Google Ads', 'Meta Ads', 'Analytics'],
+    category:    'Experiência Gastronômica',
+    title:       'Cardápios Digitais\nque Vendem Sozinhos',
+    description: 'Chega de PDF ilegível no celular do cliente. Criamos cardápios digitais com fotos que dão água na boca, navegação intuitiva e pedido finalizado direto no WhatsApp — sem fricção entre a fome e a compra.',
+    tags:        ['UX Design', 'WhatsApp API', 'Mobile-First'],
     longDescription:
-      'Cada centavo orientado por ROAS: segmentação cirúrgica, teste A/B de criativos e otimização semanal de lances. Você vê cada real trabalhando.',
+      'Seu cardápio é a primeira impressão do seu restaurante. Substituímos o PDF estático por uma experiência mobile fluida e visualmente irresistível, com pedidos roteados automaticamente para o WhatsApp do seu time — mais pedidos, menos atrito.',
+    deliverables: [
+      'Design de cardápio interativo com fotografia de alto padrão',
+      'UX mobile-first otimizada para pedidos em menos de 3 toques',
+      'Roteamento automático de pedidos para o WhatsApp Business',
+      'Atualização de itens e preços sem depender de agência',
+    ],
+  },
+  {
+    id:          '05',
+    category:    'Performance Digital',
+    title:       'Google Ads\nde Alta Performance',
+    description: 'Colocamos sua empresa na frente do cliente certo, no exato momento em que ele digita a busca e está pronto para comprar. Gestão orientada por dados, otimização semanal e foco obsessivo em custo por aquisição real — não em vaidade de métricas.',
+    tags:        ['Google Ads', 'Google Search', 'Analytics'],
+    longDescription:
+      'Cada centavo orientado por ROAS: segmentação por palavra-chave de alta intenção de compra, teste A/B de anúncios e otimização semanal de lances. Você não paga por cliques, paga por vendas.',
     deliverables: [
       'Campanhas segmentadas por intenção de compra e etapa do funil',
       'Teste A/B de até 6 variações de criativos por mês',
@@ -81,13 +96,13 @@ const SERVICES = [
     ],
   },
   {
-    id:          '05',
+    id:          '06',
     category:    'Inteligência Artificial',
-    title:       'Agentes de IA\ne Automação\nde Atendimento',
-    description: 'Agentes de IA para WhatsApp que atendem sua empresa 24 horas por dia. Humanizados, treinados no seu negócio e integrados à sua agenda. Automação de atendimento para clínicas e serviços que elimina gargalos e garante zero lead perdido por falta de resposta.',
+    title:       'Agentes de IA\ne Automação de Atendimento',
+    description: 'Enquanto sua equipe dorme, seus concorrentes atendem. Agentes de IA treinados no seu negócio respondem, qualificam e agendam pelo WhatsApp 24 horas por dia — garantindo que nenhuma venda se perca às 3 da manhã.',
     tags:        ['n8n', 'AI Agents', 'WhatsApp API'],
     longDescription:
-      'Agentes de IA que atendem 24h, qualificam leads e entregam apenas os melhores contatos para seu time fechar. Mais vendas. Menos fricção.',
+      'Agentes de IA que atendem 24h, qualificam leads pelos critérios do seu nicho e entregam ao seu time apenas os contatos prontos para fechar. Mais vendas, menos fricção, zero lead perdido por falta de resposta.',
     deliverables: [
       'Agente de IA treinado no seu negócio via WhatsApp Business API',
       'Qualificação automática de leads por critérios do seu nicho',

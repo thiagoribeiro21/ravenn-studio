@@ -61,7 +61,7 @@ export default function CTASection() {
         className="absolute inset-0 pointer-events-none"
         style={{
           zIndex:     10,
-          background: 'radial-gradient(circle at center, rgba(3,0,10,0.82) 0%, rgba(3,0,10,0.32) 42%, transparent 70%)',
+          background: 'radial-gradient(circle at center, rgba(3,0,10,0.60) 0%, rgba(3,0,10,0.22) 42%, transparent 70%)',
         }}
       />
 
@@ -79,6 +79,7 @@ export default function CTASection() {
           display:       'flex',
           flexDirection: 'column',
           alignItems:    'center',
+          pointerEvents: 'none', // deixa o mouse passar pro canvas 3D; reativado nos filhos clicáveis
         }}
       >
         {/* Eyebrow */}
@@ -96,11 +97,11 @@ export default function CTASection() {
           — Próximo passo
         </span>
 
-        {/* Headline — fontWeight 400 + textShadow para saltar das partículas */}
+        {/* Headline — fontWeight 300 + textShadow para saltar das partículas */}
         <h2
           style={{
             fontSize:      'clamp(32px, 5vw, 72px)',
-            fontWeight:    400,
+            fontWeight:    300,
             letterSpacing: '-0.03em',
             lineHeight:    1.04,
             color:         '#F8F9FA',
@@ -126,6 +127,7 @@ export default function CTASection() {
             color:          '#fff',
             border:         '1px solid #7C3AED',
             textDecoration: 'none',
+            pointerEvents:  'auto',
             transition:     'background 280ms ease, box-shadow 280ms ease, transform 120ms ease',
           }}
           onMouseEnter={(e) => {

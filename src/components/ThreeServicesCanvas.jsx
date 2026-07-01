@@ -175,14 +175,19 @@ function ParticleMorpher({ shapes, activeIndex }) {
   );
 }
 
-// ── Scene: pré-computa as 5 geometrias de partículas ──────────────────────────
+// ── Scene: pré-computa as 6 geometrias de partículas ──────────────────────────
+// Uma shape por serviço de CapabilitiesSection.SERVICES, na mesma ordem —
+// activeIndex é o índice do array, então as duas listas precisam ter o
+// mesmo tamanho (era a causa do "congelamento" no último serviço: só
+// havia 5 shapes para 6 serviços, e shapes[5] ficava undefined).
 function Scene({ activeIndex }) {
   const shapes = useMemo(() => [
-    sampleShape(new THREE.TorusGeometry(1.2, 0.45, 16, 64), N),          // 01 Landing Pages
-    sampleShape(new THREE.IcosahedronGeometry(1.5, 1), N),               // 02 Institucional
-    sampleShape(new THREE.TorusKnotGeometry(0.85, 0.28, 200, 32), N),   // 03 Experiencial
-    sampleShape(new THREE.OctahedronGeometry(1.5, 0), N),               // 04 Automação n8n
-    sampleShape(new THREE.TetrahedronGeometry(1.6, 1), N),              // 05 Tráfego
+    sampleShape(new THREE.IcosahedronGeometry(1.5, 1), N),              // 01 Sites Institucionais
+    sampleShape(new THREE.TorusGeometry(1.2, 0.45, 16, 64), N),         // 02 Landing Pages
+    sampleShape(new THREE.TorusKnotGeometry(0.85, 0.28, 200, 32), N),   // 03 Sites Experienciais
+    sampleShape(new THREE.DodecahedronGeometry(1.4, 0), N),             // 04 Cardápios Digitais
+    sampleShape(new THREE.TetrahedronGeometry(1.6, 1), N),              // 05 Google Ads
+    sampleShape(new THREE.OctahedronGeometry(1.5, 0), N),               // 06 Agentes de IA
   ], []);
 
   return <ParticleMorpher shapes={shapes} activeIndex={activeIndex} />;

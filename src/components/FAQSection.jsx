@@ -7,8 +7,8 @@ const FAQS = [
     a: 'Landing pages e sites institucionais são entregues em 7 a 21 dias úteis, dependendo da complexidade. Projetos experienciais e e-commerces seguem um cronograma personalizado definido na fase de imersão. Trabalhamos com prazos reais — sem promessas irreais.',
   },
   {
-    q: 'Quem gerencia os anúncios do Google e do Meta?',
-    a: 'Nossa equipe assume a gestão completa das campanhas: criação, segmentação, otimização contínua e relatórios semanais. Você acompanha os resultados em tempo real e tem acesso total à conta de anúncios.',
+    q: 'Quem gerencia os anúncios do Google Ads?',
+    a: 'Nossa equipe assume a gestão completa das campanhas: criação, segmentação por palavra-chave, otimização contínua e relatórios semanais. Você acompanha os resultados em tempo real e tem acesso total à conta de anúncios.',
   },
   {
     q: 'O serviço inclui manutenção após a entrega?',

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import LaptopMockup from './LaptopMockup';
+import GlassPanelMockup from './GlassPanelMockup';
 
 const CARDS = [
   {
@@ -165,7 +165,7 @@ export default function PortfolioSection() {
           >
             {CARDS.map((card, i) => (
               <div key={i} className="flex-shrink-0 snap-center" style={{ width: '80vw' }}>
-                <LaptopMockup src={card.src} poster={card.poster} />
+                <GlassPanelMockup src={card.src} poster={card.poster} />
               </div>
             ))}
           </div>
@@ -226,7 +226,7 @@ export default function PortfolioSection() {
               whileHover={{ opacity: 1, scale: 1.05 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
             >
-              <LaptopMockup
+              <GlassPanelMockup
                 src="/videos-raven-portfolio/advogado-raven.mp4"
                 poster="/videos-raven-portfolio/advogado-raven-poster.webp"
               />
@@ -247,7 +247,7 @@ export default function PortfolioSection() {
               whileHover={{ opacity: 1, scale: 1.05 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
             >
-              <LaptopMockup
+              <GlassPanelMockup
                 src="/videos-raven-portfolio/imovel-raven.mp4"
                 poster="/videos-raven-portfolio/imovel-raven-poster.webp"
               />
@@ -264,7 +264,7 @@ export default function PortfolioSection() {
             zIndex:    30,
             filter:    'drop-shadow(0 0 100px rgba(124,58,237,0.30))',
           }}>
-            <LaptopMockup src="/videos-raven-portfolio/pele-raven.mp4" />
+            <GlassPanelMockup src="/videos-raven-portfolio/pele-raven.mp4" />
           </div>
         </motion.div>
       )}
