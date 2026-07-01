@@ -117,13 +117,29 @@ export default function FAQSection() {
       id="faq"
       style={{ borderTop: '1px solid #1E1B4B', position: 'relative', overflow: 'hidden' }}
     >
-      {/* Imagem de fundo */}
+      {/* Imagem de fundo — desktop */}
       <div
         aria-hidden
+        className="hidden lg:block"
         style={{
           position:           'absolute',
           inset:              0,
-          backgroundImage:    'url(/background-faq.webp)',
+          backgroundImage:    'url(/bg-faq-ravenn/431a9833-34aa-4eef-8da8-3f31568d5eae.webp)',
+          backgroundSize:     'cover',
+          backgroundPosition: 'center right',
+          backgroundRepeat:   'no-repeat',
+          pointerEvents:      'none',
+        }}
+      />
+
+      {/* Imagem de fundo — mobile */}
+      <div
+        aria-hidden
+        className="lg:hidden"
+        style={{
+          position:           'absolute',
+          inset:              0,
+          backgroundImage:    'url(/bg-faq-ravenn/259f0eba-dac6-4e8f-aee5-374b66a4aadb.webp)',
           backgroundSize:     'cover',
           backgroundPosition: 'center',
           backgroundRepeat:   'no-repeat',
@@ -131,9 +147,22 @@ export default function FAQSection() {
         }}
       />
 
-      {/* Overlay: escurece a foto mantendo apenas um toque de profundidade */}
+      {/* Overlay: escurece a foto mantendo apenas um toque de profundidade — desktop */}
       <div
         aria-hidden
+        className="hidden lg:block"
+        style={{
+          position:   'absolute',
+          inset:      0,
+          background: 'linear-gradient(to bottom, rgba(3,0,10,0.80) 0%, rgba(3,0,10,0.66) 50%, rgba(3,0,10,0.86) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Overlay: escurece a foto mantendo apenas um toque de profundidade — mobile */}
+      <div
+        aria-hidden
+        className="lg:hidden"
         style={{
           position:   'absolute',
           inset:      0,

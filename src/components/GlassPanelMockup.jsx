@@ -1,21 +1,28 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 
-// ── Freeze Frame com Delay ───────────────────────────────────────────────────
-// Substitui o loop nativo do <video> (que corta seco de volta pro frame 0)
-// por um ciclo manual: termina → segura FREEZE_MS parado → funde pra fora →
-// reseta currentTime → funde de volta tocando do zero. FADE_MS é a duração
-// da transição de opacidade (CSS), FREEZE_MS é quanto tempo o último frame
-// fica parado na tela antes de começar o fade-out.
-const FREEZE_MS = 5000;
-const FADE_MS   = 900;
-
-export default function GlassPanelMockup({ src, poster }) {
-  const containerRef    = useRef(null);
-  const cardRef         = useRef(null);
-  const videoRef        = useRef(null);
-  const startedRef      = useRef(false);
-  const freezeTimerRef  = useRef(null);
-  const fadeTimerRef    = useRef(null);
+// ── Ciclo sincronizado ───────────────────────────────────────────────────────
+// Este componente não decide mais sozinho quando pausar/reiniciar o vídeo —
+// isso é comandado de fora (ver usePortfolioVideoCycle em PortfolioSection),
+// pra que os 3 vídeos do portfólio parem e voltem exatamente juntos:
+//   `playing`  → true/false conforme a fase atual do ciclo compartilhado.
+//   `opacity`  → 0 só durante a fase de fade, senão 1 (CSS faz a transição).
+//   `cycleKey` → incrementa a cada novo ciclo; ao mudar, reseta currentTime.
+//   `onDuration` → reporta a duração pro relógio compartilhado (só usado
+//                  pelo vídeo "mestre" do grupo, que dita a duração do ciclo).
+export default function GlassPanelMockup({
+  src,
+  poster,
+  playing = true,
+  opacity = 1,
+  cycleKey = 0,
+  fadeMs = 900,
+  onDuration,
+}) {
+  const containerRef = useRef(null);
+  const cardRef       = useRef(null);
+  const videoRef      = useRef(null);
+  const startedRef    = useRef(false);
+  const [inView, setInView] = useState(false);
 
   const handleMouseMove = useCallback((e) => {
     const r = containerRef.current?.getBoundingClientRect();
@@ -37,62 +44,48 @@ export default function GlassPanelMockup({ src, poster }) {
     }
   }, []);
 
-  const clearCycleTimers = useCallback(() => {
-    if (freezeTimerRef.current) { clearTimeout(freezeTimerRef.current); freezeTimerRef.current = null; }
-    if (fadeTimerRef.current)   { clearTimeout(fadeTimerRef.current);   fadeTimerRef.current   = null; }
-  }, []);
-
-  // ── Ciclo freeze → fade-out → reset → fade-in ──────────────────────────────
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleEnded = () => {
-      clearCycleTimers();
-      freezeTimerRef.current = setTimeout(() => {
-        video.style.opacity = '0';
-        fadeTimerRef.current = setTimeout(() => {
-          video.currentTime = 0;
-          video.play().catch(() => {});
-          video.style.opacity = '1';
-        }, FADE_MS);
-      }, FREEZE_MS);
-    };
-
-    video.addEventListener('ended', handleEnded);
-    return () => {
-      video.removeEventListener('ended', handleEnded);
-      clearCycleTimers();
-    };
-  }, [clearCycleTimers]);
-
+  // Carrega o vídeo (lazy) só na primeira vez que entra na viewport.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          if (!startedRef.current) {
-            video.src = src;
-            video.load();
-            startedRef.current = true;
-          }
-          // Garante estado limpo ao (re)entrar na viewport — se o vídeo saiu
-          // de tela no meio do freeze/fade, sem isso ele voltaria pausado
-          // e/ou com opacity:0 (invisível) até o próximo ciclo completar.
-          clearCycleTimers();
-          video.style.opacity = '1';
-          video.play().catch(() => {});
-        } else if (startedRef.current) {
-          video.pause();
-          clearCycleTimers();
+        setInView(entry.isIntersecting);
+        if (entry.isIntersecting && !startedRef.current) {
+          video.src = src;
+          video.load();
+          startedRef.current = true;
         }
       },
       { threshold: 0.25 },
     );
     observer.observe(video);
     return () => observer.disconnect();
-  }, [src, clearCycleTimers]);
+  }, [src]);
+
+  // Reinício sincronizado — todos os vídeos do grupo voltam pro frame 0 juntos.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !startedRef.current) return;
+    video.currentTime = 0;
+  }, [cycleKey]);
+
+  // Play/pause: só toca quando o ciclo global manda tocar E o card está em tela.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !startedRef.current) return;
+    if (playing && inView) video.play().catch(() => {});
+    else video.pause();
+  }, [playing, inView]);
+
+  // Reporta a duração pro relógio compartilhado (só o vídeo "mestre" passa `onDuration`).
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !onDuration) return;
+    const report = () => { if (video.duration) onDuration(video.duration); };
+    video.addEventListener('loadedmetadata', report);
+    return () => video.removeEventListener('loadedmetadata', report);
+  }, [onDuration]);
 
   return (
     <div
@@ -146,7 +139,8 @@ export default function GlassPanelMockup({ src, poster }) {
               height:     '100%',
               objectFit:  'cover',
               background: '#000',
-              transition: `opacity ${FADE_MS}ms ease`,
+              opacity,
+              transition: `opacity ${fadeMs}ms ease`,
             }}
           >
             <track kind="captions" />

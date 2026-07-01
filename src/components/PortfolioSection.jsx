@@ -6,6 +6,7 @@ const CARDS = [
   {
     src:    '/videos-raven-portfolio/pele-raven.mp4',
     poster: '/videos-raven-portfolio/pele-raven-poster.webp',
+    master: true, // dita a duração do ciclo compartilhado (ver usePortfolioVideoCycle)
   },
   {
     src:    '/videos-raven-portfolio/advogado-raven.mp4',
@@ -17,11 +18,69 @@ const CARDS = [
   },
 ];
 
+const FREEZE_MS         = 5000; // quanto tempo os 3 vídeos ficam parados, em sincronia, antes do fade
+const FADE_MS           = 900;  // duração do fade out/in entre ciclos
+const MASTER_END_OFFSET = 0.7;  // segundos antes do fim do pele-raven — ponto em que o grupo inteiro congela
+
+// ── Relógio compartilhado dos 3 vídeos do portfólio ─────────────────────────
+// Sem isso, cada <video> corria seu próprio ciclo de freeze/fade baseado na
+// PRÓPRIA duração — como os 3 clipes têm durações diferentes, eles paravam e
+// voltavam em momentos diferentes. Aqui um único vídeo "mestre" (pele-raven)
+// reporta sua duração; o ciclo (playing → frozen → fading → reset) roda uma
+// vez só e todos os GlassPanelMockup só obedecem via props (playing/opacity/
+// cycleKey), garantindo que parem e voltem exatamente juntos. O ponto de
+// parada do mestre é fixo (duration - MASTER_END_OFFSET, capturado uma única
+// vez), então não varia de um loop pro outro.
+function usePortfolioVideoCycle() {
+  const [masterDuration, setMasterDuration] = useState(null);
+  const [phase, setPhase]                   = useState('playing'); // 'playing' | 'frozen' | 'fading'
+  const [cycleKey, setCycleKey]             = useState(0);
+
+  const reportMasterDuration = useCallback((duration) => {
+    setMasterDuration((prev) => prev ?? duration);
+  }, []);
+
+  useEffect(() => {
+    if (!masterDuration) return;
+    const playMs = Math.max((masterDuration - MASTER_END_OFFSET) * 1000, 0);
+    let playTimer, freezeTimer, fadeTimer;
+
+    const runCycle = () => {
+      setPhase('playing');
+      playTimer = setTimeout(() => {
+        setPhase('frozen');
+        freezeTimer = setTimeout(() => {
+          setPhase('fading');
+          fadeTimer = setTimeout(() => {
+            setCycleKey((k) => k + 1);
+            runCycle();
+          }, FADE_MS);
+        }, FREEZE_MS);
+      }, playMs);
+    };
+
+    runCycle();
+    return () => {
+      clearTimeout(playTimer);
+      clearTimeout(freezeTimer);
+      clearTimeout(fadeTimer);
+    };
+  }, [masterDuration]);
+
+  return {
+    playing: phase === 'playing',
+    opacity: phase === 'fading' ? 0 : 1,
+    cycleKey,
+    reportMasterDuration,
+  };
+}
+
 export default function PortfolioSection() {
   const [isDesktop,   setIsDesktop]   = useState(() => window.innerWidth >= 768);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hasScrolled, setHasScrolled] = useState(false);
   const carouselRef = useRef(null);
+  const { playing, opacity, cycleKey, reportMasterDuration } = usePortfolioVideoCycle();
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 768px)');
@@ -165,7 +224,15 @@ export default function PortfolioSection() {
           >
             {CARDS.map((card, i) => (
               <div key={i} className="flex-shrink-0 snap-center" style={{ width: '80vw' }}>
-                <GlassPanelMockup src={card.src} poster={card.poster} />
+                <GlassPanelMockup
+                  src={card.src}
+                  poster={card.poster}
+                  playing={playing}
+                  opacity={opacity}
+                  cycleKey={cycleKey}
+                  fadeMs={FADE_MS}
+                  onDuration={card.master ? reportMasterDuration : undefined}
+                />
               </div>
             ))}
           </div>
@@ -229,6 +296,10 @@ export default function PortfolioSection() {
               <GlassPanelMockup
                 src="/videos-raven-portfolio/advogado-raven.mp4"
                 poster="/videos-raven-portfolio/advogado-raven-poster.webp"
+                playing={playing}
+                opacity={opacity}
+                cycleKey={cycleKey}
+                fadeMs={FADE_MS}
               />
             </motion.div>
           </div>
@@ -250,6 +321,10 @@ export default function PortfolioSection() {
               <GlassPanelMockup
                 src="/videos-raven-portfolio/imovel-raven.mp4"
                 poster="/videos-raven-portfolio/imovel-raven-poster.webp"
+                playing={playing}
+                opacity={opacity}
+                cycleKey={cycleKey}
+                fadeMs={FADE_MS}
               />
             </motion.div>
           </div>
@@ -264,7 +339,14 @@ export default function PortfolioSection() {
             zIndex:    30,
             filter:    'drop-shadow(0 0 100px rgba(124,58,237,0.30))',
           }}>
-            <GlassPanelMockup src="/videos-raven-portfolio/pele-raven.mp4" />
+            <GlassPanelMockup
+              src="/videos-raven-portfolio/pele-raven.mp4"
+              playing={playing}
+              opacity={opacity}
+              cycleKey={cycleKey}
+              fadeMs={FADE_MS}
+              onDuration={reportMasterDuration}
+            />
           </div>
         </motion.div>
       )}
