@@ -11,7 +11,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 const ITEMS = [
   {
     num:         '01',
-    title:       'Empresas invisíveis nas buscas da sua cidade',
+    title:       'Empresas invisíveis nas\nbuscas da sua cidade',
     tag:         'CAPTAÇÃO LOCAL',
     description: 'Criação de sites de alta conversão e gestão de tráfego para negócios locais que precisam ser a primeira opção quando o cliente pesquisa no Google. Desenvolvimento de sites em Niterói integrado a Google Ads para atrair compradores qualificados todos os dias.',
   },
@@ -47,13 +47,23 @@ function ServiceRow({ item, index }) {
         {item.num}
       </span>
 
-      {/* Título */}
-      <div className="md:w-1/3 text-2xl md:text-3xl font-light tracking-tight leading-tight text-gray-300 group-hover:text-white transition-colors duration-300 mb-2 md:mb-0">
+      {/* Título — a quebra manual (\n) só é respeitada no desktop (md:), pra
+          bater com o ritmo de 2 linhas dos outros itens em telas largas
+          (1920px+, onde o texto sozinho caberia numa linha só e destoaria
+          dos vizinhos). No mobile, whitespace-normal ignora o \n e deixa o
+          wrap natural cuidar do tamanho de coluna disponível. */}
+      <div
+        className="md:w-1/3 text-2xl md:text-3xl font-light tracking-tight leading-tight text-gray-300 group-hover:text-white transition-colors duration-300 mb-2 md:mb-0 whitespace-normal md:whitespace-pre-line"
+        style={{ textWrap: 'balance' }}
+      >
         {item.title}
       </div>
 
       {/* Descrição */}
-      <div className="md:w-1/3 text-sm leading-relaxed text-gray-500 group-hover:text-gray-300 transition-colors duration-300 mb-3 md:mb-0 md:px-8">
+      <div
+        className="md:w-1/3 text-sm leading-relaxed text-[#94A3B8] group-hover:text-white transition-colors duration-300 mb-3 md:mb-0 md:px-8"
+        style={{ textWrap: 'pretty' }}
+      >
         {item.description}
       </div>
 

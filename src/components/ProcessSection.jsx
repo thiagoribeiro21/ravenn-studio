@@ -75,6 +75,7 @@ export default function ProcessSection() {
             color:         '#F8F9FA',
             maxWidth:      680,
             margin:        0,
+            textWrap:      'balance',
           }}
         >
           Três passos. Resultado{' '}
@@ -146,7 +147,7 @@ export default function ProcessSection() {
               {step.title}
             </h3>
 
-            <p style={{ fontSize: 14, lineHeight: 1.78, color: '#94A3B8', margin: 0 }}>
+            <p style={{ fontSize: 14, lineHeight: 1.78, color: '#94A3B8', margin: 0, textWrap: 'pretty' }}>
               {step.body}
             </p>
           </motion.div>

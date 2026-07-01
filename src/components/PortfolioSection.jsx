@@ -88,9 +88,9 @@ export default function PortfolioSection() {
         </h2>
 
         <p style={{
-          fontSize:   'clamp(13px, 1.1vw, 15px)',
+          fontSize:   'clamp(14px, 1.3vw, 17px)',
           lineHeight: 1.7,
-          color:      '#5B6472',
+          color:      '#94A3B8',
           margin:     0,
         }}>
           Conceitos de interface desenvolvidos para tangibilizar o nível de

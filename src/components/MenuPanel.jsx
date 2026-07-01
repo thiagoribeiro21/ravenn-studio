@@ -2,19 +2,21 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMenu } from '../context/MenuContext';
 
-const WA_LINK = 'https://wa.me/5521999999999?text=Olá%2C%20quero%20agendar%20um%20diagnóstico%20gratuito%20com%20a%20Ravenn%20Studio.';
+const WA_LINK = 'https://wa.me/5521989211887?text=Olá%2C%20quero%20agendar%20um%20diagnóstico%20gratuito%20com%20a%20Ravenn%20Studio.';
 
 const SUB_LINKS = [
-  { label: 'Sites e Landing Pages',         href: '#services' },
-  { label: 'Lojas Virtuais (E-commerce)',    href: '#services' },
-  { label: 'Gestão de Tráfego Local',        href: '#services' },
-  { label: 'Agentes de IA e Automação',      href: '#services' },
+  { label: 'Sites Institucionais',      href: '#services' },
+  { label: 'Landing Pages',             href: '#services' },
+  { label: 'Sites Experienciais',       href: '#services' },
+  { label: 'Cardápios Digitais',        href: '#services' },
+  { label: 'Google Ads',                href: '#services' },
+  { label: 'Agentes de IA',             href: '#services' },
 ];
 
 const NAV_LINKS = [
   { label: 'Início',   href: '#hero',     sub: null },
   { label: 'Soluções', href: null,        sub: SUB_LINKS },
-  { label: 'Método',   href: '#process',  sub: null },
+  { label: 'Método',   href: '#processo', sub: null },
   { label: 'Contato',  href: '#contact',  sub: null },
 ];
 
@@ -343,12 +345,12 @@ export default function MenuPanel() {
         >
           <div style={{ width: 40, height: 1, background: 'linear-gradient(to right, rgba(124,58,237,0.50), transparent)', marginBottom: 14 }} />
           <a
-            href="mailto:contato@ravennsocial.com"
+            href="mailto:contato@ravennstudio.com"
             style={{ display: 'block', fontSize: 11, letterSpacing: '0.10em', color: 'rgba(255,255,255,0.40)', textDecoration: 'none', marginBottom: 6, transition: 'color 200ms', fontFamily: 'monospace' }}
             onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.80)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.40)'; }}
           >
-            contato@ravennsocial.com
+            contato@ravennstudio.com
           </a>
           <a
             href={WA_LINK}
@@ -358,7 +360,7 @@ export default function MenuPanel() {
             onMouseEnter={(e) => { e.currentTarget.style.color = '#A78BFA'; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.40)'; }}
           >
-            WhatsApp: +55 21 99999-9999
+            WhatsApp: +55 21 98921-1887
           </a>
         </motion.div>
       </div>

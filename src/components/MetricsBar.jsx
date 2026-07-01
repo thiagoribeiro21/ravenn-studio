@@ -35,9 +35,8 @@ export default function MetricsBar() {
       />
 
       <div
+        className="grid grid-cols-1 sm:grid-cols-3"
         style={{
-          display:             'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
           position:            'relative',
           zIndex:              1,
         }}
@@ -49,14 +48,18 @@ export default function MetricsBar() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
+            className={
+              i < METRICS.length - 1
+                ? 'border-b sm:border-b-0 sm:border-r border-[#1E1B4B]'
+                : ''
+            }
             style={{
               display:         'flex',
               flexDirection:   'column',
               alignItems:      'center',
               justifyContent:  'center',
               textAlign:       'center',
-              padding:         'clamp(36px, 5vh, 60px) clamp(20px, 3vw, 48px)',
-              borderRight:     i < METRICS.length - 1 ? '1px solid #1E1B4B' : 'none',
+              padding:         'clamp(32px, 5vh, 60px) clamp(20px, 3vw, 48px)',
             }}
           >
             <span
@@ -90,11 +93,13 @@ export default function MetricsBar() {
             <span
               style={{
                 display:       'block',
-                marginTop:     6,
-                fontSize:      11,
+                marginTop:     8,
+                fontSize:      'clamp(12.5px, 1.3vw, 14px)',
                 fontWeight:    400,
-                letterSpacing: '0.06em',
-                color:         '#5B6472',
+                lineHeight:    1.5,
+                letterSpacing: '0.02em',
+                color:         '#94A3B8',
+                maxWidth:      240,
               }}
             >
               {detail}

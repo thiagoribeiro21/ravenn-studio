@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const ThreeServicesCanvas = lazy(() => import('./ThreeServicesCanvas'));
 
 const WA_LINK =
-  'https://wa.me/5521999999999?text=Olá%2C%20gostaria%20de%20agendar%20um%20diagnóstico%20gratuito%20com%20a%20Ravenn%20Studio.';
+  'https://wa.me/5521989211887?text=Olá%2C%20gostaria%20de%20agendar%20um%20diagnóstico%20gratuito%20com%20a%20Ravenn%20Studio.';
 
 function useIsDesktop() {
   const [ok, setOk] = useState(
@@ -25,7 +25,7 @@ const SERVICES = [
     id:          '01',
     asset:       '/skyscraper_asset.webp',
     category:    'Posicionamento Digital',
-    title:       'Sites Institucionais\nde Alta Autoridade',
+    title:       'Sites Institucionais de Alta Autoridade',
     description: 'Presença digital que impõe respeito antes da primeira reunião. Design premium, estrutura técnica de SEO Local e velocidade que colocam sua empresa no topo do Google — exatamente onde decisões de alto valor são tomadas.',
     tags:        ['SEO Local', 'Google Business', 'Core Web Vitals'],
     longDescription:
@@ -41,7 +41,7 @@ const SERVICES = [
     id:          '02',
     asset:       '/gravitational_funnel_asset.webp',
     category:    'Alta Conversão',
-    title:       'Landing Pages\nde Alta Conversão',
+    title:       'Landing Pages de Alta Conversão',
     description: 'Cada real investido em tráfego pago merece uma página que converte, não que apenas existe. Copywriting orientado a vendas, design exclusivo sem templates e rastreamento pixel-perfeito — entrega em 7 dias úteis.',
     tags:        ['Google Ads', 'CRO', 'Copywriting'],
     longDescription:
@@ -57,7 +57,7 @@ const SERVICES = [
     id:          '03',
     asset:       '/data_vortex_asset.webp',
     category:    'Experiência Imersiva',
-    title:       'Sites Experienciais\ne Imersivos',
+    title:       'Sites Experienciais e Imersivos',
     description: 'Imagine um site que se comporta como um filme: cenas em 3D que reagem ao scroll, transições cinematográficas e uma navegação que parece mágica — como os efeitos visuais deste nosso próprio site. Para marcas de luxo, estúdios de arquitetura e design que não podem se dar ao luxo de parecer comuns.',
     tags:        ['WebGL', 'Three.js', 'Motion Design'],
     longDescription:
@@ -73,7 +73,7 @@ const SERVICES = [
     id:          '04',
     asset:       '/geometric_plate_asset.webp',
     category:    'Experiência Gastronômica',
-    title:       'Cardápios Digitais\nque Vendem Sozinhos',
+    title:       'Cardápios Digitais que Vendem Sozinhos',
     description: 'Chega de PDF ilegível no celular do cliente. Criamos cardápios digitais com fotos que dão água na boca, navegação intuitiva e pedido finalizado direto no WhatsApp — sem fricção entre a fome e a compra.',
     tags:        ['UX Design', 'WhatsApp API', 'Mobile-First'],
     longDescription:
@@ -89,7 +89,7 @@ const SERVICES = [
     id:          '05',
     asset:       '/data_arrow_asset.webp',
     category:    'Performance Digital',
-    title:       'Google Ads\nde Alta Performance',
+    title:       'Google Ads de Alta Performance',
     description: 'Colocamos sua empresa na frente do cliente certo, no exato momento em que ele digita a busca e está pronto para comprar. Gestão orientada por dados, otimização semanal e foco obsessivo em custo por aquisição real — não em vaidade de métricas.',
     tags:        ['Google Ads', 'Google Search', 'Analytics'],
     longDescription:
@@ -105,7 +105,7 @@ const SERVICES = [
     id:          '06',
     asset:       '/neural_brain_asset.webp',
     category:    'Inteligência Artificial',
-    title:       'Agentes de IA\ne Automação de Atendimento',
+    title:       'Agentes de IA e Automação de Atendimento',
     description: 'Enquanto sua equipe dorme, seus concorrentes atendem. Agentes de IA treinados no seu negócio respondem, qualificam e agendam pelo WhatsApp 24 horas por dia — garantindo que nenhuma venda se perca às 3 da manhã.',
     tags:        ['n8n', 'AI Agents', 'WhatsApp API'],
     longDescription:
@@ -258,7 +258,7 @@ function ServiceModal({ service, onClose }) {
                       lineHeight:    1.08,
                       color:         '#F8F9FA',
                       margin:        '0 0 10px',
-                      whiteSpace:    'pre-line',
+                      textWrap:      'balance',
                     }}>
                       {service.title}
                     </h3>
@@ -267,7 +267,7 @@ function ServiceModal({ service, onClose }) {
                     <div style={{ width: 32, height: 1, background: 'linear-gradient(to right, #7C3AED, transparent)', marginBottom: 14 }} />
 
                     {/* Descrição */}
-                    <p style={{ fontSize: 13, lineHeight: 1.70, color: '#94A3B8', margin: '0 0 20px' }}>
+                    <p style={{ fontSize: 14, lineHeight: 1.72, color: '#94A3B8', margin: '0 0 20px' }}>
                       {service.longDescription}
                     </p>
 
@@ -488,7 +488,7 @@ function ServiceBlock({ service, index, onActive, onOpen }) {
         lineHeight:    1.04,
         letterSpacing: '-0.03em',
         color:         '#F8F9FA',
-        whiteSpace:    'pre-line',
+        textWrap:      'balance',
         marginBottom:  16,
       }}>
         {service.title}
@@ -602,9 +602,10 @@ export default function CapabilitiesSection() {
             lineHeight:    1.04,
             color:         '#F8F9FA',
             maxWidth:      920,
+            textWrap:      'balance',
           }}>
             Da captação à automação.<br />
-            <span style={{ color: '#A78BFA' }}>Zero dependência de sorte.</span>
+            <span style={{ color: '#A78BFA' }}>Zero dependência de sorte.</span>
           </h2>
         </motion.div>
 

@@ -302,7 +302,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
           width: "100%",
           height: "100%",
           objectFit: "cover",
-          opacity: 0.42,
+          opacity: 0.32,
         }}
       />
 

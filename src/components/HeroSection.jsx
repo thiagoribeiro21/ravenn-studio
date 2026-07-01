@@ -16,7 +16,7 @@ export default function HeroSection() {
     <section
       id="hero"
       className="relative min-h-[100dvh] flex flex-col justify-center overflow-hidden overflow-x-hidden"
-      style={{ padding: 'clamp(88px, 12vh, 140px) clamp(24px, 5vw, 96px)' }}
+      style={{ padding: 'clamp(40px, 10vh, 140px) clamp(24px, 5vw, 96px)' }}
     >
       {/* ── Fade horizontal mínimo — só para legibilidade do texto ── */}
       <div
@@ -38,7 +38,7 @@ export default function HeroSection() {
         style={{ zIndex: 1 }}
       >
         {/* Eyebrow */}
-        <motion.div variants={item} className="flex items-center mb-7">
+        <motion.div variants={item} className="flex items-center" style={{ marginBottom: 'clamp(12px, 3vh, 28px)' }}>
           <span
             style={{
               fontSize:      11,
@@ -69,7 +69,12 @@ export default function HeroSection() {
             variants={item}
             className="text-balance"
             style={{
-              fontSize:      'clamp(44px, 7.2vw, 92px)',
+              // min(vw, vh) — em notebooks largos mas baixos (ex.: 1376x650),
+              // o termo vw sozinho mantinha a fonte enorme mesmo sem altura
+              // pra caber o resto do hero (descrição/botões ficavam cortados
+              // pelo overflow:hidden da seção). Misturando vh, a fonte agora
+              // encolhe quando a ALTURA é o fator limitante, não só a largura.
+              fontSize:      'clamp(38px, min(7.2vw, 10vh), 92px)',
               fontWeight:    300,
               lineHeight:    1.02,
               letterSpacing: '-0.03em',
@@ -77,7 +82,7 @@ export default function HeroSection() {
             }}
           >
             Negócios locais que vendem<br />
-            <span style={{ color: '#A78BFA' }}>mesmo quando você dorme.</span>
+            <span style={{ color: '#A78BFA' }}>mesmo quando você{' '}dorme.</span>
           </motion.h1>
         </div>
 
@@ -85,8 +90,8 @@ export default function HeroSection() {
         <motion.p
           variants={item}
           style={{
-            marginTop:  32,
-            fontSize:   'clamp(16px, 1.4vw, 19px)',
+            marginTop:  'clamp(12px, 3.5vh, 32px)',
+            fontSize:   'clamp(14px, min(1.4vw, 2.4vh), 19px)',
             lineHeight: 1.65,
             color:      '#94A3B8',
             maxWidth:   520,
@@ -99,7 +104,7 @@ export default function HeroSection() {
         </motion.p>
 
         {/* CTAs */}
-        <motion.div variants={item} className="flex flex-wrap gap-4 mt-11">
+        <motion.div variants={item} className="flex flex-wrap gap-4" style={{ marginTop: 'clamp(16px, 5vh, 44px)' }}>
           <a
             href="#contact"
             className="inline-flex items-center whitespace-nowrap gap-2 h-12 md:h-14 px-5 md:px-9 text-[11px] md:text-[13px] tracking-[0.08em] md:tracking-[0.12em] rounded"
@@ -124,7 +129,7 @@ export default function HeroSection() {
             Solicitar Diagnóstico Gratuito
           </a>
           <a
-            href="https://wa.me/5521999999999?text=Olá%2C%20gostaria%20de%20agendar%20um%20diagnóstico%20gratuito."
+            href="https://wa.me/5521989211887?text=Olá%2C%20gostaria%20de%20agendar%20um%20diagnóstico%20gratuito."
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:inline-flex"

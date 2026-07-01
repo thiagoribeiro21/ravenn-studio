@@ -126,17 +126,19 @@ export default function ManifestoSection() {
               lineHeight:    1.15,
               color:         '#F8F9FA',
               margin:        0,
+              textWrap:      'balance',
             }}>
               {p.label}
             </h3>
 
             {/* Descrição */}
             <p style={{
-              fontSize:   'clamp(13px, 1.1vw, 15px)',
+              fontSize:   'clamp(14px, 1.3vw, 16px)',
               lineHeight: 1.72,
-              color:      '#5B6472',
+              color:      '#94A3B8',
               margin:     0,
               width:      '100%',
+              textWrap:   'pretty',
             }}>
               {p.body}
             </p>
@@ -167,7 +169,7 @@ export default function ManifestoSection() {
           fontWeight:    400,
           textTransform: 'uppercase',
           letterSpacing: '0.18em',
-          color:         '#5B6472',
+          color:         '#94A3B8',
           margin:        0,
         }}>
           Sua empresa merece uma presença que compete. Vamos começar.

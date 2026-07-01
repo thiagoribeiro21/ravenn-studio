@@ -22,21 +22,23 @@ function Field({ tag: Tag = 'input', label, name, ...props }) {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         style={{
-          width:       '100%',
-          boxSizing:   'border-box',
-          background:  'rgba(14,10,30,0.6)',
-          border:      `1px solid ${focused ? '#7C3AED' : '#1E1B4B'}`,
-          borderRadius: 4,
-          padding:     isTextarea ? '14px 16px' : '0 16px',
-          height:      isTextarea ? undefined : 52,
-          minHeight:   isTextarea ? 140 : undefined,
-          resize:      isTextarea ? 'vertical' : undefined,
-          color:       '#F8F9FA',
-          fontSize:    14,
-          fontFamily:  'inherit',
-          outline:     'none',
-          boxShadow:   focused ? '0 0 0 3px rgba(124,58,237,0.15)' : 'none',
-          transition:  'border-color 180ms ease, box-shadow 180ms ease',
+          width:                '100%',
+          boxSizing:            'border-box',
+          background:           focused ? 'rgba(124,58,237,0.08)' : 'rgba(255,255,255,0.04)',
+          backdropFilter:       'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          border:               `1px solid ${focused ? 'rgba(124,58,237,0.55)' : 'rgba(255,255,255,0.10)'}`,
+          borderRadius:         12,
+          padding:              isTextarea ? '14px 16px' : '0 16px',
+          height:               isTextarea ? undefined : 52,
+          minHeight:            isTextarea ? 140 : undefined,
+          resize:               isTextarea ? 'vertical' : undefined,
+          color:                '#F8F9FA',
+          fontSize:             14,
+          fontFamily:           'inherit',
+          outline:              'none',
+          boxShadow:            focused ? '0 0 0 3px rgba(124,58,237,0.15)' : 'none',
+          transition:           'background 180ms ease, border-color 180ms ease, box-shadow 180ms ease',
         }}
         {...props}
       />
@@ -65,25 +67,27 @@ function SelectField({ label, options, name, ...props }) {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         style={{
-          width:            '100%',
-          boxSizing:        'border-box',
-          height:           52,
-          background:       'rgba(14,10,30,0.6)',
-          border:           `1px solid ${focused ? '#7C3AED' : '#1E1B4B'}`,
-          borderRadius:     4,
-          padding:          '0 40px 0 16px',
-          color:            '#F8F9FA',
-          fontSize:         14,
-          fontFamily:       'inherit',
-          outline:          'none',
-          boxShadow:        focused ? '0 0 0 3px rgba(124,58,237,0.15)' : 'none',
-          transition:       'border-color 180ms ease, box-shadow 180ms ease',
-          cursor:           'pointer',
-          appearance:       'none',
-          WebkitAppearance: 'none',
-          backgroundImage:  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235B6472' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
-          backgroundRepeat:    'no-repeat',
-          backgroundPosition:  'right 16px center',
+          width:                '100%',
+          boxSizing:            'border-box',
+          height:               52,
+          background:           focused ? 'rgba(124,58,237,0.08)' : 'rgba(255,255,255,0.04)',
+          backdropFilter:       'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          border:               `1px solid ${focused ? 'rgba(124,58,237,0.55)' : 'rgba(255,255,255,0.10)'}`,
+          borderRadius:         12,
+          padding:              '0 40px 0 16px',
+          color:                '#F8F9FA',
+          fontSize:             14,
+          fontFamily:           'inherit',
+          outline:              'none',
+          boxShadow:            focused ? '0 0 0 3px rgba(124,58,237,0.15)' : 'none',
+          transition:           'background 180ms ease, border-color 180ms ease, box-shadow 180ms ease',
+          cursor:               'pointer',
+          appearance:           'none',
+          WebkitAppearance:     'none',
+          backgroundImage:      `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A78BFA' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
+          backgroundRepeat:     'no-repeat',
+          backgroundPosition:   'right 16px center',
         }}
         {...props}
       >
@@ -111,22 +115,34 @@ const SERVICE_OPTIONS = [
 const CONTACT_INFO = [
   {
     icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
         <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
       </svg>
     ),
     label: 'E-mail',
     value: 'contato@ravennstudio.com',
+    href:  'mailto:contato@ravennstudio.com',
   },
   {
     icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+      </svg>
+    ),
+    label: 'Telefone',
+    value: '+55 21 98921-1887',
+    href:  'tel:+5521989211887',
+  },
+  {
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
         <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
         <circle cx="12" cy="11" r="2.5"/>
       </svg>
     ),
     label: 'Localização',
-    value: 'São Paulo, Brasil',
+    value: 'Niterói, Brasil',
+    href:  null,
   },
 ];
 
@@ -224,48 +240,12 @@ export default function ContactSection() {
             color:        '#94A3B8',
             maxWidth:     400,
             marginBottom: 44,
+            textWrap:     'pretty',
           }}>
             Conte sobre seu projeto e respondemos em até{' '}
             <strong style={{ color: '#F8F9FA', fontWeight: 500 }}>24 horas</strong>.
             Sem compromisso.
           </p>
-
-          {/* Indicadores */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginBottom: 52 }}>
-            {[
-              ['24h',    'Resposta garantida'],
-              ['R$ 3.8k','A partir de'],
-              ['3 vagas','Disponíveis neste trimestre'],
-            ].map(([stat, lbl]) => (
-              <div key={stat} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <span style={{
-                  display:        'inline-flex',
-                  alignItems:     'center',
-                  justifyContent: 'center',
-                  minWidth:       68,
-                  height:         32,
-                  padding:        '0 12px',
-                  fontSize:       12,
-                  fontWeight:     600,
-                  letterSpacing:  '-0.01em',
-                  color:          '#A78BFA',
-                  background:     'rgba(124,58,237,0.10)',
-                  border:         '1px solid rgba(124,58,237,0.22)',
-                  borderRadius:   4,
-                }}>
-                  {stat}
-                </span>
-                <span style={{
-                  fontSize:      11,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.14em',
-                  color:         '#5B6472',
-                }}>
-                  {lbl}
-                </span>
-              </div>
-            ))}
-          </div>
 
           {/* Info de contato */}
           <div
@@ -277,32 +257,53 @@ export default function ContactSection() {
               gap: 20,
             }}
           >
-            {CONTACT_INFO.map(({ icon, label, value }) => (
-              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                <span style={{
-                  display:        'flex',
-                  alignItems:     'center',
-                  justifyContent: 'center',
-                  width:          36,
-                  height:         36,
-                  borderRadius:   '50%',
-                  background:     'rgba(124,58,237,0.10)',
-                  border:         '1px solid rgba(124,58,237,0.20)',
-                  color:          '#A78BFA',
-                  flexShrink:     0,
-                }}>
-                  {icon}
-                </span>
-                <div>
-                  <div style={{ fontSize: 9, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.18em', color: '#5B6472', marginBottom: 2 }}>
-                    {label}
+            {CONTACT_INFO.map(({ icon, label, value, href }) => {
+              const Tag = href ? 'a' : 'div';
+              return (
+                <Tag
+                  key={label}
+                  {...(href ? { href } : {})}
+                  className={href ? 'group' : undefined}
+                  style={{
+                    display:        'flex',
+                    alignItems:     'center',
+                    gap:            16,
+                    textDecoration: 'none',
+                    width:          'fit-content',
+                  }}
+                >
+                  <span
+                    className={href ? 'group-hover:bg-[#7C3AED]/20 group-hover:border-[#7C3AED]/50' : undefined}
+                    style={{
+                      display:        'flex',
+                      alignItems:     'center',
+                      justifyContent: 'center',
+                      width:          44,
+                      height:         44,
+                      borderRadius:   '50%',
+                      background:     'rgba(124,58,237,0.10)',
+                      border:         '1px solid rgba(124,58,237,0.20)',
+                      color:          '#A78BFA',
+                      flexShrink:     0,
+                      transition:     'background 200ms ease, border-color 200ms ease',
+                    }}
+                  >
+                    {icon}
+                  </span>
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.18em', color: '#5B6472', marginBottom: 4 }}>
+                      {label}
+                    </div>
+                    <div
+                      className={href ? 'group-hover:text-white' : undefined}
+                      style={{ fontSize: 18, fontWeight: 400, color: '#F8F9FA', letterSpacing: '-0.01em', transition: 'color 200ms ease' }}
+                    >
+                      {value}
+                    </div>
                   </div>
-                  <div style={{ fontSize: 13, color: '#94A3B8' }}>
-                    {value}
-                  </div>
-                </div>
-              </div>
-            ))}
+                </Tag>
+              );
+            })}
           </div>
         </motion.div>
 
@@ -339,17 +340,33 @@ export default function ContactSection() {
             <form
               onSubmit={handleSubmit}
               style={{
-                display:       'flex',
-                flexDirection: 'column',
-                gap:           16,
-                padding:       'clamp(28px, 3vw, 48px)',
-                background:    'rgba(10,7,24,0.50)',
-                border:        '1px solid #1E1B4B',
-                borderRadius:  8,
-                backdropFilter: 'blur(12px)',
+                position:             'relative',
+                display:              'flex',
+                flexDirection:        'column',
+                gap:                  16,
+                padding:              'clamp(28px, 3vw, 48px)',
+                overflow:             'hidden',
+                background:           'rgba(255,255,255,0.035)',
+                border:               '1px solid rgba(124,58,237,0.18)',
+                borderRadius:         20,
+                backdropFilter:       'blur(24px) saturate(1.3)',
+                WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
+                boxShadow:            '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04) inset',
               }}
             >
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
+              {/* Reflexo de vidro — linha de luz fina na borda superior;
+                  único detalhe decorativo, mantém o glass limpo sem poluir */}
+              <div aria-hidden style={{
+                position:      'absolute',
+                top:           0,
+                left:          '8%',
+                right:         '8%',
+                height:        1,
+                background:    'linear-gradient(90deg, transparent, rgba(255,255,255,0.30), transparent)',
+                pointerEvents: 'none',
+              }} />
+
+              <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
                 <Field label="Nome" tag="input" type="text"  name="name"  placeholder="Seu nome"       value={form.name}  onChange={onChange} required />
                 <Field label="E-mail" tag="input" type="email" name="email" placeholder="seu@email.com" value={form.email} onChange={onChange} required />
               </div>
@@ -404,8 +421,9 @@ export default function ContactSection() {
                 fontSize:      10,
                 textTransform: 'uppercase',
                 letterSpacing: '0.14em',
-                color:         '#3B3F4A',
+                color:         '#5B6472',
                 textAlign:     'center',
+                textWrap:      'balance',
               }}>
                 Seus dados são confidenciais e nunca compartilhados.
               </p>

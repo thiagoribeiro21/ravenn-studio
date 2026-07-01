@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const CTACanvas = lazy(() => import('./CTACanvas'));
 
 const WA_LINK =
-  'https://wa.me/5521999999999?text=Olá%2C%20quero%20saber%20mais%20sobre%20os%20serviços%20da%20Ravenn%20Studio.';
+  'https://wa.me/5521989211887?text=Olá%2C%20quero%20saber%20mais%20sobre%20os%20serviços%20da%20Ravenn%20Studio.';
 
 // ── Seção CTA ─────────────────────────────────────────────────────────────────
 export default function CTASection() {
