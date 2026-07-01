@@ -24,7 +24,7 @@ const CANVAS_CLASSES =
 // classe CSS (inline style sempre ganha de classe). Então o valor base tem
 // que entrar nos próprios keyframes do `animate` abaixo, senão o "respirar"
 // da flutuação reseta o scale para 1.
-const BASE_SCALE = 1.95;
+const BASE_SCALE = 1.85;
 
 // Fade radial nas bordas do canvas — mata o limite quadrado que sobra mesmo
 // com mix-blend-screen. Duas pegadinhas aqui:
@@ -176,7 +176,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
   // Desktop: só o canvas, sempre visível — loop ping-pong parado, scroll
   // durante a rolagem. Fade-in único quando o frame 1 termina de carregar.
   //
-  const canvasOpacity = ready ? "opacity-[0.6]" : "opacity-0";
+  const canvasOpacity = ready ? "opacity-[1]" : "opacity-0";
 
   // Mobile: imagem estática + vídeo em loop por cima (150KB).
   if (isSmall) {
@@ -247,7 +247,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
     >
       {/* Camada base estática — fica parada enquanto o scroll-sequence se move */}
       <img
-        src="/bg-teste-ravenn-2.webp"
+        src="/hero-raven-bg/hero-desktop.webp"
         alt=""
         style={{
           position: "absolute",
@@ -255,7 +255,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
           width: "100%",
           height: "100%",
           objectFit: "cover",
-          opacity: 0.12,
+          opacity: 0.42,
         }}
       />
 
@@ -270,7 +270,10 @@ export default function ScrollSequenceCanvas({ endRef }) {
           style={{ display: "block", ...MASK_STYLE }}
           animate={
             !isScrolled && ready
-              ? { y: [0, -14, 0], scale: [BASE_SCALE, BASE_SCALE * 1.015, BASE_SCALE] }
+              ? {
+                  y: [0, -14, 0],
+                  scale: [BASE_SCALE, BASE_SCALE * 1.015, BASE_SCALE],
+                }
               : { y: 0, scale: BASE_SCALE }
           }
           transition={
