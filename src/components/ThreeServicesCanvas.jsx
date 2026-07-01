@@ -182,12 +182,18 @@ function ParticleMorpher({ shapes, activeIndex }) {
 // havia 5 shapes para 6 serviços, e shapes[5] ficava undefined).
 function Scene({ activeIndex }) {
   const shapes = useMemo(() => [
-    sampleShape(new THREE.IcosahedronGeometry(1.5, 1), N),              // 01 Sites Institucionais
-    sampleShape(new THREE.TorusGeometry(1.2, 0.45, 16, 64), N),         // 02 Landing Pages
-    sampleShape(new THREE.TorusKnotGeometry(0.85, 0.28, 200, 32), N),   // 03 Sites Experienciais
-    sampleShape(new THREE.DodecahedronGeometry(1.4, 0), N),             // 04 Cardápios Digitais
-    sampleShape(new THREE.TetrahedronGeometry(1.6, 1), N),              // 05 Google Ads
-    sampleShape(new THREE.OctahedronGeometry(1.5, 0), N),               // 06 Agentes de IA
+    // 01 Sites Institucionais — prisma alto (torre/arranha-céu = autoridade)
+    sampleShape(new THREE.CylinderGeometry(0.55, 0.85, 3, 6, 1), N),
+    // 02 Landing Pages — cone largo no topo (funil de conversão)
+    sampleShape(new THREE.ConeGeometry(1.4, 2.2, 32).rotateX(Math.PI), N),
+    // 03 Sites Experienciais — nó fluido (vórtice imersivo)
+    sampleShape(new THREE.TorusKnotGeometry(0.85, 0.28, 200, 32), N),
+    // 04 Cardápios Digitais — disco achatado (prato)
+    sampleShape(new THREE.CylinderGeometry(1.5, 1.5, 0.18, 40), N),
+    // 05 Google Ads — dardo fino de baixo poligonagem (seta de precisão)
+    sampleShape(new THREE.ConeGeometry(0.55, 2.6, 4), N),
+    // 06 Agentes de IA — esfera lisa (núcleo neural)
+    sampleShape(new THREE.SphereGeometry(1.5, 32, 32), N),
   ], []);
 
   return <ParticleMorpher shapes={shapes} activeIndex={activeIndex} />;
