@@ -242,7 +242,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
         }}
       >
         <img
-          src="/hero-raven-bg/hero-mobile-bg.webp"
+          src="/bg-teste-ravenn.webp"
           alt=""
           style={{
             position: "absolute",
