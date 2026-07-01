@@ -1,22 +1,13 @@
 import { useRef, useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import { useMenu } from "../context/MenuContext";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const VIDEO_SRC = "/raven-loop-fly.webm"; // usado só no overlay leve do mobile
-const TOTAL_FRAMES = 151;
-const IDLE_LEG_MS = 9000; // duração de cada trecho do loop parado (ida OU volta) — ~18s ida-e-volta
+const TOTAL_FRAMES = 121;
 
 const pad = (n) => String(n).padStart(3, "0");
-const getUrl = (n) => `/raven-voador-pasta/frame_${pad(n)}.webp`;
-
-// Smootherstep (Perlin) — velocidade zero exatamente nas pontas (frame 0 e
-// frame final) e pico de velocidade no meio. Aplicado sobre a posição linear
-// (não sobre o tempo), então funciona igual pra ida e pra volta: como os dois
-// extremos do ping-pong são sempre os mesmos dois pontos físicos (frame 0 e
-// frame 150), a curva sempre desacelera chegando neles e acelera saindo —
-// é isso que mata o "corte seco" na troca de direção e dá a sensação de
-// cinemático em vez de mecânico.
-const smootherstep = (t) => t * t * t * (t * (t * 6 - 15) + 10);
+const getUrl = (n) => `/raven-novos-frames/frame_${pad(n)}.webp`;
 
 // Classe do canvas — posicionamento extremo desktop.
 // mix-blend-screen fecha o fundo preto de cada frame contra o fundo escuro do
@@ -25,7 +16,15 @@ const smootherstep = (t) => t * t * t * (t * (t * 6 - 15) + 10);
 // MASK_STYLE) esconde a borda quadrada do bounding box com um fade suave.
 const CANVAS_CLASSES =
   "absolute top-0 w-full h-full object-cover mix-blend-screen contrast-125 brightness-110 " +
-  "lg:object-contain lg:left-[38vw] lg:w-[50vw] lg:scale-[1.75]";
+  "lg:object-contain lg:left-[38vw] lg:w-[50vw]";
+
+// Escala base do canvas no desktop. Vive aqui (não numa classe Tailwind
+// scale-[...]) porque o framer-motion escreve `transform` direto no atributo
+// style do elemento — isso sobrescreve por completo qualquer scale vindo de
+// classe CSS (inline style sempre ganha de classe). Então o valor base tem
+// que entrar nos próprios keyframes do `animate` abaixo, senão o "respirar"
+// da flutuação reseta o scale para 1.
+const BASE_SCALE = 1.95;
 
 // Fade radial nas bordas do canvas — mata o limite quadrado que sobra mesmo
 // com mix-blend-screen. Duas pegadinhas aqui:
@@ -55,23 +54,15 @@ const MASK_STYLE = {
 //  enquanto o listener nativo já resolve isso de graça. Sem dependência nova
 //  também evita inflar ainda mais os chunks do bundle (Three.js já é grande).
 //
-//  Sem vídeo no desktop: os próprios 151 frames fazem as duas funções.
-//    scrollTop === 0  → "loop RAF": avança os frames sozinho em ping-pong
-//                        (1→151→1→...) pra simular a sensação de vídeo em
-//                        loop. Ping-pong em vez de reiniciar do frame 1 evita
-//                        qualquer pulo visual — não sabemos se o frame 151
-//                        bate visualmente com o frame 1, então ida-e-volta é
-//                        sempre suave, ao contrário de um corte 151→1.
-//    scrollTop  >  0  → o loop RAF para e o scroll assume o controle do
-//                        índice do frame (lógica já existente).
-//  Ao voltar pro topo, o loop retoma de onde parou (idleFrameRef), não do
-//  frame 1 — sem "pulo" perceptível na transição scroll→loop.
+//  Sem vídeo e sem loop no desktop (teste): o frame_001 é pintado uma única
+//  vez assim que termina de carregar e fica parado (com um float/glow sutil
+//  via framer-motion) até o usuário começar a rolar. A partir daí o scroll
+//  assume o controle do índice do frame (lógica já existente).
 //
 //  Preload: as 151 imagens (~3MB no total) começam a baixar assim que o
 //  componente monta, mas fora do caminho crítico de renderização — agendado
 //  via requestIdleCallback (cai pra setTimeout em navegadores sem suporte,
-//  ex. Safari) pra não competir com LCP/hero. O frame_001 é pintado no canvas
-//  assim que termina de carregar e o loop ping-pong só começa depois disso.
+//  ex. Safari) pra não competir com LCP/hero.
 //
 export default function ScrollSequenceCanvas({ endRef }) {
   const { scrollContainerRef } = useMenu();
@@ -90,8 +81,6 @@ export default function ScrollSequenceCanvas({ endRef }) {
   const framesRef = useRef([]);
   const sizedRef = useRef(false);
   const rafRef = useRef(null);
-  const idleFrameRef = useRef(0);
-  const idleDirRef = useRef(1);
 
   // ── drawFrame ──────────────────────────────────────────────────────────────
   const drawFrame = useCallback((idx) => {
@@ -144,41 +133,6 @@ export default function ScrollSequenceCanvas({ endRef }) {
     };
   }, [isSmall, drawFrame]);
 
-  // ── Loop ping-pong suave: roda enquanto parado no topo, simulando vídeo em
-  //    loop cinematográfico. idleFrameRef guarda a posição LINEAR real (usada
-  //    também pelo handoff do scroll); o smootherstep só entra na hora de
-  //    escolher qual frame desenhar, então a lógica de retomada (direção,
-  //    continuidade ao voltar do scroll) continua simples de rastrear. ────────
-  useEffect(() => {
-    if (isSmall || isScrolled || !ready) return;
-
-    let rafId;
-    let lastTime = performance.now();
-
-    const tick = (now) => {
-      const dt = Math.min(now - lastTime, 50); // cap de segurança (tab em background)
-      lastTime = now;
-
-      const step = (dt / IDLE_LEG_MS) * (TOTAL_FRAMES - 1) * idleDirRef.current;
-      let pos = idleFrameRef.current + step;
-      if (pos >= TOTAL_FRAMES - 1) {
-        pos = TOTAL_FRAMES - 1;
-        idleDirRef.current = -1;
-      } else if (pos <= 0) {
-        pos = 0;
-        idleDirRef.current = 1;
-      }
-      idleFrameRef.current = pos;
-
-      const eased = smootherstep(pos / (TOTAL_FRAMES - 1));
-      drawFrame(Math.round(eased * (TOTAL_FRAMES - 1)));
-      rafId = requestAnimationFrame(tick);
-    };
-
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
-  }, [isSmall, isScrolled, ready, drawFrame]);
-
   // ── Listener de scroll no container do SiteShell ──────────────────────────
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -198,7 +152,6 @@ export default function ScrollSequenceCanvas({ endRef }) {
 
       const progress = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
       const frameIndex = Math.floor(progress * (TOTAL_FRAMES - 1));
-      idleFrameRef.current = frameIndex; // continuidade se voltar ao topo
 
       const inner = innerRef.current;
       if (inner) {
@@ -294,7 +247,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
     >
       {/* Camada base estática — fica parada enquanto o scroll-sequence se move */}
       <img
-        src="/hero-raven-bg/hero-desktop.webp"
+        src="/bg-teste-ravenn-2.webp"
         alt=""
         style={{
           position: "absolute",
@@ -302,7 +255,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
           width: "100%",
           height: "100%",
           objectFit: "cover",
-          opacity: 0.42,
+          opacity: 0.12,
         }}
       />
 
@@ -310,11 +263,21 @@ export default function ScrollSequenceCanvas({ endRef }) {
         ref={innerRef}
         style={{ position: "absolute", inset: 0, willChange: "transform" }}
       >
-        {/* Único elemento: loop ping-pong parado, scroll durante a rolagem */}
-        <canvas
+        {/* Frame único parado — float/glow sutil enquanto não rola, scroll assume o controle depois */}
+        <motion.canvas
           ref={canvasRef}
           className={`${CANVAS_CLASSES} transition-opacity duration-300 ${canvasOpacity}`}
           style={{ display: "block", ...MASK_STYLE }}
+          animate={
+            !isScrolled && ready
+              ? { y: [0, -14, 0], scale: [BASE_SCALE, BASE_SCALE * 1.015, BASE_SCALE] }
+              : { y: 0, scale: BASE_SCALE }
+          }
+          transition={
+            !isScrolled && ready
+              ? { duration: 7, repeat: Infinity, ease: "easeInOut" }
+              : { duration: 0.4, ease: "easeOut" }
+          }
         />
       </div>
     </div>
