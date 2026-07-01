@@ -242,7 +242,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
         }}
       >
         <img
-          src="/bg-mobile-ravenn-hero.webp"
+          src="/bg-teste-ravenn-mobile.webp"
           alt=""
           style={{
             position: "absolute",
@@ -294,7 +294,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
     >
       {/* Camada base estática — fica parada enquanto o scroll-sequence se move */}
       <img
-        src="/bg-hero-desktop.webp"
+        src="/hero-raven-bg/hero-desktop.webp"
         alt=""
         style={{
           position: "absolute",
@@ -302,7 +302,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
           width: "100%",
           height: "100%",
           objectFit: "cover",
-          opacity: 0.32,
+          opacity: 0.42,
         }}
       />
 

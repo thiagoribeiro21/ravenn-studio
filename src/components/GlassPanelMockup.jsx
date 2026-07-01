@@ -1,10 +1,21 @@
 import { useRef, useEffect, useCallback } from 'react';
 
+// ── Freeze Frame com Delay ───────────────────────────────────────────────────
+// Substitui o loop nativo do <video> (que corta seco de volta pro frame 0)
+// por um ciclo manual: termina → segura FREEZE_MS parado → funde pra fora →
+// reseta currentTime → funde de volta tocando do zero. FADE_MS é a duração
+// da transição de opacidade (CSS), FREEZE_MS é quanto tempo o último frame
+// fica parado na tela antes de começar o fade-out.
+const FREEZE_MS = 5000;
+const FADE_MS   = 900;
+
 export default function GlassPanelMockup({ src, poster }) {
-  const containerRef = useRef(null);
-  const cardRef      = useRef(null);
-  const videoRef     = useRef(null);
-  const startedRef   = useRef(false);
+  const containerRef    = useRef(null);
+  const cardRef         = useRef(null);
+  const videoRef        = useRef(null);
+  const startedRef      = useRef(false);
+  const freezeTimerRef  = useRef(null);
+  const fadeTimerRef    = useRef(null);
 
   const handleMouseMove = useCallback((e) => {
     const r = containerRef.current?.getBoundingClientRect();
@@ -26,6 +37,35 @@ export default function GlassPanelMockup({ src, poster }) {
     }
   }, []);
 
+  const clearCycleTimers = useCallback(() => {
+    if (freezeTimerRef.current) { clearTimeout(freezeTimerRef.current); freezeTimerRef.current = null; }
+    if (fadeTimerRef.current)   { clearTimeout(fadeTimerRef.current);   fadeTimerRef.current   = null; }
+  }, []);
+
+  // ── Ciclo freeze → fade-out → reset → fade-in ──────────────────────────────
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleEnded = () => {
+      clearCycleTimers();
+      freezeTimerRef.current = setTimeout(() => {
+        video.style.opacity = '0';
+        fadeTimerRef.current = setTimeout(() => {
+          video.currentTime = 0;
+          video.play().catch(() => {});
+          video.style.opacity = '1';
+        }, FADE_MS);
+      }, FREEZE_MS);
+    };
+
+    video.addEventListener('ended', handleEnded);
+    return () => {
+      video.removeEventListener('ended', handleEnded);
+      clearCycleTimers();
+    };
+  }, [clearCycleTimers]);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -37,16 +77,22 @@ export default function GlassPanelMockup({ src, poster }) {
             video.load();
             startedRef.current = true;
           }
+          // Garante estado limpo ao (re)entrar na viewport — se o vídeo saiu
+          // de tela no meio do freeze/fade, sem isso ele voltaria pausado
+          // e/ou com opacity:0 (invisível) até o próximo ciclo completar.
+          clearCycleTimers();
+          video.style.opacity = '1';
           video.play().catch(() => {});
         } else if (startedRef.current) {
           video.pause();
+          clearCycleTimers();
         }
       },
       { threshold: 0.25 },
     );
     observer.observe(video);
     return () => observer.disconnect();
-  }, [src]);
+  }, [src, clearCycleTimers]);
 
   return (
     <div
@@ -91,7 +137,6 @@ export default function GlassPanelMockup({ src, poster }) {
           <video
             ref={videoRef}
             poster={poster}
-            loop
             muted
             playsInline
             preload="none"
@@ -101,6 +146,7 @@ export default function GlassPanelMockup({ src, poster }) {
               height:     '100%',
               objectFit:  'cover',
               background: '#000',
+              transition: `opacity ${FADE_MS}ms ease`,
             }}
           >
             <track kind="captions" />
