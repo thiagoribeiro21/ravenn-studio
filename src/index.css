@@ -46,3 +46,16 @@ body { background: #03000A; }
 
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* ── Modal de serviços — imagem de referência (CapabilitiesSection) ──────── */
+@keyframes ravenn-kenburns {
+  0%   { transform: scale(1.06) translate(0, 0); }
+  100% { transform: scale(1.16) translate(-1.5%, -1.5%); }
+}
+.animate-ravenn-kenburns { animation: ravenn-kenburns 16s ease-in-out infinite alternate; }
+
+@keyframes ravenn-pulse-glow {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 0.65; }
+}
+.animate-ravenn-pulse-glow { animation: ravenn-pulse-glow 5s ease-in-out infinite; }

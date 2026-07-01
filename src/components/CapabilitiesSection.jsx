@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback, lazy, Suspense } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ThreeServicesCanvas = lazy(() => import('./ThreeServicesCanvas'));
@@ -22,6 +23,7 @@ function useIsDesktop() {
 const SERVICES = [
   {
     id:          '01',
+    asset:       '/skyscraper_asset.webp',
     category:    'Posicionamento Digital',
     title:       'Sites Institucionais\nde Alta Autoridade',
     description: 'Presença digital que impõe respeito antes da primeira reunião. Design premium, estrutura técnica de SEO Local e velocidade que colocam sua empresa no topo do Google — exatamente onde decisões de alto valor são tomadas.',
@@ -37,6 +39,7 @@ const SERVICES = [
   },
   {
     id:          '02',
+    asset:       '/gravitational_funnel_asset.webp',
     category:    'Alta Conversão',
     title:       'Landing Pages\nde Alta Conversão',
     description: 'Cada real investido em tráfego pago merece uma página que converte, não que apenas existe. Copywriting orientado a vendas, design exclusivo sem templates e rastreamento pixel-perfeito — entrega em 7 dias úteis.',
@@ -52,6 +55,7 @@ const SERVICES = [
   },
   {
     id:          '03',
+    asset:       '/data_vortex_asset.webp',
     category:    'Experiência Imersiva',
     title:       'Sites Experienciais\ne Imersivos',
     description: 'Imagine um site que se comporta como um filme: cenas em 3D que reagem ao scroll, transições cinematográficas e uma navegação que parece mágica — como os efeitos visuais deste nosso próprio site. Para marcas de luxo, estúdios de arquitetura e design que não podem se dar ao luxo de parecer comuns.',
@@ -67,6 +71,7 @@ const SERVICES = [
   },
   {
     id:          '04',
+    asset:       '/geometric_plate_asset.webp',
     category:    'Experiência Gastronômica',
     title:       'Cardápios Digitais\nque Vendem Sozinhos',
     description: 'Chega de PDF ilegível no celular do cliente. Criamos cardápios digitais com fotos que dão água na boca, navegação intuitiva e pedido finalizado direto no WhatsApp — sem fricção entre a fome e a compra.',
@@ -82,6 +87,7 @@ const SERVICES = [
   },
   {
     id:          '05',
+    asset:       '/data_arrow_asset.webp',
     category:    'Performance Digital',
     title:       'Google Ads\nde Alta Performance',
     description: 'Colocamos sua empresa na frente do cliente certo, no exato momento em que ele digita a busca e está pronto para comprar. Gestão orientada por dados, otimização semanal e foco obsessivo em custo por aquisição real — não em vaidade de métricas.',
@@ -97,6 +103,7 @@ const SERVICES = [
   },
   {
     id:          '06',
+    asset:       '/neural_brain_asset.webp',
     category:    'Inteligência Artificial',
     title:       'Agentes de IA\ne Automação de Atendimento',
     description: 'Enquanto sua equipe dorme, seus concorrentes atendem. Agentes de IA treinados no seu negócio respondem, qualificam e agendam pelo WhatsApp 24 horas por dia — garantindo que nenhuma venda se perca às 3 da manhã.',
@@ -125,7 +132,13 @@ function ServiceModal({ service, onClose }) {
     return () => window.removeEventListener('keydown', fn);
   }, [onClose]);
 
-  return (
+  // Portal pro document.body: o modal fica dentro de <main>, que cria seu
+  // próprio stacking context (position:relative + z-index:20). Um z-index
+  // alto aqui dentro (z-[9000]) só compete com irmãos DENTRO de <main> — o
+  // header (position:sticky, z-index:50) é irmão de <main>, fora desse
+  // contexto, então sempre pintava por cima do modal independente do z-index
+  // interno. Portal escapa da hierarquia inteira e resolve de vez.
+  return createPortal(
     <AnimatePresence>
       {service && (
         /* ── Backdrop ──────────────────────────────────────────────────── */
@@ -178,16 +191,19 @@ function ServiceModal({ service, onClose }) {
               </svg>
             </button>
 
-            {/* ── Grid: conteúdo (7) + vídeo (5) ─────────────────────── */}
-            <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-12 overflow-hidden">
+            {/* ── Grid: conteúdo (7) + vídeo (5) ───────────────────────
+                Mobile: uma coluna, um scroll só (o grid inteiro rola).
+                Desktop (md+): duas colunas lado a lado, cada uma com seu
+                próprio scroll interno — comportamento original. */}
+            <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-12 overflow-y-auto md:overflow-hidden">
 
               {/* Coluna esquerda — conteúdo + CTA */}
-              <div className="md:col-span-7 flex flex-col overflow-hidden">
+              <div className="md:col-span-7 flex flex-col overflow-visible md:overflow-hidden">
 
                 {/* Marca d'água */}
                 <span
                   aria-hidden
-                  className="absolute pointer-events-none select-none font-light"
+                  className="absolute pointer-events-none select-none font-light hidden md:block"
                   style={{
                     fontSize:      'clamp(7rem, 18vw, 12rem)',
                     lineHeight:    1,
@@ -201,11 +217,15 @@ function ServiceModal({ service, onClose }) {
                   {service.id}
                 </span>
 
-                {/* Área scrollável */}
+                {/* Área scrollável — no mobile é o grid pai que rola (ver
+                    acima), então aqui overflow fica solto pra não competir
+                    com aquele scroll (dois overflow:auto aninhados = duas
+                    barras de scroll brigando pelo mesmo gesto). */}
                 <div
+                  data-modal-scroll
+                  className="md:overflow-y-auto"
                   style={{
                     flex:      1,
-                    overflowY: 'auto',
                     overflowX: 'hidden',
                     padding:   'clamp(32px,3vw,44px) clamp(32px,4vw,56px) 0',
                     position:  'relative',
@@ -213,8 +233,8 @@ function ServiceModal({ service, onClose }) {
                   }}
                 >
                   <motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     transition={{ delay: 0.28, duration: 0.60, ease: [0.16, 1, 0.3, 1] }}
                   >
                     {/* Eyebrow */}
@@ -361,24 +381,53 @@ function ServiceModal({ service, onClose }) {
 
               </div>{/* /col esquerda */}
 
-              {/* Coluna direita — vídeo */}
+              {/* Coluna direita — imagem de referência visual do serviço */}
               <div
-                className="md:col-span-5 relative overflow-hidden"
-                style={{ minHeight: '300px', background: '#080516' }}
+                className="md:col-span-5 relative overflow-hidden h-[220px] md:h-auto min-h-[220px] md:min-h-[300px]"
+                style={{ background: '#080516' }}
               >
-                <video
-                  src="/google-ads-video.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none"
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={service.asset}
+                    src={service.asset}
+                    alt={`Referência visual — ${service.title.replace(/\n/g, ' ')}`}
+                    initial={{ opacity: 0, scale: 1.12 }}
+                    animate={{ opacity: 0.68, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.05 }}
+                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute inset-0 w-full h-full object-cover pointer-events-none animate-ravenn-kenburns"
+                  />
+                </AnimatePresence>
+
+                {/* Glow ambiente pulsante — ecoa a cor do próprio asset */}
+                <div
+                  aria-hidden
+                  className="absolute inset-0 pointer-events-none animate-ravenn-pulse-glow"
+                  style={{
+                    background:    'radial-gradient(circle at 50% 45%, rgba(124,58,237,0.45) 0%, transparent 62%)',
+                    mixBlendMode:  'screen',
+                  }}
                 />
-                {/* Sfumato — funde o vídeo com a coluna de texto */}
+
+                {/* Sfumato — funde a imagem com a coluna de texto */}
                 <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#03000A] to-transparent z-10" />
                 {/* Escurecimento superior e inferior */}
                 <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#03000A] to-transparent z-10" />
                 <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#03000A] to-transparent z-10" />
+
+                {/* Rótulo da categoria — canto inferior esquerdo da imagem */}
+                <div className="absolute left-6 bottom-6 z-10 flex items-center gap-2">
+                  <span aria-hidden style={{ width: 5, height: 5, borderRadius: '50%', background: '#A78BFA', boxShadow: '0 0 8px 1px rgba(167,139,250,0.85)' }} />
+                  <span style={{
+                    fontSize:      9,
+                    fontWeight:    600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.24em',
+                    color:         'rgba(248,249,250,0.75)',
+                  }}>
+                    {service.category}
+                  </span>
+                </div>
               </div>
 
             </div>{/* /grid */}
@@ -386,7 +435,8 @@ function ServiceModal({ service, onClose }) {
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
 

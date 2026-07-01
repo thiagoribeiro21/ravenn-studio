@@ -4,10 +4,19 @@ import { useMenu } from "../context/MenuContext";
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const VIDEO_SRC = "/raven-loop-fly.webm"; // usado só no overlay leve do mobile
 const TOTAL_FRAMES = 151;
-const IDLE_FRAME_MS = 35; // ~28fps do loop ping-pong parado no topo (~10.6s ida-e-volta)
+const IDLE_LEG_MS = 9000; // duração de cada trecho do loop parado (ida OU volta) — ~18s ida-e-volta
 
 const pad = (n) => String(n).padStart(3, "0");
 const getUrl = (n) => `/raven-voador-pasta/frame_${pad(n)}.webp`;
+
+// Smootherstep (Perlin) — velocidade zero exatamente nas pontas (frame 0 e
+// frame final) e pico de velocidade no meio. Aplicado sobre a posição linear
+// (não sobre o tempo), então funciona igual pra ida e pra volta: como os dois
+// extremos do ping-pong são sempre os mesmos dois pontos físicos (frame 0 e
+// frame 150), a curva sempre desacelera chegando neles e acelera saindo —
+// é isso que mata o "corte seco" na troca de direção e dá a sensação de
+// cinemático em vez de mecânico.
+const smootherstep = (t) => t * t * t * (t * (t * 6 - 15) + 10);
 
 // Classe do canvas — posicionamento extremo desktop.
 // mix-blend-screen fecha o fundo preto de cada frame contra o fundo escuro do
@@ -135,32 +144,34 @@ export default function ScrollSequenceCanvas({ endRef }) {
     };
   }, [isSmall, drawFrame]);
 
-  // ── Loop ping-pong: roda enquanto parado no topo, simulando vídeo em loop ──
+  // ── Loop ping-pong suave: roda enquanto parado no topo, simulando vídeo em
+  //    loop cinematográfico. idleFrameRef guarda a posição LINEAR real (usada
+  //    também pelo handoff do scroll); o smootherstep só entra na hora de
+  //    escolher qual frame desenhar, então a lógica de retomada (direção,
+  //    continuidade ao voltar do scroll) continua simples de rastrear. ────────
   useEffect(() => {
     if (isSmall || isScrolled || !ready) return;
 
     let rafId;
     let lastTime = performance.now();
-    let acc = 0;
 
     const tick = (now) => {
-      acc += now - lastTime;
+      const dt = Math.min(now - lastTime, 50); // cap de segurança (tab em background)
       lastTime = now;
 
-      while (acc >= IDLE_FRAME_MS) {
-        acc -= IDLE_FRAME_MS;
-        let idx = idleFrameRef.current + idleDirRef.current;
-        if (idx >= TOTAL_FRAMES - 1) {
-          idx = TOTAL_FRAMES - 1;
-          idleDirRef.current = -1;
-        } else if (idx <= 0) {
-          idx = 0;
-          idleDirRef.current = 1;
-        }
-        idleFrameRef.current = idx;
+      const step = (dt / IDLE_LEG_MS) * (TOTAL_FRAMES - 1) * idleDirRef.current;
+      let pos = idleFrameRef.current + step;
+      if (pos >= TOTAL_FRAMES - 1) {
+        pos = TOTAL_FRAMES - 1;
+        idleDirRef.current = -1;
+      } else if (pos <= 0) {
+        pos = 0;
+        idleDirRef.current = 1;
       }
+      idleFrameRef.current = pos;
 
-      drawFrame(idleFrameRef.current);
+      const eased = smootherstep(pos / (TOTAL_FRAMES - 1));
+      drawFrame(Math.round(eased * (TOTAL_FRAMES - 1)));
       rafId = requestAnimationFrame(tick);
     };
 
