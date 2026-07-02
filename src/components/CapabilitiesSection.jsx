@@ -267,7 +267,7 @@ function ServiceModal({ service, onClose }) {
                     <div style={{ width: 32, height: 1, background: 'linear-gradient(to right, #7C3AED, transparent)', marginBottom: 14 }} />
 
                     {/* Descrição */}
-                    <p style={{ fontSize: 14, lineHeight: 1.72, color: '#94A3B8', margin: '0 0 20px' }}>
+                    <p style={{ fontSize: 16, fontWeight: 400, lineHeight: 1.72, color: '#94A3B8', margin: '0 0 20px' }}>
                       {service.longDescription}
                     </p>
 
@@ -297,7 +297,8 @@ function ServiceModal({ service, onClose }) {
                             borderBottom: idx < service.deliverables.length - 1
                               ? '1px solid rgba(255,255,255,0.04)'
                               : 'none',
-                            fontSize:   13,
+                            fontSize:   16,
+                            fontWeight: 400,
                             lineHeight: 1.60,
                             color:      '#CBD5E1',
                           }}
@@ -495,7 +496,7 @@ function ServiceBlock({ service, index, onActive, onOpen }) {
       </h2>
 
       {/* Descrição */}
-      <p style={{ fontSize: 15, lineHeight: 1.74, color: '#94A3B8', maxWidth: 380, marginBottom: 24 }}>
+      <p style={{ fontSize: 17, fontWeight: 400, lineHeight: 1.74, color: '#94A3B8', maxWidth: 380, marginBottom: 24 }}>
         {service.description}
       </p>
 

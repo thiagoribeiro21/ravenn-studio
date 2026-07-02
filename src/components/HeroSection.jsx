@@ -91,7 +91,8 @@ export default function HeroSection() {
           variants={item}
           style={{
             marginTop:  'clamp(12px, 3.5vh, 32px)',
-            fontSize:   'clamp(14px, min(1.4vw, 2.4vh), 19px)',
+            fontSize:   'clamp(16px, min(1.4vw, 2.4vh), 19px)',
+            fontWeight: 400,
             lineHeight: 1.65,
             color:      '#94A3B8',
             maxWidth:   520,

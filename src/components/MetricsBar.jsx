@@ -94,7 +94,7 @@ export default function MetricsBar() {
               style={{
                 display:       'block',
                 marginTop:     8,
-                fontSize:      'clamp(12.5px, 1.3vw, 14px)',
+                fontSize:      'clamp(16px, 1.3vw, 17px)',
                 fontWeight:    400,
                 lineHeight:    1.5,
                 letterSpacing: '0.02em',

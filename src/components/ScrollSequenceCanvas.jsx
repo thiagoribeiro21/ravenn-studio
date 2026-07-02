@@ -9,6 +9,16 @@ const TOTAL_FRAMES = 121;
 const pad = (n) => String(n).padStart(3, "0");
 const getUrl = (n) => `/raven-novos-frames/frame_${pad(n)}.webp`;
 
+// Fade de opacidade do próprio corvo (canvas) conforme o scroll avança —
+// começa a sumir logo cedo (8% do progresso), mas só chega a 0 em 100%,
+// o mesmo ponto em que a sequência de frames termina (progress === 1).
+// FADE_END precisa bater com o fim do range de frameIndex/translateX —
+// se terminasse antes, o corvo sumia (opacity 0) no meio da animação,
+// com frames ainda avançando por trás de um canvas invisível.
+const CROW_FADE_START = 0.08;
+const CROW_FADE_END = 1;
+const smoothstep = (t) => t * t * (3 - 2 * t);
+
 // Classe do canvas — posicionamento extremo desktop.
 // mix-blend-screen fecha o fundo preto de cada frame contra o fundo escuro do
 // site (screen com preto = transparente); contrast/brightness compensam o
@@ -144,7 +154,10 @@ export default function ScrollSequenceCanvas({ endRef }) {
 
       setIsScrolled((prev) => (prev === nowScrolled ? prev : nowScrolled));
 
-      if (!nowScrolled) return;
+      if (!nowScrolled) {
+        if (canvasRef.current) canvasRef.current.style.opacity = "";
+        return;
+      }
 
       const maxScroll = endRef?.current
         ? endRef.current.getBoundingClientRect().top + container.scrollTop
@@ -157,6 +170,14 @@ export default function ScrollSequenceCanvas({ endRef }) {
       if (inner) {
         const xT = Math.min(1, Math.max(0, (progress - 0.05) / 0.75));
         inner.style.transform = `translateX(${8 * xT}vw)`;
+      }
+
+      const fadeT = Math.min(
+        1,
+        Math.max(0, (progress - CROW_FADE_START) / (CROW_FADE_END - CROW_FADE_START)),
+      );
+      if (canvasRef.current) {
+        canvasRef.current.style.opacity = String(1 - smoothstep(fadeT));
       }
 
       if (rafRef.current) cancelAnimationFrame(rafRef.current);

@@ -34,7 +34,8 @@ function Field({ tag: Tag = 'input', label, name, ...props }) {
           minHeight:            isTextarea ? 140 : undefined,
           resize:               isTextarea ? 'vertical' : undefined,
           color:                '#F8F9FA',
-          fontSize:             14,
+          fontSize:             16,
+          fontWeight:           400,
           fontFamily:           'inherit',
           outline:              'none',
           boxShadow:            focused ? '0 0 0 3px rgba(124,58,237,0.15)' : 'none',
@@ -77,12 +78,16 @@ function SelectField({ label, options, name, ...props }) {
           borderRadius:         12,
           padding:              '0 40px 0 16px',
           color:                '#F8F9FA',
-          fontSize:             14,
+          fontSize:             16,
+          fontWeight:           400,
           fontFamily:           'inherit',
           outline:              'none',
           boxShadow:            focused ? '0 0 0 3px rgba(124,58,237,0.15)' : 'none',
           transition:           'background 180ms ease, border-color 180ms ease, box-shadow 180ms ease',
           cursor:               'pointer',
+          whiteSpace:           'nowrap',
+          overflow:             'hidden',
+          textOverflow:         'ellipsis',
           appearance:           'none',
           WebkitAppearance:     'none',
           backgroundImage:      `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A78BFA' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
@@ -102,7 +107,7 @@ function SelectField({ label, options, name, ...props }) {
 }
 
 const SERVICE_OPTIONS = [
-  { value: '',              label: 'Selecione o serviço de interesse' },
+  { value: '',              label: 'Selecione um serviço' },
   { value: 'institucional', label: 'Sites Institucionais de Alta Autoridade' },
   { value: 'landing',       label: 'Landing Pages de Alta Conversão' },
   { value: 'experiencial',  label: 'Sites Experienciais e Imersivos' },
@@ -235,7 +240,8 @@ export default function ContactSection() {
           </h2>
 
           <p style={{
-            fontSize:     15,
+            fontSize:     16,
+            fontWeight:   400,
             lineHeight:   1.74,
             color:        '#94A3B8',
             maxWidth:     400,

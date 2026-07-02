@@ -147,7 +147,7 @@ export default function ProcessSection() {
               {step.title}
             </h3>
 
-            <p style={{ fontSize: 14, lineHeight: 1.78, color: '#94A3B8', margin: 0, textWrap: 'pretty' }}>
+            <p style={{ fontSize: 16, fontWeight: 400, lineHeight: 1.78, color: '#94A3B8', margin: 0, textWrap: 'pretty' }}>
               {step.body}
             </p>
           </motion.div>

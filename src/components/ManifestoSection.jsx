@@ -133,7 +133,8 @@ export default function ManifestoSection() {
 
             {/* Descrição */}
             <p style={{
-              fontSize:   'clamp(14px, 1.3vw, 16px)',
+              fontSize:   'clamp(16px, 1.3vw, 18px)',
+              fontWeight: 400,
               lineHeight: 1.72,
               color:      '#94A3B8',
               margin:     0,
@@ -165,10 +166,10 @@ export default function ManifestoSection() {
         }}
       >
         <p style={{
-          fontSize:      13,
+          fontSize:      15,
           fontWeight:    400,
           textTransform: 'uppercase',
-          letterSpacing: '0.18em',
+          letterSpacing: '0.14em',
           color:         '#94A3B8',
           margin:        0,
         }}>

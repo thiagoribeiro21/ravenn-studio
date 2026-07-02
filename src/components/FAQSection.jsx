@@ -45,7 +45,7 @@ function FAQItem({ item, isOpen, onToggle }) {
       >
         <span
           style={{
-            fontSize:      'clamp(15px, 1.4vw, 19px)',
+            fontSize:      'clamp(17px, 1.4vw, 20px)',
             fontWeight:    400,
             letterSpacing: '-0.01em',
             lineHeight:    1.3,
@@ -91,7 +91,8 @@ function FAQItem({ item, isOpen, onToggle }) {
           >
             <p
               style={{
-                fontSize:   15,
+                fontSize:   17,
+                fontWeight: 400,
                 lineHeight: 1.78,
                 color:      '#94A3B8',
                 margin:     '0 0 clamp(20px, 3vh, 28px)',

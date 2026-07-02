@@ -81,7 +81,8 @@ export default function PortfolioSection() {
         </h2>
 
         <p style={{
-          fontSize:   'clamp(14px, 1.3vw, 17px)',
+          fontSize:   'clamp(16px, 1.3vw, 18px)',
+          fontWeight: 400,
           lineHeight: 1.7,
           color:      '#94A3B8',
           margin:     0,

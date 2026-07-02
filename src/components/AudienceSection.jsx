@@ -61,7 +61,7 @@ function ServiceRow({ item, index }) {
 
       {/* Descrição */}
       <div
-        className="md:w-1/3 text-sm leading-relaxed text-[#94A3B8] group-hover:text-white transition-colors duration-300 mb-3 md:mb-0 md:px-8"
+        className="md:w-1/3 text-base font-normal leading-relaxed text-[#94A3B8] group-hover:text-white transition-colors duration-300 mb-3 md:mb-0 md:px-8"
         style={{ textWrap: 'pretty' }}
       >
         {item.description}
