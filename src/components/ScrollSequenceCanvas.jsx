@@ -17,7 +17,10 @@ const getUrl = (n) => `/raven-novos-frames/frame_${pad(n)}.webp`;
 // com frames ainda avançando por trás de um canvas invisível.
 const CROW_FADE_START = 0.08;
 const CROW_FADE_END = 1;
-const smoothstep = (t) => t * t * (3 - 2 * t);
+// Smootherstep (Perlin) — curva ainda mais gradual nas pontas que o
+// smoothstep comum, pra a transição de opacidade parecer um dissolve de
+// cinema em vez de um fade linear.
+const smoothstep = (t) => t * t * t * (t * (t * 6 - 15) + 10);
 
 // Classe do canvas — posicionamento extremo desktop.
 // mix-blend-screen fecha o fundo preto de cada frame contra o fundo escuro do
@@ -287,8 +290,12 @@ export default function ScrollSequenceCanvas({ endRef }) {
         {/* Frame único parado — float/glow sutil enquanto não rola, scroll assume o controle depois */}
         <motion.canvas
           ref={canvasRef}
-          className={`${CANVAS_CLASSES} transition-opacity duration-300 ${canvasOpacity}`}
-          style={{ display: "block", ...MASK_STYLE }}
+          className={`${CANVAS_CLASSES} ${canvasOpacity}`}
+          style={{
+            display: "block",
+            ...MASK_STYLE,
+            transition: "opacity 700ms cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
           animate={
             !isScrolled && ready
               ? {
