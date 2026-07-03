@@ -43,7 +43,7 @@ export default function PortfolioSection() {
   return (
     <section
       id="portfolio"
-      className="min-h-screen flex flex-col items-center justify-center bg-[#03000A] overflow-hidden border-t border-[#1E1B4B] gap-6 py-10 px-0 md:gap-[clamp(36px,5vh,60px)] md:py-[clamp(48px,8vh,80px)] md:px-[clamp(24px,4vw,48px)]"
+      className="min-h-dvh-fix flex flex-col items-center justify-center bg-[#03000A] overflow-hidden border-t border-[#1E1B4B] gap-6 py-10 px-0 md:gap-[clamp(36px,5vh,60px)] md:py-[clamp(48px,8vh,80px)] md:px-[clamp(24px,4vw,48px)]"
     >
 
       {/* ── Header ──────────────────────────────────────────────────────────── */}

@@ -48,6 +48,13 @@ body { background: #03000A; }
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 
 /*
+  min-height:100dvh via classe própria — a sintaxe de valor arbitrário do
+  Tailwind (min-h-[100dvh]) não gera CSS nesta versão (não reconhece a
+  unidade dvh), então declaramos direto pra garantir o efeito.
+*/
+.min-h-dvh-fix { min-height: 100dvh; }
+
+/*
   Compensa a navbar sticky (header, position:sticky, top:0) na navegação por
   âncora (#services, #contact etc.) — sem isso, o navegador alinha o topo da
   seção exatamente com o topo da viewport, e a navbar (que fica por cima)

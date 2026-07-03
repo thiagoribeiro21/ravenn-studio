@@ -76,7 +76,7 @@ export default function App() {
         <Navbar />
 
         <main
-          className="relative z-20 w-full min-h-screen font-grotesk"
+          className="relative z-20 w-full min-h-dvh-fix font-grotesk"
           style={{ overflowX: 'clip' }}
         >
           {/* ── Bloco transparente: canvases visíveis por trás ──────────── */}
