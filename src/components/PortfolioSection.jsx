@@ -26,8 +26,8 @@ export default function PortfolioSection() {
   const handleCarouselScroll = useCallback(() => {
     const el = carouselRef.current;
     if (!el) return;
-    // cardWidth = 80vw + 16px gap
-    const cardWidth = window.innerWidth * 0.8 + 16;
+    // cardWidth = 97vw + 16px gap
+    const cardWidth = window.innerWidth * 1 + 16;
     const idx = Math.min(Math.round(el.scrollLeft / cardWidth), CARDS.length - 1);
     setActiveIndex(idx);
     if (!hasScrolled) setHasScrolled(true);
@@ -36,7 +36,7 @@ export default function PortfolioSection() {
   const scrollToCard = useCallback((idx) => {
     const el = carouselRef.current;
     if (!el) return;
-    const cardWidth = window.innerWidth * 0.8 + 16;
+    const cardWidth = window.innerWidth * 1 + 16;
     el.scrollTo({ left: cardWidth * idx, behavior: 'smooth' });
   }, []);
 
@@ -155,10 +155,10 @@ export default function PortfolioSection() {
             ref={carouselRef}
             onScroll={handleCarouselScroll}
             className="flex flex-row overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-4 pb-4"
-            style={{ paddingInline: '10vw', position: 'relative', zIndex: 1 }}
+            style={{ paddingInline: '0vw', position: 'relative', zIndex: 1 }}
           >
             {CARDS.map((card, i) => (
-              <div key={i} className="flex-shrink-0 snap-center" style={{ width: '80vw' }}>
+              <div key={i} className="flex-shrink-0 snap-center" style={{ width: '100vw' }}>
                 <GlassPanelMockup siteSrc={card.siteSrc} />
               </div>
             ))}
