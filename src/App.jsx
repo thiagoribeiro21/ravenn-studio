@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { scrollStore } from './scrollStore';
 
 import { MenuProvider } from './context/MenuContext';
+import IntroReveal         from './components/IntroReveal';
 import MenuPanel           from './components/MenuPanel';
 import SiteShell           from './components/SiteShell';
 
@@ -54,6 +55,7 @@ export default function App() {
         │             │         seções sólidas (bg-[#03000A]): cobrem canvas    │
         │             └─ Footer                                                 │
         │  50  WhatsAppButton (position:fixed, fora do SiteShell → viewport)   │
+        │ 100  IntroReveal    (position:fixed, cortina cinematográfica inicial) │
         └───────────────────────────────────────────────────────────────────────┘
 
         Os canvases estão DENTRO do SiteShell via bgLayer.
@@ -62,6 +64,8 @@ export default function App() {
         o canvas aparece dentro do "quadro" do site, revelado pelas seções
         com background transparente (Hero, MetricsBar, AudienceSection).
       */}
+
+      <IntroReveal />
 
       <MenuPanel />
 

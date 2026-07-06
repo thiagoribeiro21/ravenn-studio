@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { onIntroDone } from '../introStore';
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.11, delayChildren: 0.3 } },
+  show: { transition: { staggerChildren: 0.13, delayChildren: 0.15 } },
 };
 
 const item = {
@@ -12,6 +14,11 @@ const item = {
 
 
 export default function HeroSection() {
+  // Espera o corte da cortina do IntroReveal antes de começar a própria entrada —
+  // sem isso, eyebrow/título/texto já apareciam prontos escondidos atrás da cortina.
+  const [introDone, setIntroDone] = useState(false);
+  useEffect(() => onIntroDone(() => setIntroDone(true)), []);
+
   return (
     <section
       id="hero"
@@ -33,7 +40,7 @@ export default function HeroSection() {
       <motion.div
         variants={container}
         initial="hidden"
-        animate="show"
+        animate={introDone ? 'show' : 'hidden'}
         className="relative max-w-4xl"
         style={{ zIndex: 1 }}
       >
@@ -168,8 +175,8 @@ export default function HeroSection() {
       {/* Scroll cue */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, duration: 1.2 }}
+        animate={{ opacity: introDone ? 1 : 0 }}
+        transition={{ delay: introDone ? 1.6 : 0, duration: 1.2 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         style={{ pointerEvents: 'none' }}
       >

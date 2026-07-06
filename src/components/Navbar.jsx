@@ -76,8 +76,8 @@ export default function Navbar() {
         background: 'transparent',
         border:     'none',
         boxShadow:  'none',
-        // top-6 (24px) de espaço acima da pílula; zero quando expandido ou menu aberto
-        padding:    pill ? '24px 0 0' : '0',
+        // 24px de espaço acima da pílula; um respiro menor quando expandido, pra não colar no topo
+        padding:    pill ? '24px 0 0' : '14px 0 0',
         transition: 'padding 420ms cubic-bezier(0.16,1,0.3,1)',
       }}
     >
@@ -126,12 +126,12 @@ export default function Navbar() {
           style={{ display: 'flex', alignItems: 'center', lineHeight: 0 }}
         >
           <img
-            src="/logos-ravenn/logo-raven-white-horizontal1.webp"
+            src="/logo-ravenn/logo-ravenn-studio-horizontal.webp"
             alt="Ravenn Studio"
             width={200}
             height={50}
             style={{
-              height:     pill ? 30 : 'clamp(44px,4vw,60px)',
+              height:     pill ? 38 : 'clamp(58px,5.2vw,80px)',
               width:      'auto',
               objectFit:  'contain',
               display:    'block',

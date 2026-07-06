@@ -86,11 +86,11 @@ export default function Footer() {
           >
             <a href="#hero" style={{ lineHeight: 0, display: 'inline-block' }}>
               <img
-                src="/logos-ravenn/logo-raven-white-horizontal1.webp"
+                src="/logo-ravenn/logo-ravenn-studio-horizontal.webp"
                 alt="Ravenn Studio"
                 width={200}
                 height={50}
-                style={{ height: 72, width: 'auto', objectFit: 'contain', opacity: 0.85 }}
+                style={{ height: 100, width: 'auto', objectFit: 'contain', opacity: 0.85 }}
                 draggable={false}
               />
             </a>
