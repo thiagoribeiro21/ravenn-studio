@@ -15,10 +15,14 @@ const SNAP = [0.22, 1, 0.36, 1];
 
 const T_ATMOS_DELAY = 0.15;
 const T_ATMOS_DUR   = 1.3;
-const T_LOGO_DELAY  = 0.12;
-const T_LOGO_DUR    = 0.85;
+const T_ICON_DELAY  = 0.15;
+const T_ICON_DUR    = 0.65;
+const T_FLASH_DELAY = 0.15;
+const T_FLASH_DUR   = 0.55;
+const T_SWEEP_DELAY = 0.95;
+const T_SWEEP_DUR   = 0.6;
 
-const HOLD_END  = 1750;               // ms — moment the curtain begins to part
+const HOLD_END  = 2000;               // ms — moment the curtain begins to part
 const EXIT_DUR  = 0.38;               // s — mark + atmosphere fade/scale out
 const SPLIT_DUR = 0.72;               // s — panel travel
 const TOTAL     = HOLD_END + SPLIT_DUR * 1000 + 60;
@@ -240,7 +244,7 @@ export default function IntroReveal() {
             />
           </motion.div>
 
-          {/* ── Marca: logo vertical revelada por wipe de cima pra baixo, some junto no corte ── */}
+          {/* ── Marca: ícone estoura de um flash de luz e depois recebe um brilho que varre a silhueta ── */}
           <motion.div
             initial={{ opacity: 1, scale: 1 }}
             animate={{ opacity: splitting ? 0 : 1, scale: splitting ? 1.06 : 1 }}
@@ -253,15 +257,64 @@ export default function IntroReveal() {
               justifyContent: 'center',
             }}
           >
-            <motion.img
-              src="/logo-ravenn/logo-ravenn-studio-vertical.webp"
-              alt="Ravenn Studio"
-              initial={{ clipPath: 'inset(0 0 100% 0)', scale: 0.94 }}
-              animate={{ clipPath: 'inset(0 0 0% 0)', scale: 1 }}
-              transition={{ duration: T_LOGO_DUR, delay: T_LOGO_DELAY, ease: SNAP }}
-              style={{ width: 'clamp(150px,15vw,210px)', height: 'auto', display: 'block' }}
-              draggable={false}
-            />
+            <div style={{ position: 'relative', width: 'clamp(140px,16vw,220px)', aspectRatio: '1' }}>
+              {/* Estouro de luz: flash radial que se expande e desaparece no instante em que o ícone surge */}
+              <motion.div
+                aria-hidden
+                initial={{ opacity: 0, scale: 0.3 }}
+                animate={{ opacity: [0, 1, 0], scale: [0.3, 1.8, 2.4] }}
+                transition={{ duration: T_FLASH_DUR, delay: T_FLASH_DELAY, times: [0, 0.28, 1], ease: 'easeOut' }}
+                style={{
+                  position:      'absolute',
+                  inset:         '-40%',
+                  borderRadius:  '50%',
+                  background:    'radial-gradient(circle, rgba(233,213,255,0.9) 0%, rgba(167,139,250,0.55) 32%, transparent 70%)',
+                  filter:        'blur(4px)',
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* Ícone: materializa do borrão, nítido e sólido */}
+              <motion.img
+                src="/logo-ravenn/icone-ravenn.webp"
+                alt="Ravenn Studio"
+                initial={{ opacity: 0, scale: 1.35, filter: 'blur(18px)' }}
+                animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                transition={{ duration: T_ICON_DUR, delay: T_ICON_DELAY, ease: SNAP }}
+                style={{ position: 'relative', width: '100%', height: '100%', display: 'block' }}
+                draggable={false}
+              />
+
+              {/* Brilho: faixa de luz diagonal que varre a silhueta do ícone uma única vez.
+                  A máscara fica parada (recorta a forma do ícone); só o gradiente por
+                  baixo se desloca via background-position — animar via transform (x)
+                  arrastaria a máscara junto, duplicando a silhueta em vez de "passar" por ela. */}
+              <motion.div
+                aria-hidden
+                initial={{ backgroundPosition: '-120% 50%', opacity: 0 }}
+                animate={{ backgroundPosition: '220% 50%', opacity: [0, 1, 1, 0] }}
+                transition={{
+                  backgroundPosition: { duration: T_SWEEP_DUR, delay: T_SWEEP_DELAY, ease: 'linear' },
+                  opacity:            { duration: T_SWEEP_DUR, delay: T_SWEEP_DELAY, times: [0, 0.15, 0.7, 1], ease: 'easeInOut' },
+                }}
+                style={{
+                  position:           'absolute',
+                  inset:              0,
+                  backgroundImage:    'linear-gradient(75deg, transparent 40%, rgba(76,29,149,0.4) 46%, rgba(237,233,254,0.95) 50%, rgba(76,29,149,0.4) 54%, transparent 60%)',
+                  backgroundSize:     '300% 300%',
+                  backgroundRepeat:   'no-repeat',
+                  WebkitMaskImage:    'url(/logo-ravenn/icone-ravenn.webp)',
+                  maskImage:          'url(/logo-ravenn/icone-ravenn.webp)',
+                  WebkitMaskSize:     'contain',
+                  maskSize:           'contain',
+                  WebkitMaskRepeat:   'no-repeat',
+                  maskRepeat:         'no-repeat',
+                  WebkitMaskPosition: 'center',
+                  maskPosition:       'center',
+                  pointerEvents:      'none',
+                }}
+              />
+            </div>
           </motion.div>
         </div>
       )}
