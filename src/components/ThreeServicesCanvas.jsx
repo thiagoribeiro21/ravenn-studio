@@ -188,7 +188,7 @@ function Scene({ activeIndex }) {
     sampleShape(new THREE.ConeGeometry(1.4, 2.2, 32).rotateX(Math.PI), N),
     // 03 Sites Experienciais — nó fluido (vórtice imersivo)
     sampleShape(new THREE.TorusKnotGeometry(0.85, 0.28, 200, 32), N),
-    // 04 Cardápios Digitais — disco achatado (prato)
+    // 04 Lojas Virtuais — disco achatado (shape herdado do serviço anterior)
     sampleShape(new THREE.CylinderGeometry(1.5, 1.5, 0.18, 40), N),
     // 05 Google Ads — dardo fino de baixo poligonagem (seta de precisão)
     sampleShape(new THREE.ConeGeometry(0.55, 2.6, 4), N),

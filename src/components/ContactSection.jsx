@@ -111,7 +111,7 @@ const SERVICE_OPTIONS = [
   { value: 'institucional', label: 'Sites Institucionais de Alta Autoridade' },
   { value: 'landing',       label: 'Landing Pages de Alta Conversão' },
   { value: 'experiencial',  label: 'Sites Experienciais e Imersivos' },
-  { value: 'cardapio',      label: 'Cardápios Digitais' },
+  { value: 'ecommerce',     label: 'Lojas Virtuais / E-commerce' },
   { value: 'trafego',       label: 'Google Ads de Alta Performance' },
   { value: 'automacao',     label: 'Agentes de IA e Automação de Atendimento' },
   { value: 'outro',         label: 'Outro' },

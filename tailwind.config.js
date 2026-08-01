@@ -17,7 +17,8 @@ export default {
         'rv-surface-2':'#0D0A18',
       },
       fontFamily: {
-        grotesk: ['"ClashGrotesk-Variable"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        grotesk: ['"ClashGrotesk-Variable"', '"Clash Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        satoshi: ['"Satoshi-Variable"', 'Satoshi', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       letterSpacing: {
         widest2: '0.35em',

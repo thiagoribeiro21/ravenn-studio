@@ -8,7 +8,7 @@ const SUB_LINKS = [
   { label: 'Sites Institucionais',      href: '#services' },
   { label: 'Landing Pages',             href: '#services' },
   { label: 'Sites Experienciais',       href: '#services' },
-  { label: 'Cardápios Digitais',        href: '#services' },
+  { label: 'Lojas Virtuais',            href: '#services' },
   { label: 'Google Ads',                href: '#services' },
   { label: 'Agentes de IA',             href: '#services' },
 ];

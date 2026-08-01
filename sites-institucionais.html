@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── SEO Primário — LP dedicada de Sites Institucionais (tráfego pago) ──── -->
+  <title>Criação de Sites Institucionais Premium em Niterói, RJ | Ravenn Studio</title>
+  <meta name="description" content="Agência de desenvolvimento web RJ especializada em sites institucionais de alta conversão. Design premium para empresas em Niterói e região. Diagnóstico gratuito." />
+  <meta name="keywords" content="criação de sites em Niterói, agência de desenvolvimento web RJ, sites institucionais de alta conversão, design premium para empresas, desenvolvedor de sites em Niterói" />
+  <link rel="canonical" href="https://ravennstudio.com.br/sites-institucionais" />
+
+  <!-- ── Robots — página de conversão, não precisa competir no índice orgânico ── -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+  <meta name="author" content="Ravenn Studio" />
+
+  <!-- ── Geo / Local SEO ──────────────────────────────────────────────────── -->
+  <meta name="geo.region" content="BR-RJ" />
+  <meta name="geo.placename" content="Niterói, Rio de Janeiro, Brasil" />
+  <meta name="geo.position" content="-22.8838;-43.1044" />
+  <meta name="ICBM" content="-22.8838, -43.1044" />
+
+  <!-- ── Open Graph ────────────────────────────────────────────────────────── -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ravennstudio.com.br/sites-institucionais" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content="Ravenn Studio" />
+  <meta property="og:title" content="Criação de Sites Institucionais Premium em Niterói, RJ" />
+  <meta property="og:description" content="Sites institucionais de alta conversão. Design premium para empresas que não podem parecer amadoras. Diagnóstico gratuito." />
+  <meta property="og:image" content="https://ravennstudio.com.br/og-image.webp" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Ravenn Studio — Sites Institucionais Premium" />
+
+  <!-- ── Twitter / X Card ─────────────────────────────────────────────────── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Criação de Sites Institucionais Premium em Niterói, RJ" />
+  <meta name="twitter:description" content="Sites institucionais de alta conversão. Design premium para empresas. Diagnóstico gratuito." />
+  <meta name="twitter:image" content="https://ravennstudio.com.br/og-image.webp" />
+
+  <!-- ── Theme ─────────────────────────────────────────────────────────────── -->
+  <meta name="theme-color" content="#000000" />
+
+  <!-- ── Structured Data: Service ──────────────────────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Criação de Sites Institucionais Premium",
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "Ravenn Studio",
+      "telephone": "+55-21-98921-1887",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Niterói",
+        "addressRegion": "RJ",
+        "addressCountry": "BR"
+      }
+    },
+    "areaServed": [
+      { "@type": "City", "name": "Niterói" },
+      { "@type": "State", "name": "Rio de Janeiro" }
+    ],
+    "description": "Desenvolvimento de sites institucionais de alta conversão, design premium para empresas, com arquitetura técnica de SEO local."
+  }
+  </script>
+
+  <!-- ── LCP hero image ────────────────────────────────────────────────────
+       Preload direto no <head>: como a página é CSR (React monta a
+       <picture> só depois do bundle JS baixar/rodar), o preload scanner do
+       navegador não descobre essa imagem sozinho — media queries aqui
+       espelham as do <picture> em HeroDevice.jsx pra baixar só a variante
+       certa por breakpoint. Sem isso, o Lighthouse media "Load Delay" da
+       LCP ficava em ~700ms (28% do LCP total) só esperando o JS rodar pra
+       então descobrir a URL da imagem. ─────────────────────────────────── -->
+  <link rel="preload" as="image" href="/lp-institucional/hero-device-mobile.webp" media="(max-width: 767px)" fetchpriority="high" />
+  <link rel="preload" as="image" href="/lp-institucional/hero-device.webp" media="(min-width: 768px)" fetchpriority="high" />
+
+  <!-- ── Fonts ─────────────────────────────────────────────────────────────── -->
+  <style>html,body{background:#000000;margin:0;padding:0;}</style>
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <!-- Não-bloqueante: carrega a fonte em paralelo ao primeiro paint em vez
+       de travar o LCP nela (era o maior item de render-blocking-resources
+       no Lighthouse, ~1,3s). display=optional já evita FOUT/CLS quando o
+       woff2 chega depois do texto ter pintado com a fonte de sistema. -->
+  <link rel="preload" as="style" href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=optional" />
+  <link
+    href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=optional"
+    rel="stylesheet"
+    media="print"
+    onload="this.media='all'"
+  />
+  <noscript>
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=optional" rel="stylesheet" />
+  </noscript>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/lp-main.jsx"></script>
+</body>
+</html>

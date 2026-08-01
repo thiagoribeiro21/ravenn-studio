@@ -1,4 +1,6 @@
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useMenu } from '../context/MenuContext';
 
 // ── Navegação principal — espelha as seções reais do site (ver App.jsx) ──
 const NAV_LINKS = [
@@ -16,7 +18,7 @@ const CORE_SERVICES = [
   { label: 'Sites Institucionais',   href: '#services', title: 'Sites institucionais premium com SEO Local, Google Business e Core Web Vitals' },
   { label: 'Landing Pages',          href: '#services', title: 'Landing pages de alta conversão para campanhas de Google Ads' },
   { label: 'Sites Experienciais',    href: '#services', title: 'Sites experienciais e imersivos com WebGL e Three.js' },
-  { label: 'Cardápios Digitais',     href: '#services', title: 'Cardápios digitais mobile-first integrados ao WhatsApp' },
+  { label: 'Lojas Virtuais',         href: '#services', title: 'Lojas virtuais e e-commerce de alta conversão com checkout otimizado e gestão de estoque' },
   { label: 'Google Ads',             href: '#services', title: 'Gestão de Google Ads de alta performance orientada a ROAS' },
   { label: 'Agentes de IA',          href: '#services', title: 'Agentes de IA e automação de atendimento via WhatsApp' },
 ];
@@ -43,8 +45,45 @@ const staggerColumns = {
 };
 
 export default function Footer() {
+  const footerRef = useRef(null);
+  const { scrollContainerRef } = useMenu();
+
+  // Reveal em "cortina" ligado ao progresso do scroll — puramente visual
+  // (clip-path + y + blur no próprio footer, que continua 100% normal no
+  // fluxo do documento). Não mexe em position/margin/altura de scroll:
+  // zero risco de quebrar a página, o pior caso é o footer só aparecer
+  // já visível (progress preso em 0 ou 1), nunca sumir ou desalinhar.
+  const { scrollYProgress } = useScroll({
+    container: scrollContainerRef,
+    target:    footerRef,
+    offset:    ['start end', 'start 0.55'],
+  });
+
+  const clipPath = useTransform(
+    scrollYProgress,
+    [0, 1],
+    ['inset(100% 0% 0% 0%)', 'inset(0% 0% 0% 0%)'],
+  );
+  const revealY    = useTransform(scrollYProgress, [0, 1], [56, 0]);
+  const revealBlur = useTransform(scrollYProgress, [0, 1], [10, 0]);
+  const filter      = useTransform(revealBlur, (v) => `blur(${v}px)`);
+
   return (
-    <footer className="relative z-20 w-full bg-black overflow-hidden" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+    // O <footer> em si NUNCA é clipado/transformado — fica sempre sólido,
+    // opaco, no fluxo normal do documento. Antes, clipPath/y/filter estavam
+    // aplicados direto aqui, no MESMO elemento que tem bg-black — cortar o
+    // elemento cortava o fundo junto, abrindo uma "janela" transparente que
+    // deixava o canvas fixo do Hero (sempre atrás de tudo no SiteShell)
+    // vazar por trás antes do reveal completar. Isolando a animação num
+    // wrapper interno, o fundo preto do footer nunca é removido — o pior
+    // caso possível agora é o conteúdo aparecer sem a animação, nunca um
+    // "buraco" revelando o que está atrás.
+    <footer
+      ref={footerRef}
+      className="relative z-20 w-full bg-black overflow-hidden"
+      style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+    >
+      <motion.div style={{ clipPath, y: revealY, filter }}>
 
       {/* ── Conteúdo editorial ─── extrema respiração vertical ─────────────── */}
       <div className="px-[clamp(32px,6vw,120px)] pt-[clamp(80px,14vh,160px)] pb-[clamp(56px,8vh,96px)]">
@@ -219,6 +258,7 @@ export default function Footer() {
         </div>
       </div>
 
+      </motion.div>
     </footer>
   );
 }

@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/sites-institucionais",
+      "destination": "/sites-institucionais.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

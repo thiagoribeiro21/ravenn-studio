@@ -3,10 +3,13 @@ import { motion } from 'framer-motion';
 const WA_LINK =
   'https://wa.me/5521989211887?text=Olá%2C%20vim%20pelo%20site%20da%20Ravenn%20Studio%20e%20gostaria%20de%20agendar%20um%20diagnóstico%20gratuito%20para%20meu%20negócio.';
 
-export default function WhatsAppButton() {
+/* `link` é opcional — quem não passar nada mantém o comportamento original
+   (site principal). As LPs em src/lp/ passam sua própria mensagem por
+   seção via config, sem precisar duplicar este componente. */
+export default function WhatsAppButton({ link = WA_LINK }) {
   return (
     <motion.a
-      href={WA_LINK}
+      href={link}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Falar com a Ravenn Studio no WhatsApp"

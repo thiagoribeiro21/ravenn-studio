@@ -72,17 +72,17 @@ const SERVICES = [
   {
     id:          '04',
     asset:       '/geometric_plate_asset.webp',
-    category:    'Experiência Gastronômica',
-    title:       'Cardápios Digitais que Vendem Sozinhos',
-    description: 'Chega de PDF ilegível no celular do cliente. Criamos cardápios digitais com fotos que dão água na boca, navegação intuitiva e pedido finalizado direto no WhatsApp — sem fricção entre a fome e a compra.',
-    tags:        ['UX Design', 'WhatsApp API', 'Mobile-First'],
+    category:    'E-commerce de Alta Performance',
+    title:       'Lojas Virtuais que Vendem 24 Horas por Dia',
+    description: 'Chega de depender só do balcão. Criamos lojas virtuais de alta conversão com checkout ultrarrápido, vitrine que faz o produto vender sozinho e integração direta com os principais meios de pagamento — para faturar em vendas online enquanto você dorme.',
+    tags:        ['E-commerce', 'Checkout Otimizado', 'Mobile-First'],
     longDescription:
-      'Seu cardápio é a primeira impressão do seu restaurante. Substituímos o PDF estático por uma experiência mobile fluida e visualmente irresistível, com pedidos roteados automaticamente para o WhatsApp do seu time — mais pedidos, menos atrito.',
+      'Sua loja virtual é o vendedor mais lucrativo do seu negócio: nunca fecha, nunca tira férias e atende quantos clientes forem precisos ao mesmo tempo. Construímos e-commerces mobile-first com performance de carregamento agressiva e arquitetura de alta conversão em cada vitrine — para transformar visita em venda, não em carrinho abandonado.',
     deliverables: [
-      'Design de cardápio interativo com fotografia de alto padrão',
-      'UX mobile-first otimizada para pedidos em menos de 3 toques',
-      'Roteamento automático de pedidos para o WhatsApp Business',
-      'Atualização de itens e preços sem depender de agência',
+      'Loja virtual mobile-first com checkout em até 3 etapas',
+      'Integração com gateways de pagamento (Pix, cartão, boleto) e gestão de estoque',
+      'PageSpeed 90+ para reduzir abandono de carrinho por lentidão',
+      'SEO local e global para o seu produto aparecer antes do concorrente',
     ],
   },
   {
