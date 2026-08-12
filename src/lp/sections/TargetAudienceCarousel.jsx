@@ -235,6 +235,17 @@ export default function TargetAudienceCarousel({ data }) {
   const trackX = useMotionValue(0);
   const progress = useMotionValue(0);
 
+  // Seção precisa estar VISÍVEL pro autoplay avançar — sem isso o `tick()`
+  // (useEffect abaixo) começa a rodar assim que o componente MONTA, não
+  // quando a pessoa efetivamente chega na seção. Como o LPShell monta todas
+  // as seções de uma vez (sem lazy-mount), alguém que demora 20-30s lendo
+  // seções anteriores já encontraria o carrossel adiantado alguns slides ao
+  // chegar aqui — o mesmo bug explica tanto "não começa sempre no slide 1"
+  // quanto "o timer roda fora da tela". Mesmo padrão de `ConsequenceCarousel
+  // .jsx` (`IntersectionObserver`, `threshold: 0.4`).
+  const sectionRef = useRef(null);
+  const [inView, setInView] = useState(false);
+
   // Mesma fórmula usada pro `paddingLeft` do trilho de cartões — a borda
   // esquerda do primeiro cartão nasce exatamente aqui. Calculada UMA vez e
   // usada nos dois lugares (cabeçalho + trilho) em vez de duplicar a string:
@@ -245,8 +256,10 @@ export default function TargetAudienceCarousel({ data }) {
   const indexRef = useRef(0);
   const playingRef = useRef(true);
   const draggingRef = useRef(false);
+  const inViewRef = useRef(false);
   indexRef.current = index;
   playingRef.current = playing;
+  inViewRef.current = inView;
 
   const step = cardWidth + GAP;
 
@@ -276,9 +289,22 @@ export default function TargetAudienceCarousel({ data }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Visibilidade da seção — gate do autoplay, ver nota acima de `inViewRef`.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return undefined;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.4 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   // Motor de autoplay — um rAF só, não um setInterval por slide: dá pausa/
   // retomada de verdade (retoma de onde parou, não reinicia o slide) porque
   // `progress` só é lido/escrito aqui, nunca resetado por um timer solto.
+  // `last = performance.now()` é reatribuído a cada tick mesmo quando pausado
+  // (fora de vista) — sem isso, o primeiro `dt` calculado ao voltar pra tela
+  // seria "agora menos o instante em que saiu de vista", um salto gigante que
+  // pularia direto pro próximo slide em vez de continuar de onde parou.
   useEffect(() => {
     if (reduced) return undefined;
     let raf;
@@ -287,7 +313,7 @@ export default function TargetAudienceCarousel({ data }) {
     const tick = (now) => {
       const dt = now - last;
       last = now;
-      if (playingRef.current && !draggingRef.current) {
+      if (playingRef.current && !draggingRef.current && inViewRef.current) {
         const next = progress.get() + dt / AUTOPLAY_MS;
         if (next >= 1) {
           goTo(indexRef.current + 1);
@@ -318,7 +344,7 @@ export default function TargetAudienceCarousel({ data }) {
   }
 
   return (
-    <section className={`relative overflow-hidden border-t border-white/[0.06] bg-rv-void ${SECTION_PAD}`}>
+    <section ref={sectionRef} className={`relative overflow-hidden border-t border-white/[0.06] bg-rv-void ${SECTION_PAD}`}>
       {/* v2 — de volta a alinhado à esquerda (não centralizado), mas com o
           `paddingLeft` do CARTÃO (`edgeInset`), não o gutter padrão da
           página (`${GX}`, 6vw simétrico). Os dois só coincidem quando
