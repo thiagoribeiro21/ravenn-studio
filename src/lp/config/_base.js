@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { cubicBezier, useMotionValue } from 'framer-motion';
 
 /* ── Defaults compartilhados entre todas as LPs clonadas de src/lp/ ──────── */
@@ -95,6 +95,27 @@ export function hasWebGL() {
 export function prefersReducedMotion() {
   if (typeof window === 'undefined') return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/* `md` do Tailwind é 768px — o mesmo valor aqui, não um número solto.
+   Extraído de PillarsShaped.jsx (era local, virou compartilhado quando
+   CurtainReveal.jsx passou a precisar da mesma checagem): cenas
+   cinematográficas pinadas pressupõem folga vertical de sobra que telas
+   curtas não têm — quem usa isto troca de árvore inteira por breakpoint
+   (não `md:hidden`/`hidden md:block`, que deixaria as duas montadas ao
+   mesmo tempo; ver a nota completa em PillarsShaped.jsx sobre por que isso
+   importa quando um dos lados tem um `<canvas>` WebGL). */
+export function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia('(min-width: 768px)').matches);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 768px)');
+    const handler = (e) => setIsDesktop(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
+
+  return isDesktop;
 }
 
 /*
@@ -225,6 +246,69 @@ export function useTrackProgress(trackRef, disabled) {
       ro.disconnect();
     };
   }, [trackRef, disabled, progress]);
+
+  return progress;
+}
+
+/**
+ * Progresso 0→1 de uma seção NORMAL (não pinada, altura de fluxo comum)
+ * conforme ela atravessa a viewport — mesma semântica do offset
+ * `["start end", "end start"]` do `useScroll` do Framer Motion: 0 quando o
+ * TOPO da seção toca a BASE da viewport (ela está prestes a entrar), 1
+ * quando a BASE da seção toca o TOPO da viewport (ela está prestes a sair
+ * por completo). Pensado pra parallax de entrada/saída (fundo, elevação de
+ * conteúdo) em seções curtas — `useTrackProgress` acima resolve o caso
+ * irmão (trilho alto e pinado), este resolve o caso "seção de altura
+ * normal passando pela tela".
+ *
+ * Mesmo motivo de `useTrackProgress` pra não usar `useScroll` do Framer
+ * direto: esta rota não rola a `window`, e `useScroll({ container })`
+ * exige o RefObject do scroller já populado no momento em que o hook monta
+ * — aqui ele só é descoberto via `getScrollerEl()` depois do commit.
+ */
+export function useSectionProgress(sectionRef, disabled) {
+  const progress = useMotionValue(disabled ? 1 : 0);
+
+  useLayoutEffect(() => {
+    if (disabled) {
+      progress.set(1);
+      return undefined;
+    }
+    const section = sectionRef.current;
+    const scroller = getScrollerEl();
+    if (!section) return undefined;
+
+    const target = scroller || window;
+    let frame = 0;
+
+    const measure = () => {
+      frame = 0;
+      const r = section.getBoundingClientRect();
+      const viewTop = scroller ? scroller.getBoundingClientRect().top : 0;
+      const viewHeight = scroller ? scroller.clientHeight : window.innerHeight;
+      const localTop = r.top - viewTop; // topo da seção relativo ao topo da viewport real
+      const travel = viewHeight + r.height; // distância entre "start end" e "end start"
+      progress.set(clamp01((viewHeight - localTop) / travel));
+    };
+
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+
+    measure();
+    target.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+
+    const ro = new ResizeObserver(schedule);
+    ro.observe(section);
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      target.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      ro.disconnect();
+    };
+  }, [sectionRef, disabled, progress]);
 
   return progress;
 }

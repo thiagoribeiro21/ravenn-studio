@@ -1,41 +1,68 @@
 import { useMemo, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
+import { Environment, Lightformer } from '@react-three/drei';
 
 const VIOLET = '#7C3AED';
 
 /* ══════════════════════════════════════════════════════════════════════════
-   v3 — revertido pro TorusKnot original, sem morph vértice-a-vértice entre
-   pilares. A v2 (morph pra 4 formas na mesma malha-base, ver histórico do
-   arquivo) foi removida por pedido explícito: as formas derivadas (blob,
-   facetado, cubo, octaedro) liam como "flat/plasticky" perto do nó de toro
-   original, que já tinha a superfície orgânica de alta curvatura que faz o
-   `clearcoat`/`transmission` de vidro escuro funcionar bem sem precisar de
-   ambiente rico pra refletir.
+   v4 — mesma geometria estática do v3 (torusKnotGeometry, sem morph), mas
+   com a iluminação reconstruída. O v3 tirou o `<Environment>` do drei
+   inteiro (achando que 2 point lights bastariam) — na prática, um material
+   com `metalness` alto + `clearcoat` é ESPECULAR quase puro: sem um mapa de
+   ambiente pra refletir, a superfície só mostra os 2-3 pixels onde a luz
+   pontual bate direto, e o resto do nó (a maior parte da superfície, em
+   qualquer ângulo de câmera) fica sem NENHUMA luz retornando pro olho — daí
+   o "buraco negro achatado" reportado. Metal/clearcoat sem env map não é
+   "menos brilhante", é estruturalmente quase invisível.
 
-   Volta a ser: uma malha ÚNICA, estática (`torusKnotGeometry`), rotação
-   contínua + boost proporcional à velocidade do scroll — nenhuma
-   deformação, nenhum estado de "pilar ativo" influenciando a geometria. Os
-   4 pilares da seção continuam trocando de destaque no TEXTO (`PillarRow`
-   em PillarsShaped.jsx, não mexido aqui); o objeto 3D volta a ser puro
-   ornamento giratório, não um indicador visual de qual pilar está ativo.
-
-   Sem `<Environment>` do drei — não por regressão de performance (o
-   trabalho de lazy-load e detecção de WebGL feito antes deste revert
-   continua intacto, ver PillarsShaped.jsx), mas porque a v1 nunca teve um
-   env map: as duas point lights (rim neutro + violeta) já bastam pra fazer
-   o clearcoat/metal pegar highlight direto conforme o nó gira — é
-   exatamente o "reflections" que o pedido de revert descreve.
+   A correção certa não é aumentar a intensidade das luzes diretas (isso só
+   alarga um pouco os 2-3 pixels) — é dar ao material um AMBIENTE pra
+   refletir. `<Environment>` + `<Lightformer>` do drei fazem exatamente isso
+   offline: são planos emissivos bakeados uma vez num cubemap local (zero
+   requisição de rede, ver nota em `ProceduralEnvironment` abaixo) — o
+   material passa a refletir uma "sala" de painéis de luz em vez de reflectir
+   o nada.
    ══════════════════════════════════════════════════════════════════════════ */
 
 /*
+  `<Environment>` sem `preset`/`files` — deliberado: `preset="city"/"studio"`
+  baixaria um HDRI do CDN da pmndrs (centenas de KB a poucos MB) toda vez que
+  a seção monta, e este ícone já passou por todo um trabalho de lazy-loading
+  pra não pesar o carregamento inicial da LP (ver `lazy()` em
+  PillarsShaped.jsx) — um HDRI externo jogaria fora esse ganho. Em vez disso,
+  `<Environment>` bakeia os `children` (aqui, 3 `<Lightformer>`) num cubemap
+  LOCAL uma vez só (`resolution={64}`, sem prop `frames` — drei já bakeia
+  uma vez por padrão quando o conteúdo é estático) e para: o material não
+  precisa refletir uma cena que muda, só precisa ter ALGO rico pra refletir.
+
+  3 painéis, não 1: um único Lightformer dá UM highlight — a leitura de
+  "estúdio" vem de várias fontes em ângulos diferentes se misturando na
+  curva do nó conforme ele gira (a mesma lógica de um estúdio de still de
+  produto de verdade: key + fill + accent, nunca uma luz só).
+    1. Retângulo branco grande, de cima — o "softbox" principal, luz de
+       preenchimento neutra que dá volume geral à forma.
+    2. Retângulo violeta, lateral — o acento de cor da marca refletido na
+       curva, ecoando a luz pontual violeta que já existe na cena.
+    3. Retângulo branco menor, de baixo — luz de contorno inferior, evita
+       que a parte de baixo do nó vire uma silhueta sem detalhe nenhum.
+*/
+function ProceduralEnvironment() {
+  return (
+    <Environment resolution={64}>
+      <Lightformer form="rect" color="#F8F9FA" intensity={4} position={[0, 4, 2]} rotation={[-Math.PI / 3, 0, 0]} scale={[6, 3, 1]} />
+      <Lightformer form="rect" color={VIOLET} intensity={6} position={[-4, 0.5, 1.5]} rotation={[0, Math.PI / 2.4, 0]} scale={[5, 4, 1]} />
+      <Lightformer form="rect" color="#F8F9FA" intensity={2} position={[2, -3, -1]} rotation={[Math.PI / 2.5, 0, 0]} scale={[4, 2, 1]} />
+    </Environment>
+  );
+}
+
+/*
   Objeto principal — `torusKnotGeometry` nativo do R3F (via elemento JSX
-  minúsculo, não `new THREE.TorusKnotGeometry` importado à mão: R3F já
-  registra todas as geometrias/materiais do Three como tags, e usar a tag
-  evita reimportar `three` só pra isso). `args={[1, 0.3, 128, 32]}` — raio,
-  raio do tubo, segmentos radiais e tubulares altos o bastante pra a
-  superfície ficar lisa em close-up sem precisar de `mergeVertices`/normais
-  recalculadas por frame (o nó não deforma, então as normais de fábrica já
-  são as definitivas — zero trabalho de geometria no `useFrame`).
+  minúsculo, não `new THREE.TorusKnotGeometry` importado à mão). `args={[1,
+  0.3, 128, 32]}` — segmentos altos o bastante pra superfície ficar lisa em
+  close-up sem precisar de `mergeVertices`/normais recalculadas por frame (o
+  nó não deforma, então as normais de fábrica já são as definitivas — zero
+  trabalho de geometria no `useFrame`).
 */
 function ObsidianKnot({ velocityRef, reduceMotion }) {
   const meshRef = useRef(null);
@@ -62,33 +89,32 @@ function ObsidianKnot({ velocityRef, reduceMotion }) {
     mesh.rotation.y += (idle + boost) * cap;
     mesh.rotation.x += idle * 0.5 * cap;
 
-    // Luz violeta orbitando devagar — não amarrada ao scroll, um movimento
-    // de "vitrine" contínuo e independente, pra sempre ter alguma face do
-    // nó pegando reflexo especular direto conforme ele gira.
+    // Luz violeta (key light) orbitando devagar — não amarrada ao scroll,
+    // um movimento de "vitrine" contínuo e independente, pra sempre ter
+    // alguma face do nó pegando reflexo especular DIRETO conforme ele gira,
+    // além do reflexo indireto que os Lightformers já garantem o tempo todo.
     light.position.set(Math.cos(t * 0.35) * 2.6, Math.sin(t * 0.5) * 1.4, Math.sin(t * 0.35) * 2.6);
   });
 
   return (
     <>
       <ambientLight intensity={0.12} />
-      {/* rim light neutro, fixo — dá uma borda de luz fria constante pro
-          objeto nunca desaparecer totalmente contra o fundo preto entre um
-          passe e outro da luz violeta. */}
-      <pointLight position={[-2.5, 1.5, -2]} intensity={8} color="#F8F9FA" distance={9} decay={2} />
-      <pointLight ref={lightRef} intensity={14} color={VIOLET} distance={8} decay={2} />
+
+      {/* Rim light — virou `directionalLight` (era `pointLight`): luz
+          direcional simula raios paralelos vindos de um lado, então a borda
+          do nó fica consistentemente contornada de luz fria não importa a
+          distância câmera-objeto (point light tem falloff por distância,
+          directional não) — é o que faz a silhueta nunca se perder contra o
+          `#03000A` de fundo, mesmo nas faces que a luz violeta não alcança. */}
+      <directionalLight position={[-4, 2, -3]} intensity={1.4} color="#F8F9FA" />
+
+      {/* Key light violeta — point light de alta intensidade, é a luz
+          "assinatura" da marca refletindo na curva do nó. */}
+      <pointLight ref={lightRef} intensity={22} color={VIOLET} distance={10} decay={2} />
 
       <mesh ref={meshRef}>
         <torusKnotGeometry args={[1, 0.3, 128, 32]} />
-        <meshPhysicalMaterial
-          color="#000000"
-          metalness={1}
-          roughness={0.05}
-          clearcoat={1}
-          clearcoatRoughness={0.1}
-          transmission={0.9}
-          thickness={1.2}
-          ior={1.5}
-        />
+        <meshPhysicalMaterial color="#000000" metalness={0.9} roughness={0.1} clearcoat={1} clearcoatRoughness={0.1} />
       </mesh>
     </>
   );
@@ -111,7 +137,8 @@ function ObsidianKnot({ velocityRef, reduceMotion }) {
    `PillarsShaped.jsx` pra trocar a cena inteira pelo fallback em CSS em vez
    de deixar um retângulo preto no lugar do "ícone". Isto (e o `lazy()` que
    PillarsShaped.jsx usa pra importar este módulo, e a detecção de suporte a
-   WebGL em config/_base.js) não faz parte do revert — continuam intactos. */
+   WebGL em config/_base.js) continuam intactos, não fazem parte deste
+   ajuste de luz. */
 export default function PillarsCanvas({ velocityRef, reduceMotion = false, onContextLost }) {
   const stableVelocityRef = useMemo(() => velocityRef ?? { current: 0 }, [velocityRef]);
 
@@ -128,6 +155,7 @@ export default function PillarsCanvas({ velocityRef, reduceMotion = false, onCon
         });
       }}
     >
+      <ProceduralEnvironment />
       <ObsidianKnot velocityRef={stableVelocityRef} reduceMotion={reduceMotion} />
     </Canvas>
   );

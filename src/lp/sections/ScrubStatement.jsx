@@ -97,8 +97,27 @@ const HEADLINE_SIZE = 'clamp(2.4rem, 4.4vw + 1.6dvh, 6.25rem)';
    escala da própria headline, pra pousar como uma segunda declaração, não
    como legenda do que acabou de sumir. O `Glyph` ao lado dela é 100% `em`
    (ver Glyph.jsx) — cresce na mesma proporção sem precisar mexer em mais
-   nada. */
-const ANCHOR_SIZE = 'clamp(2.75rem, 6.4vw, 5.75rem)';
+   nada.
+
+   v10 — duas fórmulas, não uma: o pouso mudou de destino por breakpoint
+   (ver a `<motion.span>` do Estágio 3 mais abaixo — mobile centraliza no
+   meio da tela, desktop continua ancorado à direita), e cada destino pede
+   uma escala diferente. Preso à direita, ao lado do parágrafo, a palavra
+   precisa ficar comedida — grande demais ali brigaria com o texto vizinho.
+   Centralizada sozinha no meio da tela, ela é a ÚNICA coisa na cena
+   naquele instante — pode (e deve) ser maior sem brigar com nada. Testado
+   contra o pior caso real (375px, "amador." + glifo): mesmo no teto de
+   4.75rem cabe com folga numa linha só (`whitespace-nowrap` já garante que
+   nunca quebra).
+
+   Os dois valores vivem só como classes Tailwind (`text-[...] md:text-[...]`
+   na própria `<motion.span>`), não como constantes aqui — o compilador JIT
+   do Tailwind precisa ver a string LITERAL no código-fonte pra gerar o CSS;
+   uma classe montada em runtime a partir de uma constante JS (`` `text-[${X}]` ``)
+   não é encontrada por ele, e a fonte silenciosamente nunca aplicaria.
+   Manter os dois valores só num lugar evita também a segunda forma de
+   silenciosamente dessincronizar: uma constante aqui e uma classe lá que
+   alguém edita e esquece de espelhar na outra. */
 /* Estatura equivalente a um h3 grande — precisa ler como "declaração", não
    como legenda de rodapé de número. font-grotesk (mesma família da
    headline) em vez de satoshi: cria uma segunda voz, mais parruda, mas
@@ -327,14 +346,32 @@ export default function ScrubStatement({ data }) {
     if (anchorRef.current) ro.observe(anchorRef.current);
     window.addEventListener('resize', measure);
 
+    // Reforço "à prova de balas" contra a corrida de fonte: o `<link>` da
+    // ClashGrotesk/Satoshi em index.html carrega de forma NÃO-bloqueante
+    // (`media="print" onload="this.media='all'"`, ver o próprio comentário
+    // lá — decisão deliberada pra não travar o LCP na fonte). Isso significa
+    // que a MEDIDA síncrona acima pode rodar antes da fonte trocar, usando
+    // métricas da fonte de fallback do sistema — geometria diferente da
+    // versão final. O `ResizeObserver` já pega essa mudança na maioria dos
+    // casos (a troca de fonte quase sempre muda a largura do texto, que é
+    // exatamente o que ele observa), mas depender só disso pra um efeito
+    // "sem erro nenhum" é fé demais num "quase sempre". `document.fonts`
+    // pode não existir (Safari antigo, browsers exóticos) — daí o optional
+    // chaining; sem a API, o ResizeObserver continua sendo a rede de
+    // segurança.
+    document.fonts?.ready?.then(measure);
+
     return () => {
       ro.disconnect();
       window.removeEventListener('resize', measure);
     };
   }, [persistToken]);
 
-  // Enquanto não há medida, a transformação é a identidade — o pior caso é a
-  // palavra já estar no destino, nunca fora da tela.
+  // Enquanto não há medida, a âncora fica com opacidade 0 (ver `anchorOpacity`
+  // mais abaixo) em vez de usar a transformação identidade como fallback
+  // visível — "nunca aparecer" é um fallback seguro; "aparecer já no
+  // destino, sem ter voado" É o próprio bug que motivou este ajuste, então
+  // não faz sentido continuar sendo o comportamento de rede de segurança.
   const flightX = useTransform(progress, STAGE.flight, [flip?.x ?? 0, 0], { ease: EASE_LUXE });
 
   /* v9 — arco em vez de linha reta: `flightY` ganha um terceiro ponto no
@@ -388,7 +425,12 @@ export default function ScrubStatement({ data }) {
   );
 
   const anchorReveal = persistToken ? slot(STAGE.reveal, indexOf(persistToken), animatable.length) : STAGE.reveal;
-  const anchorOpacity = useTransform(progress, anchorReveal, [0, 1]);
+  // `flip ? 1 : 0` como alvo final — enquanto a medida não chegou, o range
+  // inteiro vai de 0 a 0 (invisível em qualquer progresso), em vez de 0→1.
+  // Assim que `flip` resolve, o próximo render já recria esta MotionValue
+  // mirando 0→1 de verdade, e ela nasce direto no valor correto pro
+  // progresso atual — nunca existe um frame pintado na posição errada.
+  const anchorOpacity = useTransform(progress, anchorReveal, [0, flip ? 1 : 0]);
   const anchorColor = useTransform(progress, anchorReveal, [COLOR.faint, COLOR.purple]);
 
   return (
@@ -484,21 +526,37 @@ export default function ScrubStatement({ data }) {
           </div>
 
           {/* ── Estágio 3: a âncora ─────────────────────────────────────────
-              O wrapper faz LAYOUT (CSS decide a direita e o centro vertical);
-              o filho faz MOVIMENTO (transform). Separar os dois é o que
-              garante que, em repouso, o alinhamento não depende de nenhuma
-              conta em JS. */}
+              O wrapper faz LAYOUT; o filho faz MOVIMENTO (transform).
+              Separar os dois garante que, em repouso, o alinhamento não
+              depende de nenhuma conta em JS.
+
+              v10 — destino por breakpoint, não só tamanho por breakpoint:
+                MOBILE   `inset-0 flex items-center justify-center` — a
+                         palavra pousa centralizada na tela inteira. Era
+                         `right: ANCHOR_INSET` + `items-start pt-[16vh]` (o
+                         mesmo destino ancorado à direita do desktop, só que
+                         empurrado pro topo) — nesse layout ela pousava
+                         espremida no canto superior direito, perto da
+                         navbar, longe do parágrafo que vem embaixo: lia
+                         como fora do lugar, não como uma segunda declaração.
+                DESKTOP  continua igual — `inset-y-0` + `right: ANCHOR_INSET`,
+                         centralizada verticalmente, ancorada à direita, ao
+                         lado do parágrafo à esquerda.
+              O FLIP (`flip.x/y/scale`, calculado contra o retângulo REAL do
+              `anchorRef`) não precisa saber de nada disso — ele mede
+              qualquer que seja a posição final renderizada, então o voo
+              continua correto nos dois destinos sem lógica condicional
+              própria. */}
           {persistToken && (
             <div
-              className="pointer-events-none absolute inset-y-0 z-20 flex items-start pt-[16vh] md:items-center md:pt-0"
-              style={{ right: ANCHOR_INSET }}
+              className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center md:inset-x-auto md:right-[var(--anchor-inset)]"
+              style={{ '--anchor-inset': ANCHOR_INSET }}
             >
               <motion.span
                 ref={anchorRef}
                 aria-hidden
-                className="inline-flex items-center gap-[0.3em] whitespace-nowrap font-grotesk font-light tracking-[-0.025em]"
+                className="inline-flex origin-center items-center gap-[0.3em] whitespace-nowrap text-[clamp(3.5rem,15vw,4.75rem)] font-grotesk font-light tracking-[-0.025em] md:origin-right md:text-[clamp(2.75rem,6.4vw,5.75rem)]"
                 style={{
-                  fontSize: ANCHOR_SIZE,
                   x: flightX,
                   y: flightY,
                   scale: flightScale,
@@ -507,7 +565,6 @@ export default function ScrubStatement({ data }) {
                   opacity: anchorOpacity,
                   color: anchorColor,
                   textShadow: landingGlow,
-                  transformOrigin: 'right center',
                   willChange: 'transform, opacity, filter',
                 }}
               >

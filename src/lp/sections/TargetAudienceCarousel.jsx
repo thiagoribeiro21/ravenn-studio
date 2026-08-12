@@ -132,6 +132,22 @@ function Card({ slide, index, activeIndex, trackX, step, cardWidth, reduced }) {
         }}
       />
 
+      {/* Reforço SÓ no mobile (`md:hidden`) — medido ao vivo: a camada acima
+          (pensada pro card lado a lado do desktop, onde o texto ocupa
+          metade da largura da foto) some com folga na parte de baixo do
+          parágrafo no mobile, onde o corpo de texto é mais alto E cobre a
+          largura inteira do card — cai bem em cima de partes claras da foto
+          (rosto, ombro) na maioria dos 3 slides. Uma segunda camada linear,
+          mais escura e progressiva, resolve sem mexer no gradiente do
+          desktop (que já está calibrado e funciona lá). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 md:hidden"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(3,0,10,0.1) 0%, rgba(3,0,10,0.55) 28%, rgba(3,0,10,0.88) 58%, rgba(3,0,10,0.96) 100%)',
+        }}
+      />
+
       {/* Lado do texto por slide (`TEXT_SIDE`) — nas fotos 1 e 3 o rosto
           fica à esquerda do quadro; texto também à esquerda cairia em cima
           da pessoa. `flex` + `justify-end/start` no wrapper decide o LADO;
@@ -139,8 +155,8 @@ function Card({ slide, index, activeIndex, trackX, step, cardWidth, reduced }) {
           dele — sem os dois, um título de 2 linhas ficaria no lado certo
           mas com a segunda linha alinhada errada. No mobile a diferença
           quase não aparece (o cartão já é ~85vw, o texto ocupa a largura
-          inteira de qualquer forma) — a camada mais escura acima é quem
-          faz o trabalho pesado de legibilidade lá. */}
+          inteira de qualquer forma) — as duas camadas escuras acima é que
+          fazem o trabalho pesado de legibilidade lá. */}
       <div
         className={`pointer-events-none absolute inset-x-0 top-0 flex p-8 md:p-12 ${
           TEXT_SIDE[index % TEXT_SIDE.length] === 'right' ? 'justify-end' : 'justify-start'
@@ -343,8 +359,19 @@ export default function TargetAudienceCarousel({ data }) {
     goTo(target);
   }
 
+  // `z-20` na seção (era z-10) — a seção logo abaixo (`CurtainReveal` +
+  // "Como Funciona") pina de verdade agora (`position: sticky`, não só um
+  // efeito visual amarrado a progresso), então o empilhamento explícito
+  // deixou de ser "rede de segurança pra 1px de subpixel" e passou a ser
+  // ESTRUTURAL: sem z-index maior aqui, a ordem de pintura seguiria só
+  // ordem de DOM, e durante a janela em que esta seção ainda está rolando
+  // por cima da seção pinada (que já está sticky-presa por baixo, esperando
+  // ser revelada), ela vazaria por cima em vez de cobrir. Continua rolando
+  // embora em fluxo NORMAL — nenhum sticky nem transform aplicado aqui, só
+  // a garantia de empilhamento. `bg-rv-void` (#03000A) já presente é o que
+  // faz essa cobertura ser opaca de verdade, não só por ordem de pintura.
   return (
-    <section ref={sectionRef} className={`relative overflow-hidden border-t border-white/[0.06] bg-rv-void ${SECTION_PAD}`}>
+    <section ref={sectionRef} className={`relative z-20 overflow-hidden border-t border-white/[0.06] bg-rv-void ${SECTION_PAD}`}>
       {/* v2 — de volta a alinhado à esquerda (não centralizado), mas com o
           `paddingLeft` do CARTÃO (`edgeInset`), não o gutter padrão da
           página (`${GX}`, 6vw simétrico). Os dois só coincidem quando

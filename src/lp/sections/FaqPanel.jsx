@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { EASE_LUXE, GX, TYPE, RADIUS, SECTION_PAD } from '../config/_base';
+import { useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion, useSpring, useTransform } from 'framer-motion';
+import { EASE_LUXE, GX, RADIUS, SCRUB_SPRING, SECTION_PAD, TYPE, prefersReducedMotion, useSectionProgress } from '../config/_base';
 
 /*
   Item 9 do refinamento v3 — glassmorphism reforçado (valores exatos em
@@ -9,18 +9,76 @@ import { EASE_LUXE, GX, TYPE, RADIUS, SECTION_PAD } from '../config/_base';
   animar altura) pra accordion controlado com framer-motion. Só um item
   aberto por vez — soma no máximo 1 elemento com blur "aberto" mais os 3
   fechados, dentro do teto de 4-5 simultâneos que o brief pede.
+
+  ── Parallax de entrada, transição com "Como Funciona" ──────────────────────
+  Duas camadas de movimento amarradas ao MESMO progresso 0→1 (`useSectionProgress`,
+  ver config/_base.js — mesma família de `useTrackProgress` que ScrubStatement.jsx
+  e PillarsShaped.jsx já usam, só com a semântica de entrada/saída de uma seção
+  de altura normal em vez de trilho pinado):
+    1. FUNDO    a imagem translada verticalmente bem mais devagar que o
+                scroll (±15vh) — a profundidade clássica de parallax. Vive
+                oversized (30vh a mais de altura, -15vh de topo) porque um
+                elemento transladado por transform continua ocupando a MESMA
+                caixa: sem a folga extra, os extremos do movimento
+                revelariam uma tira vazia nas bordas da seção.
+    2. CONTEÚDO o bloco de texto + accordion sobe e ganha nitidez/escala
+                enquanto a seção entra — um "elevar" sutil, não um fade seco.
+  `useSpring` com a mesma física (`SCRUB_SPRING`) que todo scrub-linked
+  motion desta LP usa — inércia de "câmera pesada" consistente com o resto
+  da página, não um número novo inventado pra esta seção.
 */
 export default function FaqPanel({ data }) {
   const [openIndex, setOpenIndex] = useState(null);
+  const sectionRef = useRef(null);
+  const reduced = useMemo(() => prefersReducedMotion(), []);
+  const rawProgress = useSectionProgress(sectionRef, reduced);
+  const progress = useSpring(rawProgress, SCRUB_SPRING);
+
+  const bgY = useTransform(progress, [0, 1], ['-15vh', '15vh']);
+  const contentY = useTransform(progress, [0, 0.4], [100, 0]);
+  const contentOpacity = useTransform(progress, [0, 0.3], [0, 1]);
+  const contentScale = useTransform(progress, [0, 0.4], [0.96, 1]);
 
   return (
-    <section id="faq" className={`relative overflow-hidden border-t border-white/[0.06] ${SECTION_PAD} ${GX}`}>
+    // `z-20` + `bg-rv-void`: esta seção precisa COBRIR de verdade a "Como
+    // Funciona" pinada (sticky) logo acima dela conforme rola por cima —
+    // `z-20` garante a ordem de pintura certa (mesmo valor de
+    // TargetAudienceCarousel.jsx, o outro lado do "sanduíche" da cortina;
+    // ver CurtainReveal.jsx), e `bg-rv-void` dá uma base sólida e opaca de
+    // verdade: antes o fundo vinha só da imagem + gradiente internos
+    // (`data.bg` abaixo), que são absolutamente posicionados — sem uma cor
+    // de base na própria `<section>`, qualquer frame em que a imagem ainda
+    // não pintou deixaria o void por trás (a seção pinada) vazar através.
+    <section
+      ref={sectionRef}
+      id="faq"
+      className={`relative z-20 overflow-hidden border-t border-white/[0.06] bg-rv-void ${SECTION_PAD} ${GX}`}
+    >
+      {/* `overflow-hidden` já vive na própria `<section>` — é o que corta a
+          imagem oversized de volta pros limites da seção; não precisa de
+          mais uma camada de clip aqui. */}
       <div aria-hidden className="absolute inset-0">
-        <img src={data.bg} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" style={{ filter: 'brightness(0.4)' }} />
+        <motion.img
+          src={data.bg}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-x-0 w-full object-cover"
+          style={{
+            top: '-15vh',
+            height: 'calc(100% + 30vh)',
+            y: bgY,
+            filter: 'brightness(0.4)',
+            willChange: 'transform',
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-rv-void/80 via-rv-void/60 to-rv-void/90" />
       </div>
 
-      <div className="relative z-10 grid gap-12 md:grid-cols-12 md:gap-[2vw]">
+      <motion.div
+        className="relative z-10 grid gap-12 md:grid-cols-12 md:gap-[2vw]"
+        style={{ y: contentY, opacity: contentOpacity, scale: contentScale, willChange: 'transform, opacity' }}
+      >
         <div className="md:col-span-5">
           <div className="md:sticky md:top-32">
             <motion.p
@@ -104,7 +162,7 @@ export default function FaqPanel({ data }) {
             );
           })}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

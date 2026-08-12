@@ -10,6 +10,7 @@ import {
   isSlowConnection,
   prefersReducedMotion,
   slot,
+  useIsDesktop,
   useTrackProgress,
 } from '../config/_base';
 
@@ -317,22 +318,6 @@ function PinnedTimeline({ data, trackRef, progress, lineScale, activeIndex, useF
   );
 }
 
-/* `md` do Tailwind é 768px — o mesmo valor aqui, não um número solto. Só
-   monta UMA das duas árvores por vez (ver nota no topo do arquivo sobre por
-   que isso importa especificamente aqui: há um `<canvas>` WebGL do lado
-   de dentro). */
-function useIsDesktop() {
-  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia('(min-width: 768px)').matches);
-
-  useEffect(() => {
-    const mql = window.matchMedia('(min-width: 768px)');
-    const handler = (e) => setIsDesktop(e.matches);
-    mql.addEventListener('change', handler);
-    return () => mql.removeEventListener('change', handler);
-  }, []);
-
-  return isDesktop;
-}
 
 export default function PillarsShaped({ data }) {
   const trackRef = useRef(null);

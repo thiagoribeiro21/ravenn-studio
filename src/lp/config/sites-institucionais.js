@@ -157,8 +157,15 @@ export default {
     ],
   },
 
+  /* Ato 5 — vitrine de portfólio (ConceptStack.jsx).
+
+     `eyebrow`/`heading` passaram a viver aqui na v8: antes eram string
+     hardcoded dentro do componente, o que quebrava a promessa desta LP ser
+     MOLDE (clonar pra outro serviço exigia editar JSX, não config). O
+     `intro` já existia mas nunca era renderizado — era código morto. */
   concepts: {
-    label: 'CONCEITO AUTORAL',
+    eyebrow: 'O padrão aplicado',
+    heading: 'É assim que o seu mercado deveria ver você.',
     intro:
       'Três conceitos autorais criados pelo nosso estúdio para mercados de alto tíquete. Não são clientes — são o padrão exato de design e conversão que aplicamos quando o projeto é o seu.',
     items: [

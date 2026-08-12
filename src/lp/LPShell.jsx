@@ -8,6 +8,7 @@ import HeroDevice from './sections/HeroDevice';
 import ScrubStatement from './sections/ScrubStatement';
 import SilentInbox from './sections/SilentInbox';
 import ConsequenceCarousel from './sections/ConsequenceCarousel';
+import CurtainReveal from './sections/CurtainReveal';
 import BentoValue from './sections/BentoValue';
 import ConceptStack from './sections/ConceptStack';
 import PillarsShaped from './sections/PillarsShaped';
@@ -143,7 +144,9 @@ export default function LPShell({ config }) {
         <ConceptStack data={config.concepts} />
         <PillarsShaped data={config.pillars} />
         <TargetAudienceCarousel data={config.audience} />
-        <ConsequenceCarousel id="processo" eyebrow={config.process.eyebrow} heading={config.process.heading} items={config.process.steps} bg={config.process.bg} cta={config.process.cta} />
+        <CurtainReveal>
+          <ConsequenceCarousel id="processo" eyebrow={config.process.eyebrow} heading={config.process.heading} items={config.process.steps} bg={config.process.bg} cta={config.process.cta} />
+        </CurtainReveal>
         <FaqPanel data={config.faq} />
         <FinaleCta data={config.finale} />
 
