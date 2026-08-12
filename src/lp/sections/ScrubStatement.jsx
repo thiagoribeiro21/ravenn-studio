@@ -1,258 +1,534 @@
-import { useLayoutEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import ScrubWords from '../primitives/ScrubWords';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { motion, useSpring, useTransform } from 'framer-motion';
 import Glyph from '../primitives/Glyph';
-import { GX, TYPE, getScrollerEl, prefersReducedMotion } from '../config/_base';
+import {
+  EASE_LUXE_FN as EASE_LUXE,
+  GX,
+  SCRUB_SPRING,
+  prefersReducedMotion,
+  slot,
+  useTrackProgress,
+} from '../config/_base';
 
-gsap.registerPlugin(ScrollTrigger);
+/* ══════════════════════════════════════════════════════════════════════════
+   Ato 2 — v8. Reescrito de GSAP ScrollTrigger para Framer Motion (v7),
+   refinado contra a referência "Superconscious" (v8: clearance de navbar,
+   inércia de mola, tipografia da âncora/parágrafo, geometria de destino).
 
-/*
-  Ato 2, refinamento v4 (item 4) — 3 fases numa timeline pinada:
+   Quatro estágios, todos amarrados ao progresso do scroll (nada é baseado em
+   tempo — parar de rolar congela a cena exatamente onde está):
 
-  Fase 1 (0 → 50%): a headline acende palavra a palavra, glifos SVG
-  intercalados entre palavras acendem junto (fac-símile de pontuação, não
-  ícone de UI).
-  Fase 2 (50% → 65%): a headline inteira faz fade out, exceto o par final
-  [glifo + última palavra], que translada até o canto inferior direito e
-  fica lá, inteiro e legível.
-  Fase 3 (65% → 100%): o parágrafo entra alinhado à esquerda, acendendo
-  palavra por palavra pelo mesmo mecanismo de `ScrubWords`.
+   1. CENTRO      as palavras acendem em sequência, glifos como pontuação.
+   2. DISSOLVE    tudo sobe (y), desfoca (blur) e apaga — profundidade de
+                  campo cinematográfica, não um fade seco.
+   3. ÂNCORA      a última palavra NÃO dissolve: voa da posição inline até
+                  travar na direita, centrada verticalmente.
+   4. REVELAÇÃO   com a palavra travada, o parágrafo acende pela esquerda.
 
-  `scroller` vem de `getScrollerEl()` (config/_base.js, lookup direto via
-  `document.querySelector('[data-lp-scroller]')`) — não dá pra confiar em
-  `ScrollTrigger.defaults()` porque o `useEffect` do LPShell que o
-  configura roda depois deste `useLayoutEffect`.
+   ── Decisão 1: sticky em vez de pin do GSAP ───────────────────────────────
+   A seção é um trilho de 400vh com um palco `sticky top-0 h-[100dvh]`. Some
+   o `pin-spacer` que o ScrollTrigger injetava no DOM fora do controle do React
+   — era ele o suspeito na nota do LPShell sobre refresh duplo e refs de
+   Context lendo `null`. Sticky é layout nativo do browser: nada é inserido,
+   nada precisa de refresh, e o Lenis continua funcionando porque roda sobre
+   scroll nativo (só suaviza o delta da roda até o `scrollTop`).
 
-  Bug original: a palavra final aparecia cortada no canto ("amador" virava
-  "am"). Causa: o par persistente ganhava só um `transform: translate()`
-  continuando `display:inline-flex` dentro do fluxo de texto do `<p>`
-  centralizado — `transform` não tira o elemento do fluxo/layout, só afeta
-  pintura. Fix: ao entrar na Fase 2, o par vira `position:absolute` com
-  `top`/`left` explícitos, calculados **relativos à própria `<section>`**
-  (não `position:fixed` relativo ao viewport, que seria posicionado
-  incorretamente pelo transform que o GSAP aplica na seção pra sustentar o
-  pin em cima de um scroller custom).
+   400vh (era 300vh) só estica o trilho — a coreografia inteira continua
+   expressa em frações 0→1 do `STAGE`, então nada de proporção muda, só o
+   quanto de scroll físico cabe em cada fração (mais distância por estágio =
+   a cena "respira" mais antes de trocar de fase).
 
-  Segundo bug, achado no QA desta rodada: depois de aumentar a headline pra
-  `clamp(3rem,7vw,8rem)` (também item 4), o par persistente herdava esse
-  mesmo font-size gigante e só encolhia por `scale:0.7` — nada perto do
-  suficiente, o que jogava a palavra pra fora da viewport (chegava a
-  sobrar ~225px além da borda direita em 1440px). A âncora também era só um
-  ponto de 1px (`h-px w-px`), então `top`/`left` mediam a posição de um
-  ponto, não de uma caixa do tamanho real que o par ocupa depois de
-  encolher — outra fonte de erro. Fix: a âncora agora é um **clone
-  invisível** do par (mesmo glifo + mesma palavra) já renderizado no
-  font-size final pequeno (`PERSIST_FINAL_FONT`), posicionado via
-  `bottom-[8vh] right-[6vw]` — o navegador calcula o `getBoundingClientRect()`
-  real dessa caixa no tamanho certo, e é esse retângulo que vira o alvo de
-  `top`/`left`. A Fase 2 anima `fontSize` da palavra (não mais `scale` da
-  caixa inteira) até `PERSIST_FINAL_FONT` — o glifo já tem tamanho fixo em
-  px (`Glyph.jsx`), não depende de font-size, então não precisa de ajuste.
-*/
-const PERSIST_FINAL_FONT = 'clamp(1.35rem, 2.4vw, 1.85rem)';
+   ── Decisão 2: FLIP invertido para a âncora da direita ────────────────────
+   O requisito é precisão absoluta no alinhamento — por isso o JS nunca
+   calcula o destino: a palavra já NASCE no lugar final, posicionado por CSS
+   puro (ver `ANCHOR_INSET` abaixo). O que se mede é a ORIGEM — um "ghost"
+   invisível ocupando o lugar dela no fluxo da headline — e aplica-se a
+   transformação INVERSA, que decai até a identidade.
 
-function Token({ token, persistRef, wordRefs, glyphRefs }) {
-  if (token.br) return <br />;
+   Em progresso 1, o transform é exatamente `translate(0,0) scale(1)`: a
+   palavra está onde o layout do browser a colocou, com erro zero. Qualquer
+   imprecisão de medição fica na origem, ou seja, no meio do voo — onde é
+   invisível. O contrário (calcular o destino em JS, ex.: interpolar `x` de
+   "0vw" a "25vw" num valor chutado) empilha erro justamente onde o olho
+   descansa — e foi exatamente esse tipo de erro que cortou "amador" ao meio
+   na v3 (ver histórico do arquivo). Trocar o CSS de destino (`ANCHOR_INSET`)
+   continua seguro porque o FLIP mede o retângulo real, não um número fixo.
 
-  if (token.glyph && !token.persist) {
-    return (
-      <Glyph
-        name={token.glyph}
-        className="mx-2 -translate-y-1"
-        ref={(el) => el && glyphRefs.current.push(el)}
-      />
-    );
-  }
+   ── Decisão 3: por que não `useScroll` ────────────────────────────────────
+   Esta rota não rola a `window`: o LPShell rola um container próprio
+   (`[data-lp-scroller]`, `overflow-y:auto`). O `useScroll` do Framer aceita
+   `container`, mas exige um RefObject já populado no momento em que o hook
+   monta — e este componente só descobre o scroller via `getScrollerEl()`
+   (querySelector) depois do commit. `useTrackProgress` (agora em
+   `config/_base.js` — PillarsShaped.jsx passou a precisar da mesma coisa,
+   virou utilitário compartilhado) alimenta uma MotionValue diretamente, que
+   passa por um `useSpring` antes de qualquer `useTransform` consumir — daí
+   pra baixo é Framer Motion idiomático: `useTransform`, interpolação de
+   cor, composição de transform.
+   ══════════════════════════════════════════════════════════════════════════ */
 
-  if (token.persist) {
-    return (
-      <span ref={persistRef} className="mx-2 inline-flex items-center gap-2 align-middle">
-        <Glyph name={token.glyph} ref={(el) => el && glyphRefs.current.push(el)} />
-        <span
-          data-accent="1"
-          ref={(el) => el && wordRefs.current.push(el)}
-          className="inline-block text-rv-faint"
-        >
-          {token.text}
-        </span>
-      </span>
-    );
-  }
+/* Coreografia — janelas de progresso [início, fim] no trilho de 400vh.
+   Estágios 2 e 3 começam juntos de propósito: a palavra final decola no mesmo
+   instante em que as outras se desfazem, então o olho é entregue de uma para
+   a outra sem intervalo morto. */
+const STAGE = {
+  reveal: [0.0, 0.46],
+  dissolve: [0.46, 0.64],
+  flight: [0.46, 0.75],
+  paragraph: [0.7, 0.93],
+};
+
+const MAX_BLUR = 11;
+
+const COLOR = {
+  faint: '#5B6472',
+  titanium: '#F8F9FA',
+  slate: '#94A3B8',
+  purple: '#A78BFA',
+};
+
+/* Headline — teto reduzido (era 7.5rem) e agora híbrido vw+dvh: 6.6vw sozinho
+   crescia sem limite em telas largas e baixas (laptop em paisagem, janela
+   maximizada 21:9) até colidir com a navbar fixa do LPShell, porque `vw` não
+   sabe nada sobre altura disponível. Somar uma fração de `dvh` faz o mesmo
+   texto encolher em viewports baixas mesmo que largas. */
+const HEADLINE_SIZE = 'clamp(2.4rem, 4.4vw + 1.6dvh, 6.25rem)';
+/* v9 — âncora maior (era `clamp(2.1rem, 5vw, 4.25rem)`): mais perto da
+   escala da própria headline, pra pousar como uma segunda declaração, não
+   como legenda do que acabou de sumir. O `Glyph` ao lado dela é 100% `em`
+   (ver Glyph.jsx) — cresce na mesma proporção sem precisar mexer em mais
+   nada. */
+const ANCHOR_SIZE = 'clamp(2.75rem, 6.4vw, 5.75rem)';
+/* Estatura equivalente a um h3 grande — precisa ler como "declaração", não
+   como legenda de rodapé de número. font-grotesk (mesma família da
+   headline) em vez de satoshi: cria uma segunda voz, mais parruda, mas
+   ainda parente da primeira — coerência tipográfica com a cena que ela
+   fecha. */
+/* Teto em 2.5rem, não os ~3.5rem que um `text-5xl` sugeriria — o parágrafo
+   real desta LP tem ~35 palavras (4 frases curtas + 1 longa); numa coluna
+   estreita e fonte maior que isso, o texto vira uma torre de 12+ linhas e
+   perde exatamente o impacto de "declaração" que o tamanho deveria dar.
+   Testado contra o texto real de `sites-institucionais.js`, não a média
+   genérica de um hero de uma palavra. */
+const PARAGRAPH_SIZE = 'clamp(1.375rem, 0.85rem + 2.1vw, 2.5rem)';
+
+/* Reserva de topo abaixo da navbar pílula do LPShell (~64-86px conforme o
+   estado scrolled) — mesma lógica de clamp vh+rem que a navbar já usa pra si
+   mesma, aplicada aqui como padding-top do bloco que centraliza a headline.
+   Como o wrapper é `inset-0` com `flex items-center`, padding-top tira
+   espaço só do lado de cima da conta de centralização — o efeito líquido é
+   empurrar o centro visual pra baixo, para longe da navbar, sem mexer no
+   posicionamento de mais nada na cena. */
+const NAV_CLEARANCE = 'clamp(6rem, 8rem + 4dvh, 10.5rem)';
+
+/* Destino da âncora — inset extra ALÉM do gutter `GX` (6vw) da seção, pra
+   não ficar "colada" na borda do próprio gutter. `CONTENT_MAX_W` trava o
+   conteúdo numa coluna central em monitores ultrawide, senão right:0 dentro
+   de uma seção full-bleed manda a palavra pro canto físico da tela, que é
+   exatamente a leitura de "descontrolado" que se queria evitar — não porque
+   o valor em si fosse impreciso (o FLIP mede o rect real, sempre exato),
+   mas porque o alvo escolhido era mesmo o pior lugar visualmente. */
+const ANCHOR_INSET = 'clamp(0.5rem, 3vw, 3rem)';
+const CONTENT_MAX_W = '1560px';
+
+/* ── Palavra cinética ─────────────────────────────────────────────────────
+   Acende dentro da sua fatia e, se receber `dissolve`, sobe + desfoca + apaga.
+   O filtro vira literalmente `none` quando o blur é desprezível: manter
+   `blur(0px)` obrigaria o compositor a sustentar uma camada de filtro sobre
+   tipografia gigante durante todo o Estágio 1, que é o trecho mais longo da
+   cena. Só se paga o custo no instante em que ele aparece na tela. */
+function KineticWord({ progress, reveal, dissolve, accent = false, className = '', children }) {
+  const opacity = useTransform(
+    progress,
+    dissolve ? [reveal[0], reveal[1], dissolve[0], dissolve[1]] : reveal,
+    dissolve ? [0, 1, 1, 0] : [0, 1],
+  );
+
+  const color = useTransform(progress, reveal, [COLOR.faint, accent ? COLOR.purple : COLOR.titanium]);
+
+  const y = useTransform(progress, dissolve || [0, 1], dissolve ? [0, -90] : [0, 0], {
+    ease: dissolve ? EASE_LUXE : undefined,
+  });
+
+  const blur = useTransform(progress, dissolve || [0, 1], dissolve ? [0, MAX_BLUR] : [0, 0]);
+  const filter = useTransform(blur, (v) => (v < 0.06 ? 'none' : `blur(${v.toFixed(2)}px)`));
 
   return (
-    <span
-      ref={(el) => el && wordRefs.current.push(el)}
-      data-accent={token.accent ? '1' : '0'}
-      className="mr-[0.28em] inline-block text-rv-faint"
+    <motion.span
+      className={`inline-block ${className}`}
+      style={{ opacity, color, y, filter, willChange: 'transform, opacity, filter' }}
     >
-      {token.text || token}
-    </span>
+      {children}
+    </motion.span>
   );
 }
 
-function CornerMoire({ position }) {
-  const isTR = position === 'tr';
+/* Glifo que participa da mesma coreografia das palavras (pontuação, não UI).
+   `pulseDelay` só desincroniza a respiração (`rv-glyph-pulse`, ver Glyph.jsx)
+   — variação barata pra não ler como um único elemento clonado 3x. */
+function KineticGlyph({ progress, reveal, dissolve, name, pulseDelay = 0 }) {
+  const opacity = useTransform(progress, [reveal[0], reveal[1], dissolve[0], dissolve[1]], [0, 1, 1, 0]);
+  const y = useTransform(progress, dissolve, [0, -90], { ease: EASE_LUXE });
+  const blur = useTransform(progress, dissolve, [0, MAX_BLUR]);
+  const filter = useTransform(blur, (v) => (v < 0.06 ? 'none' : `blur(${v.toFixed(2)}px)`));
+
   return (
-    <div
+    <motion.span
       aria-hidden
-      className={`pointer-events-none absolute h-[45vw] w-[45vw] opacity-40 ${isTR ? '-right-[15vw] -top-[15vw]' : '-bottom-[15vw] -left-[15vw]'}`}
-      style={{
-        backgroundImage: 'repeating-linear-gradient(115deg, rgba(124,58,237,0.35) 0px, rgba(124,58,237,0.35) 2px, transparent 2px, transparent 14px)',
-        filter: 'blur(18px)',
-        maskImage: 'radial-gradient(closest-side, black, transparent 70%)',
-        WebkitMaskImage: 'radial-gradient(closest-side, black, transparent 70%)',
-      }}
-    />
+      className="mx-[0.18em] inline-block align-middle"
+      style={{ opacity, y, filter, willChange: 'transform, opacity, filter' }}
+    >
+      <Glyph name={name} spin glow pulseDelay={pulseDelay} />
+    </motion.span>
+  );
+}
+
+/* ── Parágrafo da esquerda (Estágio 4) ────────────────────────────────────
+   Acende palavra a palavra amarrado ao scroll. `_palavra_` marca destaque em
+   roxo — mesma convenção do resto da marca. Tipografia deliberadamente mais
+   pesada que `TYPE.body` (a legenda padrão da marca): esta é a segunda
+   metade de uma declaração de duas partes com a palavra travada à direita
+   ("...amador." / "O paciente [...] julgam sua credibilidade..."), não uma
+   legenda de apoio — precisa ler como a mesma ordem de grandeza. */
+function ScrubParagraph({ progress, text, range }) {
+  const words = useMemo(() => text.split(' '), [text]);
+
+  return (
+    <p
+      className="text-left font-grotesk font-medium leading-[1.16] tracking-[-0.01em]"
+      style={{ fontSize: PARAGRAPH_SIZE }}
+    >
+      {words.map((raw, i) => {
+        const accent = raw.startsWith('_') && raw.endsWith('_');
+        const clean = accent ? raw.slice(1, -1) : raw;
+        const reveal = slot(range, i, words.length, 0.35);
+        return (
+          <ParagraphWord key={i} progress={progress} reveal={reveal} accent={accent}>
+            {clean}
+          </ParagraphWord>
+        );
+      })}
+    </p>
+  );
+}
+
+function ParagraphWord({ progress, reveal, accent, children }) {
+  const opacity = useTransform(progress, reveal, [0, 1]);
+  const color = useTransform(progress, reveal, [COLOR.faint, accent ? COLOR.purple : COLOR.titanium]);
+  const y = useTransform(progress, reveal, [16, 0], { ease: EASE_LUXE });
+  const blur = useTransform(progress, reveal, [4, 0]);
+  const filter = useTransform(blur, (v) => (v < 0.06 ? 'none' : `blur(${v.toFixed(2)}px)`));
+
+  return (
+    <motion.span
+      className="mr-[0.26em] inline-block"
+      style={{ opacity, color, y, filter, willChange: 'transform, opacity, filter' }}
+    >
+      {children}
+    </motion.span>
+  );
+}
+
+/* Brilhos violeta ambientes — altamente difusos, dentro da regra dos 5%. */
+function AmbientGlow({ progress }) {
+  const scale = useTransform(progress, [0, 1], [1, 1.85]);
+  const opacity = useTransform(progress, [0, 0.5, 1], [0.42, 0.6, 0.32]);
+  const drift = useTransform(progress, [0.4, 1], ['0%', '18%'], { ease: EASE_LUXE });
+
+  return (
+    <>
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[75vh] origin-bottom"
+        style={{
+          scale,
+          opacity,
+          background: 'radial-gradient(ellipse at 50% 118%, rgba(124,58,237,0.5), transparent 64%)',
+          willChange: 'transform, opacity',
+        }}
+      />
+      {/* O deslocamento vertical vem do próprio Framer (`y: '-50%'`), não de
+          `-translate-y-1/2`: o Framer escreve a propriedade `transform`
+          inteira, e a classe do Tailwind seria sobrescrita sem aviso. */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute -right-[10vw] top-1/2 h-[70vh] w-[55vw]"
+        style={{
+          x: drift,
+          y: '-50%',
+          background: 'radial-gradient(circle at 60% 50%, rgba(124,58,237,0.28), transparent 66%)',
+          filter: 'blur(40px)',
+          willChange: 'transform',
+        }}
+      />
+    </>
   );
 }
 
 export default function ScrubStatement({ data }) {
-  const sectionRef = useRef(null);
-  const bloomRef = useRef(null);
-  const headlineRef = useRef(null);
-  const persistRef = useRef(null);
+  const trackRef = useRef(null);
+  const ghostRef = useRef(null);
   const anchorRef = useRef(null);
-  const wordRefs = useRef([]);
-  const glyphRefs = useRef([]);
-  const [bodyWords, setBodyWords] = useState(null);
 
-  const persistToken = data.headlineTokens.find((t) => typeof t === 'object' && t.persist);
+  const reduced = useMemo(() => prefersReducedMotion(), []);
+  const rawProgress = useTrackProgress(trackRef, reduced);
+  // Amortece o scrub — a cena persegue o progresso real em vez de segui-lo
+  // 1:1, dando inércia de "câmera pesada" em vez de rigidez pixel-a-pixel.
+  // Overdamped (ver SCRUB_SPRING em config/_base.js) por construção: nunca
+  // ultrapassa o alvo, então tudo que consome `progress` abaixo
+  // (opacity/blur/scale) continua garantido dentro de [0,1] mesmo com a
+  // mola por cima. Sempre chamado (não só quando `!reduced`) porque hooks
+  // não podem ser condicionais — com `rawProgress` já parado em 1 no modo
+  // reduzido, a mola nasce no alvo e não anima nada.
+  const progress = useSpring(rawProgress, SCRUB_SPRING);
 
-  wordRefs.current = [];
-  glyphRefs.current = [];
+  const tokens = useMemo(
+    () => data.headlineTokens.map((t) => (typeof t === 'string' ? { text: t } : t)),
+    [data.headlineTokens],
+  );
+  const persistToken = useMemo(() => tokens.find((t) => t.persist), [tokens]);
+
+  // Índice de coreografia: só conta o que anima (quebras de linha ficam de fora).
+  const animatable = useMemo(() => tokens.filter((t) => !t.br), [tokens]);
+  const indexOf = useCallback((token) => animatable.indexOf(token), [animatable]);
+
+  /* FLIP: mede a ORIGEM (ghost inline) contra o DESTINO (posição real de CSS).
+     `transform-origin: right center` faz a borda direita e o centro vertical
+     serem invariantes ao scale — por isso o delta é simplesmente a diferença
+     entre as bordas direitas e entre os centros verticais, sem correção. */
+  const [flip, setFlip] = useState(null);
 
   useLayoutEffect(() => {
-    if (!bodyWords || !sectionRef.current || !persistRef.current || !anchorRef.current) return;
-    const reduce = prefersReducedMotion();
-    const words = wordRefs.current;
-    const glyphs = glyphRefs.current;
-    const persistWords = persistRef.current.querySelectorAll('[data-accent]');
-    const persistGlyph = persistRef.current.querySelector('[data-scrub-glyph]');
-    const others = [...words, ...glyphs].filter((el) => !persistRef.current.contains(el));
+    if (!persistToken) return undefined;
 
-    // posições calculadas relativas à própria seção (local, imune a
-    // qualquer transform que o GSAP aplique na seção pra sustentar o pin).
-    const sectionRect = sectionRef.current.getBoundingClientRect();
-    const startRect = persistRef.current.getBoundingClientRect();
-    const endRect = anchorRef.current.getBoundingClientRect();
-    const startTop = startRect.top - sectionRect.top;
-    const startLeft = startRect.left - sectionRect.left;
-    const endTop = endRect.top - sectionRect.top;
-    const endLeft = endRect.left - sectionRect.left;
+    const measure = () => {
+      const ghost = ghostRef.current;
+      const anchor = anchorRef.current;
+      if (!ghost || !anchor) return;
 
-    if (reduce) {
-      gsap.set(words, { opacity: 1, color: '#F8F9FA' });
-      gsap.set(words.filter((w) => w.dataset.accent === '1'), { color: '#A78BFA' });
-      gsap.set(glyphs, { opacity: 1, borderColor: 'rgba(124,58,237,0.6)' });
-      gsap.set(others, { opacity: 0 });
-      gsap.set(persistRef.current, { position: 'absolute', top: endTop, left: endLeft, whiteSpace: 'nowrap' });
-      gsap.set(persistWords, { fontSize: PERSIST_FINAL_FONT });
-      gsap.set(bodyWords, { opacity: 1, color: '#94A3B8' });
-      return;
-    }
+      const g = ghost.getBoundingClientRect();
+      const a = anchor.getBoundingClientRect();
+      if (!a.width || !g.width) return;
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          scroller: getScrollerEl(),
-          start: 'top top',
-          end: '+=220%',
-          scrub: 0.6,
-          pin: true,
-        },
+      setFlip({
+        x: g.right - a.right,
+        y: g.top + g.height / 2 - (a.top + a.height / 2),
+        scale: g.width / a.width,
       });
+    };
 
-      tl.to(bloomRef.current, { scale: 2.2, opacity: 0.85, ease: 'none' }, 0);
+    // useLayoutEffect roda antes do paint e o setState aqui é aplicado de forma
+    // síncrona no mesmo commit — a palavra nunca aparece um frame no destino
+    // antes de recuar para a origem.
+    measure();
 
-      // Fase 1 (0 → 50%) — headline + glifos acendem juntos, em ordem do DOM.
-      const allSeq = [...words, ...glyphs].sort((a, b) => (a.compareDocumentPosition(b) & 4 ? -1 : 1));
-      allSeq.forEach((el, i) => {
-        const t = (i / allSeq.length) * 0.5;
-        if (el.dataset.scrubGlyph !== undefined || el.hasAttribute('data-scrub-glyph')) {
-          tl.to(el, { opacity: 1, borderColor: 'rgba(124,58,237,0.6)', duration: 0.15, ease: 'none' }, t);
-        } else {
-          const accent = el.dataset.accent === '1';
-          tl.to(el, { opacity: 1, color: accent ? '#A78BFA' : '#F8F9FA', duration: 0.15, ease: 'none' }, t);
-        }
-      });
+    const ro = new ResizeObserver(measure);
+    if (ghostRef.current) ro.observe(ghostRef.current);
+    if (anchorRef.current) ro.observe(anchorRef.current);
+    window.addEventListener('resize', measure);
 
-      // Fase 2 (50% → 65%) — some tudo, exceto o par final. No exato
-      // instante em que a fase começa, ele sai do fluxo de texto
-      // (position:absolute, nowrap) plantado na sua própria posição atual
-      // — só então anima top/left até o canto. Isso garante que a palavra
-      // nunca fica espremida pelo texto ao redor dela encolhendo.
-      tl.set(persistRef.current, { position: 'absolute', top: startTop, left: startLeft, whiteSpace: 'nowrap', x: 0, y: 0 }, 0.5);
-      tl.to(others, { opacity: 0, duration: 0.15, ease: 'none' }, 0.5);
-      tl.to(persistRef.current, { top: endTop, left: endLeft, duration: 0.15, ease: 'none' }, 0.5);
-      tl.to(persistWords, { opacity: 1, color: '#A78BFA', fontSize: PERSIST_FINAL_FONT, duration: 0.15, ease: 'none' }, 0.5);
-      tl.to(persistGlyph, { opacity: 1, borderColor: 'rgba(124,58,237,0.6)' }, 0.5);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [persistToken]);
 
-      // Fase 3 (65% → 100%) — parágrafo entra à esquerda, mesmo mecanismo de ScrubWords.
-      bodyWords.forEach((w, i) => {
-        tl.to(w, { opacity: 1, color: '#94A3B8', duration: 0.12, ease: 'none' }, 0.68 + i * 0.02);
-      });
-    }, sectionRef);
+  // Enquanto não há medida, a transformação é a identidade — o pior caso é a
+  // palavra já estar no destino, nunca fora da tela.
+  const flightX = useTransform(progress, STAGE.flight, [flip?.x ?? 0, 0], { ease: EASE_LUXE });
 
-    return () => ctx.revert();
-  }, [bodyWords]);
+  /* v9 — arco em vez de linha reta: `flightY` ganha um terceiro ponto no
+     meio do voo, deslocado pra cima além da posição final (`ARC_LIFT`), e
+     só desce pro pouso no último trecho — a mesma trajetória de algo
+     arremessado, não empurrado em linha reta. Precisa de 3 valores tanto no
+     domínio (progresso) quanto na imagem (posição) — 2 pontos só dão uma
+     reta. `flightMid` é o ponto médio do estágio, não um número solto. */
+  const flightMid = (STAGE.flight[0] + STAGE.flight[1]) / 2;
+  const ARC_LIFT = 46;
+  const flightY = useTransform(
+    progress,
+    [STAGE.flight[0], flightMid, STAGE.flight[1]],
+    [flip?.y ?? 0, (flip?.y ?? 0) * 0.5 - ARC_LIFT, 0],
+    { ease: EASE_LUXE },
+  );
+  const flightScale = useTransform(progress, STAGE.flight, [flip?.scale ?? 1, 1], { ease: EASE_LUXE });
+
+  /* Rotação só existe DURANTE o voo — 3 pontos (0 → -4 → 0), não 2 (-4 → 0).
+     Bug real da v9 anterior: `useTransform` com um range de 2 pontos clampa
+     no PRIMEIRO valor pra qualquer progresso ANTES do range começar — como
+     esse primeiro valor era `-4`, a palavra ficava girada -4° o tempo TODO
+     em que deveria estar quieta, fundida no título (Estágio 1 inteiro,
+     antes do voo sequer começar). É exactly o tipo de coisa que faz "amador"
+     não ler como parte do título: pra quem está olhando, ela nunca esteve
+     alinhada com as palavras ao lado. Com 0 como primeiro valor, o clamp
+     pré-voo agora é 0° — idêntico ao resto do título — e a rotação só entra
+     como um floreio DURANTE a viagem, desarmando de novo no pouso. Pivota
+     no mesmo `transformOrigin: right center` do resto da âncora. */
+  const flightRotate = useTransform(progress, [STAGE.flight[0], flightMid, STAGE.flight[1]], [0, -4, 0], {
+    ease: EASE_LUXE,
+  });
+
+  /* Blur de "chicote" — sobe no meio do voo (mais rápido = mais borrado) e
+     zera nas duas pontas, igual ao dissolve das outras palavras, mas usado
+     aqui pra dar peso ao movimento em vez de fazer a palavra sumir. Mesmo
+     truque de "vira `none` quando desprezível" das outras animações — não
+     paga o custo de uma camada de filtro fora da janela em que ela importa. */
+  const flightBlurRaw = useTransform(progress, [STAGE.flight[0], flightMid, STAGE.flight[1]], [0, 5.5, 0]);
+  const flightFilter = useTransform(flightBlurRaw, (v) => (v < 0.06 ? 'none' : `blur(${v.toFixed(2)}px)`));
+
+  /* Flash de pouso — halo de texto que acende bem no fim do voo e apaga em
+     seguida, pra puxar o olho no exato instante em que a palavra assenta
+     (o "mais chamativo" pedido). Não é contínuo — um pulso só, sincronizado
+     ao MESMO `progress` de tudo o mais, então também congela se o scroll
+     parar no meio dele. */
+  const landingAt = STAGE.flight[1] - 0.025;
+  const landingGlowRaw = useTransform(progress, [landingAt - 0.05, landingAt, landingAt + 0.1], [0, 1, 0]);
+  const landingGlow = useTransform(landingGlowRaw, (v) =>
+    v < 0.03 ? 'none' : `0 0 ${(20 * v).toFixed(1)}px rgba(167,139,250,${(0.85 * v).toFixed(2)})`,
+  );
+
+  const anchorReveal = persistToken ? slot(STAGE.reveal, indexOf(persistToken), animatable.length) : STAGE.reveal;
+  const anchorOpacity = useTransform(progress, anchorReveal, [0, 1]);
+  const anchorColor = useTransform(progress, anchorReveal, [COLOR.faint, COLOR.purple]);
 
   return (
-    <section ref={sectionRef} className="relative h-screen overflow-hidden bg-rv-void">
-      <CornerMoire position="tr" />
-      <CornerMoire position="bl" />
+    <section
+      ref={trackRef}
+      aria-labelledby="scrub-statement-title"
+      className="relative h-[400dvh] bg-rv-void"
+    >
+      {/* Palco: uma viewport de altura, colado no topo enquanto o trilho passa.
+          `dvh` e não `vh`: o container de scroll do LPShell tem `100dvh`, e no
+          mobile `100vh` é maior que isso (conta a barra do navegador que se
+          recolhe) — o palco ficaria alguns pixels mais alto que a viewport e
+          deslizaria de leve em vez de ficar perfeitamente travado. */}
+      <div className="sticky top-0 h-[100dvh] overflow-hidden">
+        <AmbientGlow progress={progress} />
 
-      <div
-        ref={bloomRef}
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[70vh] origin-bottom opacity-30"
-        style={{ background: 'radial-gradient(ellipse at 50% 120%, rgba(124,58,237,0.55), transparent 62%)' }}
-      />
+        {/* `CONTENT_MAX_W` + `mx-auto`: trava a cena numa coluna central em
+            monitores ultrawide. Sem isso, `right:0`/`left:0` dos filhos
+            absolutos abaixo alinhariam contra o edge físico da viewport
+            inteira — a âncora e o parágrafo ficariam grudados nas bordas
+            reais da tela em vez de dentro de uma moldura editorial. */}
+        <div className={`relative z-10 mx-auto h-full ${GX}`} style={{ maxWidth: CONTENT_MAX_W }}>
+          {/* ── Estágios 1 e 2 ─────────────────────────────────────────── */}
+          {/* `paddingTop: NAV_CLEARANCE` empurra o centro visual pra baixo,
+              longe da navbar pílula fixa do LPShell — como o wrapper é
+              `inset-0` + `items-center`, padding-top só consome espaço do
+              lado de cima da conta de centralização (ver nota da constante,
+              no topo do arquivo). */}
+          <div className="absolute inset-0 flex items-center justify-center" style={{ paddingTop: NAV_CLEARANCE }}>
+            <h2
+              id="scrub-statement-title"
+              className="mx-auto max-w-5xl text-center font-grotesk font-light leading-[1.18] tracking-[-0.025em]"
+              style={{ fontSize: HEADLINE_SIZE }}
+            >
+              {tokens.map((token, i) => {
+                if (token.br) return <br key={i} />;
 
-      {/* âncora invisível — clone do par [glifo+palavra] já no tamanho final
-          pequeno (PERSIST_FINAL_FONT), posicionado no canto real via
-          bottom/right. O navegador calcula o getBoundingClientRect() certo
-          pra essa caixa, e é esse retângulo (não um ponto de 1px) que vira
-          o alvo de top/left do par de verdade — assim o tamanho medido bate
-          com o tamanho que ele vai ter quando chegar lá. */}
-      {persistToken && (
-        <span
-          ref={anchorRef}
-          aria-hidden
-          // bottom-11vh (não 8vh): o botão fixo do WhatsApp ocupa o canto
-          // inferior-direito real da viewport (bottom/right:24px, 56x56) —
-          // essa folga extra garante que o par pousa acima dele, sem
-          // sobreposição, em vez de disputar o mesmo pixel.
-          className="pointer-events-none absolute bottom-[11vh] right-[6vw] inline-flex items-center gap-2 opacity-0"
-          style={{ fontSize: PERSIST_FINAL_FONT }}
-        >
-          <Glyph name={persistToken.glyph} />
-          <span>{persistToken.text}</span>
-        </span>
-      )}
+                const idx = indexOf(token);
+                const reveal = slot(STAGE.reveal, idx, animatable.length);
+                const dissolve = slot(STAGE.dissolve, idx, animatable.length, 0.45);
 
-      <div className={`relative z-10 flex h-full flex-col items-center justify-center ${GX}`}>
-        <div ref={headlineRef} className="mx-auto max-w-5xl text-center">
-          <p className={`font-grotesk font-light leading-[1.25] tracking-[-0.02em] ${TYPE.h1}`} style={{ fontSize: 'clamp(3rem,7vw,8rem)' }}>
-            {data.headlineTokens.map((token, i) => (
-              <Token
-                key={i}
-                token={typeof token === 'string' ? { text: token } : token}
-                persistRef={persistRef}
-                wordRefs={wordRefs}
-                glyphRefs={glyphRefs}
-              />
-            ))}
-          </p>
-        </div>
+                if (token.persist) {
+                  /* Ghost: reserva no fluxo o espaço exato da palavra final e
+                     serve de alvo de medição. Precisa continuar ocupando
+                     layout (mantém a quebra de linha idêntica e dá um rect
+                     mensurável), então nada de `display:none`.
 
-        <div className="mx-auto mt-10 max-w-xl self-start md:self-center md:text-left">
-          <ScrubWords
-            lines={[data.paragraph]}
-            onWords={setBodyWords}
-            lineClassName={`font-satoshi text-left ${TYPE.body}`}
-          />
+                     `opacity-0` e não `invisible`: `visibility:hidden` tiraria
+                     o nó da árvore de acessibilidade e a frase chegaria
+                     truncada no leitor de tela ("...quem parece" sem
+                     "amador."). Com opacity o ghost segue lido aqui, no lugar
+                     certo da sentença, e é a cópia visível da direita que
+                     leva `aria-hidden`. */
+                  return (
+                    <span
+                      key={i}
+                      ref={ghostRef}
+                      className="pointer-events-none mx-[0.18em] inline-flex select-none items-center gap-[0.3em] align-middle opacity-0"
+                    >
+                      <Glyph name={token.glyph} />
+                      <span>{token.text}</span>
+                    </span>
+                  );
+                }
+
+                if (token.glyph) {
+                  return (
+                    <KineticGlyph
+                      key={i}
+                      progress={progress}
+                      reveal={reveal}
+                      dissolve={dissolve}
+                      name={token.glyph}
+                      pulseDelay={idx * 0.35}
+                    />
+                  );
+                }
+
+                return (
+                  <KineticWord
+                    key={i}
+                    progress={progress}
+                    reveal={reveal}
+                    dissolve={dissolve}
+                    accent={token.accent}
+                    className="mr-[0.26em]"
+                  >
+                    {token.text}
+                  </KineticWord>
+                );
+              })}
+            </h2>
+          </div>
+
+          {/* ── Estágio 3: a âncora ─────────────────────────────────────────
+              O wrapper faz LAYOUT (CSS decide a direita e o centro vertical);
+              o filho faz MOVIMENTO (transform). Separar os dois é o que
+              garante que, em repouso, o alinhamento não depende de nenhuma
+              conta em JS. */}
+          {persistToken && (
+            <div
+              className="pointer-events-none absolute inset-y-0 z-20 flex items-start pt-[16vh] md:items-center md:pt-0"
+              style={{ right: ANCHOR_INSET }}
+            >
+              <motion.span
+                ref={anchorRef}
+                aria-hidden
+                className="inline-flex items-center gap-[0.3em] whitespace-nowrap font-grotesk font-light tracking-[-0.025em]"
+                style={{
+                  fontSize: ANCHOR_SIZE,
+                  x: flightX,
+                  y: flightY,
+                  scale: flightScale,
+                  rotate: flightRotate,
+                  filter: flightFilter,
+                  opacity: anchorOpacity,
+                  color: anchorColor,
+                  textShadow: landingGlow,
+                  transformOrigin: 'right center',
+                  willChange: 'transform, opacity, filter',
+                }}
+              >
+                <Glyph name={persistToken.glyph} spin glow />
+                {persistToken.text}
+              </motion.span>
+            </div>
+          )}
+
+          {/* ── Estágio 4: revelação pela esquerda ──────────────────────────
+              Mesmo `ANCHOR_INSET` do lado direito — moldura simétrica com a
+              palavra travada, em vez de dois valores arbitrários diferentes
+              que por acaso ficam parecidos. Largura sobe em relação à v7
+              (era `26rem`/`lg` no teto) pra acomodar `PARAGRAPH_SIZE` maior
+              sem virar uma coluna de 12+ linhas — ver nota da constante. */}
+          <div
+            className="pointer-events-none absolute inset-y-0 z-10 flex max-w-[min(90vw,28rem)] items-end pb-[14vh] sm:max-w-md md:max-w-xl md:items-center md:pb-0 lg:max-w-2xl"
+            style={{ left: ANCHOR_INSET }}
+          >
+            <ScrubParagraph progress={progress} text={data.paragraph} range={STAGE.paragraph} />
+          </div>
         </div>
       </div>
     </section>

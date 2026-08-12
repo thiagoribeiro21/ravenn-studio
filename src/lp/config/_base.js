@@ -1,3 +1,6 @@
+import { useLayoutEffect } from 'react';
+import { cubicBezier, useMotionValue } from 'framer-motion';
+
 /* ── Defaults compartilhados entre todas as LPs clonadas de src/lp/ ──────── */
 
 export const WA_PHONE = '5521989211887';
@@ -61,6 +64,34 @@ export function isSlowConnection() {
   return c.saveData === true || c.effectiveType === '2g' || c.effectiveType === 'slow-2g';
 }
 
+/* Detecta suporte real a WebGL — não é redundante com `isSlowConnection()`:
+   aquela mede VELOCIDADE de rede, esta mede CAPACIDADE do navegador. Uma LP
+   de tráfego pago recebe uma fatia relevante de cliques abertos dentro de
+   webviews embutidas (Instagram, Facebook, TikTok) — vários deles restringem
+   ou desligam WebGL mesmo em conexão 4G/5G rápida. Sem esse segundo check, o
+   `<Canvas>` do react-three-fiber tenta montar mesmo assim e o "ícone" 3D
+   simplesmente não pinta nada, sem erro visível — a causa mais provável do
+   "não está aparecendo" num aparelho real que o teste em navegador de
+   desktop não reproduz.
+
+   Resultado cacheado num módulo-level var: criar e descartar um canvas de
+   teste é barato, mas não há motivo pra repetir a cada chamada — o suporte a
+   WebGL de um navegador não muda durante a sessão. */
+let _webglSupport;
+export function hasWebGL() {
+  if (_webglSupport !== undefined) return _webglSupport;
+  if (typeof document === 'undefined') return (_webglSupport = false);
+
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    _webglSupport = !!gl;
+  } catch {
+    _webglSupport = false;
+  }
+  return _webglSupport;
+}
+
 export function prefersReducedMotion() {
   if (typeof window === 'undefined') return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -81,4 +112,119 @@ export function prefersReducedMotion() {
 export function getScrollerEl() {
   if (typeof document === 'undefined') return undefined;
   return document.querySelector('[data-lp-scroller]') || undefined;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Máquina de scroll-progress compartilhada — extraída de ScrubStatement.jsx
+   (Ato 2) quando PillarsShaped.jsx (Ato 4) passou a precisar exatamente da
+   mesma coisa: um progresso 0→1 de um trilho `sticky`, amortecido por mola,
+   fatiável em janelas por trecho. Duplicar essas ~50 linhas na segunda seção
+   seria o sinal clássico de "devia ser uma função" — a primeira cópia é
+   coincidência, a segunda é padrão.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Física de mola do scrub — SUPERAMORTECIDA de propósito (damping ratio
+   ≈ 1.5 com stiffness:100/damping:30): a mola persegue o progresso real sem
+   nunca ultrapassar o alvo. Overshoot aqui tocaria valores fora de [0,1] em
+   quem consome o progresso (opacity, scale, blur) — overdamped garante que
+   o pior caso é "chega um instante depois", nunca "passa do ponto". */
+export const SCRUB_SPRING = { stiffness: 100, damping: 30, restDelta: 0.001 };
+
+/* `useTransform` espera uma EasingFunction de verdade, não a tupla bezier
+   que `animate()`/`transition` aceitam — passar `[0.16,1,0.3,1]` direto ali
+   seria lido como um array de easings por segmento e quebraria
+   silenciosamente. `cubicBezier` compila a curva da marca numa função.
+   Nome deliberadamente diferente de `EASE_LUXE` (a tupla, usada em toda
+   `transition={{ ease: ... }}` do resto do LP) — são tipos incompatíveis,
+   um alias teria escondido a diferença exatamente onde ela mais importa. */
+export const EASE_LUXE_FN = cubicBezier(0.16, 1, 0.3, 1);
+
+export const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+
+/**
+ * Reparte uma janela de progresso em N fatias sobrepostas. `overlap` controla
+ * o quanto uma fatia começa antes da anterior terminar — 1 = sequência dura,
+ * 0.5 = onda macia. Pensado pra revelações MONOTÔNICAS (acende e fica —
+ * palavra, parágrafo): não serve pra algo que precisa apagar de novo depois
+ * (um item "ativo" que volta a ficar "inativo" quando o próximo assume —
+ * isso é uma janela sobe-e-desce, forma diferente, cada consumidor com essa
+ * necessidade define a própria função local em vez de forçar os dois
+ * formatos dentro de uma função só).
+ */
+export function slot([start, end], index, total, overlap = 0.55) {
+  const step = (end - start) / Math.max(total, 1);
+  const from = start + index * step * overlap;
+  return [from, Math.min(from + step / overlap, 1)];
+}
+
+/**
+ * Progresso 0→1 de um trilho `sticky`, lido do container de scroll do
+ * LPShell (`getScrollerEl()`) em vez de `window`.
+ *
+ * Mede por `getBoundingClientRect` a cada frame (via rAF, não a cada evento
+ * de scroll) em vez de cachear offsets: seções vizinhas ainda usam pin do
+ * GSAP, que muda a altura do conteúdo depois do mount, e qualquer offset
+ * cacheado ficaria desatualizado justo nesse intervalo. Duas leituras de
+ * layout por frame, sem escrita entre elas (o Framer agrupa os writes de
+ * transform no próprio batch) — não há thrash, é o mesmo padrão do
+ * ScrollTrigger.
+ *
+ * Por que não `useScroll` do Framer: essas rotas não rolam a `window` — o
+ * LPShell rola um container próprio (`[data-lp-scroller]`,
+ * `overflow-y:auto`). `useScroll({ container })` exige um RefObject já
+ * populado no momento em que o hook monta, e o scroller só é descoberto via
+ * `getScrollerEl()` (querySelector) depois do commit — forçar isso a
+ * sincronizar pediria um remount. Esta função alimenta a MotionValue
+ * diretamente; dali pra baixo (`useSpring`, `useTransform`) é Framer Motion
+ * idiomático de novo.
+ */
+export function useTrackProgress(trackRef, disabled) {
+  const progress = useMotionValue(disabled ? 1 : 0);
+
+  useLayoutEffect(() => {
+    if (disabled) {
+      progress.set(1);
+      return undefined;
+    }
+    const track = trackRef.current;
+    const scroller = getScrollerEl();
+    if (!track) return undefined;
+
+    // Fallback para scroll de documento caso a seção seja usada fora do LPShell.
+    const target = scroller || window;
+    let frame = 0;
+
+    const measure = () => {
+      frame = 0;
+      const t = track.getBoundingClientRect();
+      const viewTop = scroller ? scroller.getBoundingClientRect().top : 0;
+      const viewHeight = scroller ? scroller.clientHeight : window.innerHeight;
+      const travel = t.height - viewHeight;
+      if (travel <= 0) {
+        progress.set(0);
+        return;
+      }
+      progress.set(clamp01((viewTop - t.top) / travel));
+    };
+
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+
+    measure();
+    target.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+
+    const ro = new ResizeObserver(schedule);
+    ro.observe(track);
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      target.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      ro.disconnect();
+    };
+  }, [trackRef, disabled, progress]);
+
+  return progress;
 }

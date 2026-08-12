@@ -1,7 +1,8 @@
-import { motion } from 'framer-motion';
+import { useEffect, useMemo, useRef } from 'react';
+import { animate, motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import Aurora from '../primitives/Aurora';
 import ParticleField from '../primitives/ParticleField';
-import { EASE_LUXE, GX, TYPE, RADIUS, prefersReducedMotion } from '../config/_base';
+import { EASE_LUXE, GX, TYPE, prefersReducedMotion } from '../config/_base';
 
 function Fade({ children, delay = 0, y = 24, className = '' }) {
   return (
@@ -75,6 +76,199 @@ function DeviceShot() {
   );
 }
 
+/*
+  Botão magnético — o cursor "puxa" o botão dentro de um raio curto (spring
+  crítico, não elástico: mass/damping ajustados pra parar sem overshoot
+  visível, senão parece brinquedo). `prefersReducedMotion` desliga o
+  tracking do mouse por completo (fica estático, só o hover de cor/glow
+  continua) em vez de simplesmente pular o spring — mexer na posição de um
+  elemento clicável sem input explícito do usuário é o tipo de movimento que
+  a preferência existe pra evitar.
+*/
+const MAGNETIC_SPRING = { stiffness: 180, damping: 14, mass: 0.4 };
+const MAGNETIC_STRENGTH = 0.35;
+
+function MagneticCta({ href, children, variant = 'solid', className = '' }) {
+  const ref = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, MAGNETIC_SPRING);
+  const springY = useSpring(y, MAGNETIC_SPRING);
+  const reduce = prefersReducedMotion();
+
+  function handleMove(e) {
+    if (reduce || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    x.set((e.clientX - rect.left - rect.width / 2) * MAGNETIC_STRENGTH);
+    y.set((e.clientY - rect.top - rect.height / 2) * MAGNETIC_STRENGTH);
+  }
+  function handleLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  const solid = variant === 'solid';
+
+  return (
+    <motion.a
+      ref={ref}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      style={reduce ? undefined : { x: springX, y: springY }}
+      className={`group relative isolate inline-flex items-center gap-2.5 overflow-hidden rounded-full px-8 py-4 font-satoshi font-medium tracking-wide transition-[color,border-color,box-shadow] duration-500 ${TYPE.button} ${
+        solid
+          ? 'bg-rv-purple text-white shadow-[0_0_36px_rgba(124,58,237,0.32)] group-hover:shadow-[0_0_64px_rgba(124,58,237,0.62)]'
+          : 'border border-white/15 text-rv-titanium hover:border-rv-purple/50'
+      } ${className}`}
+    >
+      {/* halo violeta — só acende no hover, blur largo pra parecer luz, não caixa */}
+      {solid && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -inset-8 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+          style={{ background: 'radial-gradient(circle, rgba(167,139,250,.85), transparent 68%)' }}
+        />
+      )}
+      {/* faixa de brilho varrendo o botão no hover — sutil, uma vez por hover */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
+      />
+      <span className="relative z-10">{children}</span>
+      <span aria-hidden className="relative z-10 inline-block transition-transform duration-300 group-hover:translate-x-1">
+        →
+      </span>
+    </motion.a>
+  );
+}
+
+/*
+  Item 3, refinamento v6 — dashboard editorial. Cada stat vira uma célula
+  numa régua Swiss-grid: hairline que se desenha (scaleY/scaleX, não width/
+  height — pura composição, sem layout shift), número com count-up amarrado
+  ao viewport (não a um timer) e o sufixo (`s`, `%`) isolado em roxo, como
+  destaque tipográfico em vez de ícone.
+
+  `parseStat`/`formatStat` — a marca usa vírgula decimal (pt-BR: "0,05s"),
+  então o count-up precisa reconstruir esse formato a cada frame, não só
+  interpolar um número cru. Falha graciosamente: qualquer `big` que não
+  comece com dígito (conteúdo futuro fora do padrão) renderiza como texto
+  estático, sem quebrar.
+*/
+function parseStat(raw) {
+  const match = /^(-?[\d.,]+)(.*)$/.exec(String(raw).trim());
+  if (!match || match[1] === '') return { value: null, decimals: 0, suffix: raw };
+  const [, numeric, suffix] = match;
+  const decimals = numeric.includes(',') ? numeric.split(',')[1].length : 0;
+  const value = parseFloat(numeric.replace(/\./g, '').replace(',', '.'));
+  return { value: Number.isNaN(value) ? null : value, decimals, suffix };
+}
+
+function formatStat(value, decimals) {
+  return value.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+
+/* v10 — "Apple Dark Mode": números sólidos e pesados (não mais o gradiente
+   titanium→slate do v6), o acento violeta migrou pro SUFIXO (`s`/`%`), que
+   agora é ele mesmo o elemento "chamativo" via `bg-clip-text` — a marca já
+   tinha esse recorte pronto (era só o dot que dependia de ficar fora dele).
+   Sem dot nenhum agora, então o número volta a ser um `<p>` só, sem wrapper
+   flex pra acomodar um irmão. */
+function StatNumber({ raw, active, reduce }) {
+  const { value, decimals, suffix } = useMemo(() => parseStat(raw), [raw]);
+  const count = useMotionValue(reduce ? value ?? 0 : 0);
+  const display = useTransform(count, (v) => formatStat(v, decimals));
+
+  useEffect(() => {
+    if (!active || value === null || reduce) return undefined;
+    const controls = animate(count, value, { duration: 2, ease: EASE_LUXE });
+    return controls.stop;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, value, reduce]);
+
+  if (value === null) {
+    return <>{raw}</>;
+  }
+
+  return (
+    <>
+      <motion.span>{display}</motion.span>
+      {suffix && (
+        <span className="bg-gradient-to-br from-rv-purple-400 to-rv-purple bg-clip-text text-transparent">
+          {suffix}
+        </span>
+      )}
+    </>
+  );
+}
+
+/* Hairline neutro (era um gradiente com ponta violeta) — o acento da régua
+   agora vive só no sufixo do número; um segundo ponto violeta aqui
+   competiria com ele em vez de emoldurar. Continua se desenhando
+   (scaleY/scaleX 0→1) ao entrar em vista, só a cor mudou. */
+function Divider({ active, reduce, delay }) {
+  return (
+    <>
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute left-0 top-0 hidden h-full w-px bg-white/10 md:block"
+        style={{ transformOrigin: 'top' }}
+        initial={reduce ? false : { scaleY: 0 }}
+        animate={active ? { scaleY: 1 } : undefined}
+        transition={{ duration: 0.9, delay, ease: EASE_LUXE }}
+      />
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute left-0 top-0 block h-px w-full bg-white/10 md:hidden"
+        style={{ transformOrigin: 'left' }}
+        initial={reduce ? false : { scaleX: 0 }}
+        animate={active ? { scaleX: 1 } : undefined}
+        transition={{ duration: 0.7, delay, ease: EASE_LUXE }}
+      />
+    </>
+  );
+}
+
+function StatsRow({ stats }) {
+  const rowRef = useRef(null);
+  const reduce = prefersReducedMotion();
+  const active = useInView(rowRef, { once: true, amount: 0.6 }) || reduce;
+
+  return (
+    <div ref={rowRef} className="grid grid-cols-1 md:grid-cols-3">
+      {stats.map((s, i) => (
+        <div key={s.label} className="relative">
+          {i > 0 && <Divider active={active} reduce={reduce} delay={i * 0.15} />}
+
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 20, filter: 'blur(6px)' }}
+            animate={active ? { opacity: 1, y: 0, filter: 'blur(0px)' } : undefined}
+            transition={{ duration: 0.8, delay: 0.12 + i * 0.12, ease: EASE_LUXE }}
+            className="group flex flex-col items-center gap-2.5 rounded-2xl py-6 text-center transition-colors duration-500 ease-out first:pt-0 hover:bg-white/[0.02] md:items-start md:px-10 md:py-2 md:text-left md:first:pl-0"
+          >
+            <p className={`font-grotesk font-semibold leading-none tracking-tight text-rv-titanium ${TYPE.statNum}`}>
+              <StatNumber raw={s.big} active={active} reduce={reduce} />
+            </p>
+            {/* Sentence case (como escrito nos dados), não `uppercase`: o
+                brief aceitava sentence case OU title case — `capitalize`
+                (title case via CSS) capitalizaria preposições em português
+                ("Da Credibilidade Vem Do Design"), o que lê como IA
+                traduzindo convenção do inglês, não como editorial. Sentence
+                case natural já bate com a voz do resto do site (subheadline
+                do hero também começa em minúscula, é frase corrida). */}
+            <p className={`max-w-[12rem] font-satoshi font-medium leading-snug text-rv-slate ${TYPE.statLabel}`}>
+              {s.label}
+            </p>
+          </motion.div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function HeroDevice({ data }) {
   return (
     <section id="hero" className={`relative flex min-h-[100dvh] flex-col overflow-hidden pt-32 pb-10 ${GX}`}>
@@ -99,23 +293,13 @@ export default function HeroDevice({ data }) {
           <p className={`font-satoshi text-rv-slate ${TYPE.body}`}>{data.subheadline}</p>
         </Fade>
 
-        <Fade delay={0.45} className="mt-8 flex flex-wrap items-center justify-center gap-4">
-          <a
-            href={data.ctaPrimary.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`rounded-full bg-rv-purple px-7 py-3.5 font-satoshi font-medium tracking-wide text-white shadow-[0_0_40px_rgba(124,58,237,0.35)] transition-shadow duration-300 hover:shadow-[0_0_60px_rgba(124,58,237,0.55)] ${TYPE.button}`}
-          >
+        <Fade delay={0.45} className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <MagneticCta href={data.ctaPrimary.href} variant="solid">
             {data.ctaPrimary.label}
-          </a>
-          <a
-            href={data.ctaSecondary.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`rounded-full border border-white/20 px-7 py-3.5 font-satoshi font-medium tracking-wide text-rv-titanium transition-colors duration-300 hover:border-rv-purple/60 ${TYPE.button}`}
-          >
+          </MagneticCta>
+          <MagneticCta href={data.ctaSecondary.href} variant="ghost">
             {data.ctaSecondary.label}
-          </a>
+          </MagneticCta>
         </Fade>
       </div>
 
@@ -133,29 +317,18 @@ export default function HeroDevice({ data }) {
 
       <Fade
         delay={0.7}
-        className="relative z-10 mx-auto mt-10 flex w-full max-w-6xl flex-col items-stretch justify-between gap-6 border-t border-white/[0.06] pt-6 md:flex-row md:items-end"
+        className="relative z-10 mx-auto mt-10 flex w-full max-w-6xl flex-col items-stretch justify-between gap-8 border-t border-white/[0.06] pt-8 md:flex-row md:items-end"
       >
-        <div className="flex flex-wrap justify-center gap-8 md:justify-start">
-          {data.stats.map((s) => (
-            <div key={s.label} className="text-center md:text-left">
-              <p className={`font-grotesk font-light text-rv-titanium ${TYPE.statNum}`}>{s.big}</p>
-              {/* item 3 — piso explícito de 16px pros labels de stat, prova social precisa ser lida */}
-              <p className="mt-1 max-w-[11rem] font-satoshi text-[15px] leading-[1.5] text-rv-slate md:text-[16px]">{s.label}</p>
-            </div>
-          ))}
-        </div>
+        <StatsRow stats={data.stats} />
 
-        {/* item 2 — badge refeito: texto à esquerda, botão coeso à direita */}
-        <div
-          className="mx-auto flex w-full max-w-md items-center justify-between gap-5 p-5 md:mx-0"
-          style={{
-            borderRadius: RADIUS.md,
-            border: '1px solid rgba(255,255,255,0.07)',
-            background: 'rgba(13,10,24,0.5)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-          }}
-        >
+        {/* v10 — vidro branco-neutro (`bg-white/[0.03]`) em vez do vidro
+            escuro-violeta (`rgba(13,10,24,0.5)`) do v6: são duas famílias
+            diferentes de "glassmorphism" — a antiga lê como painel sólido
+            com leve transparência, esta lê como o vidro fosco nativo da
+            Apple, um véu neutro sobre o preto de trás. Pedido explícito do
+            brief, não uma correção — as duas são válidas, essa é a que se
+            quer aqui agora. */}
+        <div className="mx-auto flex w-full max-w-md items-center justify-between gap-5 rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md md:mx-0">
           <div className="text-left">
             <p className="font-grotesk text-lg font-light text-rv-titanium">{data.scarcity.line1}</p>
             <p className={`mt-0.5 font-satoshi text-rv-slate ${TYPE.cardDesc}`}>{data.scarcity.line2}</p>

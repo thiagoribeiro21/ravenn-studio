@@ -6,11 +6,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Preloader from './Preloader';
 import HeroDevice from './sections/HeroDevice';
 import ScrubStatement from './sections/ScrubStatement';
-import CostReveal from './sections/CostReveal';
+import SilentInbox from './sections/SilentInbox';
 import ConsequenceCarousel from './sections/ConsequenceCarousel';
 import BentoValue from './sections/BentoValue';
 import ConceptStack from './sections/ConceptStack';
 import PillarsShaped from './sections/PillarsShaped';
+import TargetAudienceCarousel from './sections/TargetAudienceCarousel';
 import FaqPanel from './sections/FaqPanel';
 import FinaleCta from './sections/FinaleCta';
 import WhatsAppButton from '../components/WhatsAppButton';
@@ -137,10 +138,11 @@ export default function LPShell({ config }) {
       <div ref={contentRef}>
         <HeroDevice data={config.hero} />
         <ScrubStatement data={config.scrub} />
-        <CostReveal data={config.consequence} />
+        <SilentInbox data={config.consequence} />
         <BentoValue data={config.bento} />
         <ConceptStack data={config.concepts} />
         <PillarsShaped data={config.pillars} />
+        <TargetAudienceCarousel data={config.audience} />
         <ConsequenceCarousel id="processo" eyebrow={config.process.eyebrow} heading={config.process.heading} items={config.process.steps} bg={config.process.bg} cta={config.process.cta} />
         <FaqPanel data={config.faq} />
         <FinaleCta data={config.finale} />

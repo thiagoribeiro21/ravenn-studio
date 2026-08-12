@@ -165,6 +165,40 @@ section[id] { scroll-margin-top: 100px; }
   .rv-aurora-a, .rv-aurora-b, .rv-aurora-c { animation: none; }
 }
 
+/* Rotação contínua e lenta + respiração dos glifos SVG do Ato 2
+   (ScrubStatement) — dá o "vivo, respirando" sem ser um ícone girando
+   rápido tipo loading spinner.
+
+   Duas animações, DUAS regras em DOIS elementos — não uma regra com dois
+   keyframes no mesmo nó. `transform` é uma propriedade só: se rotate e
+   scale rodassem como animations separadas no mesmo elemento, a segunda da
+   lista simplesmente substituiria o valor computado da primeira a cada
+   frame (CSS não soma transforms de animations concorrentes sem
+   `animation-composition: accumulate`, que não vale a pena aqui só pra
+   isso) — o giro sumiria, só a pulsação ficaria visível. Por isso o giro
+   vive no `<svg>` interno (`rv-glyph-spin`) e a respiração no `<span>`
+   externo (`rv-glyph-pulse`, escala+opacidade) — nós diferentes, cada um
+   com seu próprio transform, compostos naturalmente pela árvore do DOM.
+
+   Ambas em CSS puro, não Framer Motion: o Ato 2 já alimenta ~15
+   `useTransform` por frame de scroll a partir de uma única MotionValue de
+   progresso — mais um punhado de loops do Framer só pra um giro decorativo
+   e constante (sem relação nenhuma com o scroll) seria custo de thread JS
+   pago à toa. Animação CSS roda no compositor, fora do loop do React. */
+@keyframes rv-glyph-spin { to { transform: rotate(360deg); } }
+@keyframes rv-glyph-pulse {
+  0%, 100% { opacity: 0.78; transform: scale(0.94); }
+  50%      { opacity: 1;    transform: scale(1.06); }
+}
+.rv-glyph-spin { animation: rv-glyph-spin 18s linear infinite; }
+.rv-glyph-pulse {
+  animation: rv-glyph-pulse 3.6s ease-in-out infinite;
+  animation-delay: var(--rv-glyph-delay, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rv-glyph-spin, .rv-glyph-pulse { animation: none; }
+}
+
 /* ── LP v3 — FAQ, glassmorphism reforçado (item 9) ───────────────────────── */
 .rv-faq-item {
   background: rgba(13, 10, 24, .55);

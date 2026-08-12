@@ -7,9 +7,9 @@ const AUTO_ADVANCE_MS = 4500;
 
 /*
   Card de vidro navegável sobre fundo full-bleed. Desde o refinamento v3
-  (item 5), fica exclusivo do Ato 7 (Processo, sobre `process-bg.webp`,
+  (item 5), fica exclusivo do Ato 7 (Processo, sobre `funciona-bg-lp/`,
   onde a numeração `// 01·03` é sequência real) — o Ato 3 (Consequência)
-  agora usa `CostReveal.jsx`, estrutura própria, pra não repetir a mesma
+  agora usa `SilentInbox.jsx`, estrutura própria, pra não repetir a mesma
   mecânica visual duas vezes na página. `bg`/`punchline` seguem suportados
   pra manter o componente reusável nas próximas LPs nichadas.
 
@@ -67,13 +67,40 @@ export default function ConsequenceCarousel({ id, eyebrow, heading, items, bg, c
       <div aria-hidden className="absolute inset-0">
         {bg ? (
           <>
-            <img src={bg} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" style={{ filter: 'brightness(0.45)' }} />
-            <div className="absolute inset-0 bg-rv-void/40" />
+            {/* `bg` aceita string (uma imagem só) OU {mobile,desktop} (o caso
+                de hoje) — mesmo padrão de `<picture>` que `DeviceShot` já usa
+                em HeroDevice.jsx. As duas imagens não são a mesma foto
+                redimensionada: o enquadramento da peça de vidro muda de
+                verdade entre as versões, então precisa de `<source>`, não
+                de um único `<img>` escalado por CSS. */}
+            {typeof bg === 'string' ? (
+              <img src={bg} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+            ) : (
+              <picture>
+                <source media="(min-width: 768px)" srcSet={bg.desktop} />
+                <img src={bg.mobile} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+              </picture>
+            )}
+            {/* Overlay em DUAS camadas, pensado pra imagem em si (peça de
+                vidro faiscando violeta, concentrada de um lado, o resto já
+                quase preto puro) em vez de um escurecimento genérico.
+                  1. Gradiente HORIZONTAL: preto sólido do lado do TEXTO,
+                     amenizando pro lado do objeto — mas SEM chegar a
+                     transparente em ponto nenhum (`to-rv-void/40`, era
+                     `to-transparent`): a imagem crua ficava forte/brilhante
+                     demais competindo com o resto da página, que é quase
+                     toda preto com pontas de luz contidas. Ainda é gradiente
+                     de verdade (varia, não é um véu chapado) — só o piso de
+                     escurecimento subiu inteiro.
+                  2. Gradiente VERTICAL, mais forte que antes também, pra
+                     costurar a seção com o `bg-rv-void` de cima/baixo sem
+                     deixar uma faixa central clara demais. */}
+            <div className="absolute inset-0 bg-gradient-to-r from-rv-void via-rv-void/78 to-rv-void/40" />
           </>
         ) : (
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(124,58,237,0.14),transparent_60%)]" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-rv-void/70 via-transparent to-rv-void/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-rv-void/70 via-rv-void/15 to-rv-void/80" />
       </div>
 
       <div className="relative z-10 grid gap-12 md:grid-cols-12 md:items-center md:gap-[2vw]">

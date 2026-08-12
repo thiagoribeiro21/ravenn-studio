@@ -1,245 +1,554 @@
-import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
 import Aurora from '../primitives/Aurora';
-import { EASE_LUXE, GX, TYPE, RADIUS, SHADOW, SECTION_PAD, prefersReducedMotion } from '../config/_base';
+import { EASE_LUXE, GX, TYPE, SECTION_PAD, prefersReducedMotion } from '../config/_base';
 
-/* ── Mockups HTML — pequenos, só existem aqui, um por célula do bento ─────
-   Item 6 do refinamento v4: os 4 mockups tocavam uma vez só (onViewportEnter)
-   e ficavam parados no estado final — agora cada um reinicia seu próprio
-   ciclo indefinidamente enquanto a célula está montada (loop contínuo, não
-   "one-shot"). prefers-reduced-motion continua travando direto no estado
-   final estático, sem o loop. */
+/* ══════════════════════════════════════════════════════════════════════════
+   Ato "O que você recebe" — v10. Redesign completo.
 
-function PageSpeedMockup({ play }) {
-  const [value, setValue] = useState(0);
-  const [chip, setChip] = useState(-1);
-  useEffect(() => {
-    if (!play) return;
-    if (prefersReducedMotion()) { setValue(98); setChip(2); return; }
-    let cancelled = false;
-    let raf;
-    const timers = [];
-    const dur = 1400;
-    const pauseAtEnd = 1600;
+   ── A mudança de fundo: de fac-símile de UI pra ícone animado ──────────────
+   Até a v9 os 4 mockups eram MINIATURAS DE INTERFACE montadas em HTML: uma
+   moldura de celular com <div>s, bolhas de chat com <div>s, um cartão de
+   avaliação com <div>s, um anel + chips. Cada um tinha seu próprio
+   vocabulário visual (um é um telefone, outro é uma conversa, outro é um
+   card) — juntos liam como quatro capturas de tela diferentes coladas na
+   mesma seção, não como um sistema.
 
-    const animateOnce = () => {
-      setValue(0);
-      setChip(-1);
-      const start = performance.now();
-      const tick = (ts) => {
-        if (cancelled) return;
-        const p = Math.min(1, (ts - start) / dur);
-        setValue(Math.round(p * 98));
-        if (p < 1) raf = requestAnimationFrame(tick);
-      };
-      raf = requestAnimationFrame(tick);
-      timers.push(setTimeout(() => setChip(0), 500));
-      timers.push(setTimeout(() => setChip(1), 900));
-      timers.push(setTimeout(() => setChip(2), 1300));
-      timers.push(setTimeout(animateOnce, dur + pauseAtEnd));
-    };
-    animateOnce();
+   Agora os 4 são SVG de line-art no MESMO viewBox (200×200), com a mesma
+   gramática: traço fino, gradiente violeta, desenho por `pathLength`
+   (aquele "traço que se desenha sozinho" que é a assinatura visual de
+   Lottie), e um loop de vida contínuo depois da entrada. É isso que faz
+   parecer uma família de ícones animados em vez de quatro prints.
 
-    return () => { cancelled = true; cancelAnimationFrame(raf); timers.forEach(clearTimeout); };
-  }, [play]);
+   Por que SVG e não Lottie de verdade: um .lottie/.json exigiria uma
+   dependência nova (`lottie-web`, ~250kB) e um asset de rede por ícone —
+   contra a regra que o projeto inteiro já segue (ver `NOISE_URI` em
+   config/_base.js, um data-URI só pra não disparar uma requisição). SVG
+   inline + Framer entrega a mesma linguagem visual com zero bytes de rede,
+   zero dependência, e ainda deixa cada ícone reagir ao estado do React
+   (`play`, `reduce`, cor de acento).
 
-  const pct = value / 100;
-  const r = 34;
-  const c = 2 * Math.PI * r;
+   ── Gotcha de SVG + Framer que moldou o código abaixo ──────────────────────
+   `buildSVGAttrs` (node_modules/framer-motion/dist/es/render/svg/utils/)
+   SOBRESCREVE `style.transformOrigin` de qualquer elemento SVG que o Framer
+   esteja transformando — calculando a origem a partir do bbox do PRÓPRIO
+   elemento (default 0.5/0.5 = centro dele mesmo), não do viewBox. Então
+   `style={{ transformOrigin: '100px 100px' }}` seria descartado
+   silenciosamente, e o ponto em órbita giraria em torno de si mesmo em vez
+   de orbitar o centro. `calcOrigin` devolve strings verbatim — por isso a
+   órbita usa `originX: '100px'` / `originY: '100px'`, que é a API correta
+   pra isso (mesma classe do conflito Tailwind×Framer no `transform` que já
+   apareceu no Ato 2).
+   ══════════════════════════════════════════════════════════════════════════ */
 
-  return (
-    <div className="flex items-center gap-5">
-      <svg width="88" height="88" viewBox="0 0 88 88" className="shrink-0 -rotate-90">
-        <circle cx="44" cy="44" r={r} stroke="rgba(255,255,255,0.08)" strokeWidth="6" fill="none" />
-        <circle
-          cx="44" cy="44" r={r} stroke="#A78BFA" strokeWidth="6" fill="none" strokeLinecap="round"
-          strokeDasharray={c} strokeDashoffset={c * (1 - pct)} style={{ transition: 'stroke-dashoffset 0.1s linear' }}
-        />
-        <text x="44" y="44" transform="rotate(90 44 44)" textAnchor="middle" dominantBaseline="central" fill="#F8F9FA" fontSize="22" fontFamily="ClashGrotesk-Variable, sans-serif" fontWeight="300">
-          {value}
-        </text>
-      </svg>
-      {/* micro-UI fac-símile (chips de métrica) — exceção documentada à
-          Regra 1: forçar 15px aqui quebraria a leitura de "captura pequena". */}
-      <div className="flex flex-col gap-1.5">
-        {['LCP', 'CLS', 'INP'].map((label, i) => (
-          <span
-            key={label}
-            className="rounded-full border px-2.5 py-1 font-satoshi text-[10px] font-medium uppercase tracking-widest2 transition-all duration-300"
-            style={{
-              opacity: chip >= i ? 1 : 0.15,
-              borderColor: chip >= i ? 'rgba(124,58,237,0.5)' : 'rgba(255,255,255,0.1)',
-              color: chip >= i ? '#A78BFA' : '#5B6472',
-            }}
-          >
-            {label}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
+/* ── Sistema visual compartilhado pelos 4 ícones ─────────────────────────── */
+const TRACK = 'rgba(255,255,255,0.09)';   // trilho "apagado" — o mesmo em todos
+const DRAW_EASE = EASE_LUXE;
 
-function WireframeMockup({ play }) {
-  return (
-    <div className="relative w-full max-w-[15rem] rounded-lg border border-white/10 bg-white/[0.02] p-3">
-      <div className="h-2 w-1/3 rounded bg-white/10" />
-      <div className="mt-3 h-8 rounded bg-white/[0.04]" />
-      <div className="mt-2 h-8 rounded bg-white/[0.04]" />
-      <div className="mt-3 flex justify-end">
-        <div className="h-4 w-16 rounded-full bg-rv-purple/40" />
-      </div>
-      {play && (
-        <motion.span
-          aria-hidden
-          className="absolute left-1/2 h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-rv-purple-400 shadow-[0_0_12px_2px_rgba(167,139,250,0.8)]"
-          initial={{ top: '6%', opacity: 0 }}
-          animate={prefersReducedMotion() ? { top: '88%', opacity: 1 } : { top: ['6%', '88%'], opacity: [0, 1, 1, 0] }}
-          transition={prefersReducedMotion() ? {} : { duration: 2.6, repeat: Infinity, repeatDelay: 0.6, ease: 'easeInOut' }}
-        />
-      )}
-    </div>
-  );
-}
-
-function AuthorityMockup({ play }) {
-  const [stars, setStars] = useState(0);
-  useEffect(() => {
-    if (!play) return;
-    if (prefersReducedMotion()) { setStars(5); return; }
-    let cancelled = false;
-    const timers = [];
-    const fillOnce = () => {
-      setStars(0);
-      for (let i = 0; i < 5; i++) {
-        timers.push(setTimeout(() => { if (!cancelled) setStars(i + 1); }, 250 + i * 180));
-      }
-      timers.push(setTimeout(fillOnce, 250 + 4 * 180 + 1800));
-    };
-    fillOnce();
-    return () => { cancelled = true; timers.forEach(clearTimeout); };
-  }, [play]);
-
-  return (
-    <div className="w-full max-w-[15rem] rounded-lg border border-white/10 bg-white/[0.03] p-4">
-      <div className="flex gap-1">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <span key={i} className="text-sm" style={{ color: i < stars ? '#A78BFA' : 'rgba(255,255,255,0.15)' }}>★</span>
-        ))}
-      </div>
-      <p className="mt-2 font-satoshi text-xs leading-relaxed text-rv-slate">
-        "Site rápido e transmite muita confiança logo na primeira visita."
-      </p>
-      <p className="mt-1.5 font-satoshi text-[10px] uppercase tracking-widest2 text-rv-faint">Avaliação ilustrativa</p>
-    </div>
-  );
-}
-
-function WhatsappMockup({ play }) {
-  const [stage, setStage] = useState(0); // 0 nada, 1 pergunta, 2 digitando, 3 resposta
-  useEffect(() => {
-    if (!play) return;
-    if (prefersReducedMotion()) { setStage(3); return; }
-    const timers = [];
-    const runOnce = () => {
-      setStage(0);
-      timers.push(setTimeout(() => setStage(1), 200));
-      timers.push(setTimeout(() => setStage(2), 1000));
-      timers.push(setTimeout(() => setStage(3), 2400));
-      timers.push(setTimeout(runOnce, 2400 + 1800));
-    };
-    runOnce();
-    return () => timers.forEach(clearTimeout);
-  }, [play]);
-
-  return (
-    <div className="w-full max-w-[15rem] space-y-2">
-      {stage >= 1 && (
-        <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-white/10 px-3 py-2 font-satoshi text-xs text-rv-titanium">
-          Oi, vocês fazem site pra clínica?
-        </div>
-      )}
-      {stage === 2 && (
-        <div className="w-fit rounded-2xl rounded-tl-sm bg-[#25D366]/15 px-3 py-2 font-satoshi text-xs text-[#25D366]">
-          digitando…
-        </div>
-      )}
-      {stage >= 3 && (
-        <div className="flex items-end gap-2">
-          <div className="w-fit rounded-2xl rounded-tl-sm bg-[#25D366]/20 px-3 py-2 font-satoshi text-xs text-rv-titanium">
-            Fazemos sim! Posso te mostrar alguns conceitos agora mesmo.
-          </div>
-          <span className="shrink-0 rounded-full border border-white/15 px-1.5 py-0.5 font-satoshi text-[9px] text-rv-faint">02:47</span>
-        </div>
-      )}
-    </div>
-  );
-}
-
-const MOCKUPS = { pagespeed: PageSpeedMockup, wireframe: WireframeMockup, authority: AuthorityMockup, whatsapp: WhatsappMockup };
-
-/* ícone pequeno em quadrado arredondado lilás claro — abstrato, não de UI */
-const ICON_PATHS = {
-  pagespeed: <path d="M4 15a8 8 0 0 1 16 0M12 15V9M9 12l3-3 3 3" />,
-  wireframe: <path d="M4 5h16v4H4zM4 12h9v7H4zM16 12h4v7h-4z" />,
-  authority: <path d="M12 4l2.2 5.6 6 .5-4.6 3.9 1.4 5.9L12 16.8 6.9 19.9l1.4-5.9L3.8 10l6-.5z" />,
-  whatsapp: <path d="M7 10h10M7 14h6M4 20l1.6-4.2A8 8 0 1 1 9 19.5z" />,
+/* Par de gradiente por ícone. É direção de arte, não conteúdo — mora aqui,
+   não no config (mesmo critério de `CARD_TINTS` em TargetAudienceCarousel).
+   Os 3 primeiros são a escala de roxos da marca; o 4º mantém o verde do
+   WhatsApp porque ali a cor é INFORMAÇÃO (diz de qual canal se está
+   falando), não decoração — um acento entre quatro lê como sinal
+   deliberado, não como ruído. */
+const ACCENTS = {
+  pagespeed: ['#C4B5FD', '#7C3AED'],
+  wireframe: ['#A78BFA', '#7C3AED'],
+  authority: ['#DDD6FE', '#8B5CF6'],
+  whatsapp: ['#25D366', '#0E8043'],
 };
-function CellIcon({ name }) {
+
+/* `useId` (React 18) em vez de ids fixos: `<linearGradient id="x">` é
+   GLOBAL no documento — dois SVGs com o mesmo id fazem o segundo herdar o
+   gradiente do primeiro. Com um id fixo funcionaria hoje (uma instância de
+   cada), mas quebraria no dia em que a mesma célula aparecesse duas vezes
+   na página. */
+function SvgDefs({ uid, from, to }) {
   return (
-    <span className="flex h-10 w-10 items-center justify-center rounded-[10px]" style={{ background: 'rgba(167,139,250,.12)' }}>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-        {ICON_PATHS[name]}
-      </svg>
-    </span>
+    <defs>
+      <linearGradient id={`${uid}-stroke`} x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor={from} />
+        <stop offset="100%" stopColor={to} />
+      </linearGradient>
+      <linearGradient id={`${uid}-shine`} x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
+        <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.55" />
+        <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+      </linearGradient>
+      <radialGradient id={`${uid}-halo`}>
+        <stop offset="0%" stopColor={from} stopOpacity="0.28" />
+        <stop offset="100%" stopColor={from} stopOpacity="0" />
+      </radialGradient>
+    </defs>
   );
 }
 
-function BentoCell({ cell, delay, isLastMobile, isLastRowDesktop, borderRight }) {
-  const ref = useRef(null);
-  const [play, setPlay] = useState(false);
-  const Mockup = MOCKUPS[cell.mockup];
+/*
+  Brilho aplicado por um <g> COMUM, nunca no `style` de um `motion.*` SVG.
+
+  Motivo: `buildSVGAttrs` faz `state.attrs = state.style` — pra elementos
+  SVG o Framer move o style inteiro pra ATRIBUTOS (só `transform` volta pro
+  style). Então `style={{ filter: 'drop-shadow(...)' }}` num `motion.path`
+  vira `filter="drop-shadow(...)"`, um atributo de apresentação. O SVG2
+  aceita filter-functions ali, mas o suporte é desigual — o WebKit
+  historicamente só honra `url(#id)` NO ATRIBUTO, enquanto a PROPRIEDADE CSS
+  `filter` com drop-shadow() funciona em todos. Num <g> comum o React
+  escreve style.filter de verdade (propriedade CSS), que é o caminho
+  universalmente suportado.
+*/
+function Glow({ color, blur = 8, children }) {
+  return <g style={{ filter: `drop-shadow(0 0 ${blur}px ${color})` }}>{children}</g>;
+}
+
+/* Moldura comum — todo ícone nasce no mesmo palco 200×200 com o mesmo halo
+   de fundo. É o que faz os quatro lerem como um conjunto. */
+function IconStage({ children, uid, className = '' }) {
+  return (
+    <svg viewBox="0 0 200 200" className={`h-full w-full ${className}`} aria-hidden focusable="false">
+      {children}
+      <circle cx="100" cy="100" r="92" fill={`url(#${uid}-halo)`} style={{ mixBlendMode: 'screen' }} />
+    </svg>
+  );
+}
+
+/* ══ 01 — Performance: medidor que preenche ═══════════════════════════════ */
+const GAUGE_R = 62;
+const GAUGE_PATH = 'M 56.16 143.84 A 62 62 0 1 1 143.84 143.84'; // 270°, começa em 135° e varre horário
+
+function GaugeTick({ tick, progress, from }) {
+  const opacity = useTransform(progress, [tick.at - 0.06, tick.at], [0.1, 1]);
+  return (
+    <motion.line
+      x1={tick.x1}
+      y1={tick.y1}
+      x2={tick.x2}
+      y2={tick.y2}
+      stroke={from}
+      strokeWidth="2"
+      strokeLinecap="round"
+      style={{ opacity }}
+    />
+  );
+}
+
+function PerformanceIcon({ play, reduce, uid, from }) {
+  const progress = useMotionValue(0);
+  const value = useTransform(progress, (v) => Math.round(v * 100));
+
+  const ticks = useMemo(() => {
+    const out = [];
+    const N = 26;
+    for (let i = 0; i < N; i += 1) {
+      const frac = i / (N - 1);
+      const a = (135 + 270 * frac) * (Math.PI / 180);
+      out.push({
+        x1: 100 + Math.cos(a) * 72,
+        y1: 100 + Math.sin(a) * 72,
+        x2: 100 + Math.cos(a) * 79,
+        y2: 100 + Math.sin(a) * 79,
+        // último tick acende em 0.9 (o valor final), não em 1 — senão ficaria
+        // apagado pra sempre, já que o medidor nunca chega a 100.
+        at: frac * 0.9,
+      });
+    }
+    return out;
+  }, []);
+
+  useEffect(() => {
+    if (!play) return undefined;
+    if (reduce) {
+      progress.set(0.98);
+      return undefined;
+    }
+    let cancelled = false;
+    let controls;
+    let pause;
+
+    const cycle = async () => {
+      while (!cancelled) {
+        progress.set(0);
+        controls = animate(progress, 0.98, { duration: 1.6, ease: DRAW_EASE });
+        await controls;
+        if (cancelled) return;
+        await new Promise((r) => { pause = setTimeout(r, 2000); });
+      }
+    };
+    cycle();
+
+    return () => {
+      cancelled = true;
+      controls?.stop();
+      clearTimeout(pause);
+    };
+  }, [play, reduce, progress]);
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      onViewportEnter={() => setPlay(true)}
-      transition={{ duration: 0.8, delay, ease: EASE_LUXE }}
-      className={`flex flex-col gap-8 p-8 md:p-12 ${isLastMobile ? '' : 'border-b border-white/[0.08]'} ${isLastRowDesktop ? 'md:border-b-0' : 'md:border-b'} ${borderRight ? 'md:border-r md:border-white/[0.08]' : ''}`}
-    >
-      {/* mockup flutuante — sombra difusa, sem caixa/borda ao redor */}
-      <div className="relative flex min-h-[9rem] items-center justify-center py-4">
-        <div
-          className="flex items-center justify-center bg-rv-surface-2 p-6"
-          style={{ borderRadius: RADIUS.md, boxShadow: SHADOW.deep }}
+    <IconStage uid={uid}>
+      <SvgDefs uid={uid} from={from} to={ACCENTS.pagespeed[1]} />
+
+      {ticks.map((tick, i) => (
+        <GaugeTick key={i} tick={tick} progress={progress} from={from} />
+      ))}
+
+      <path d={GAUGE_PATH} stroke={TRACK} strokeWidth="7" strokeLinecap="round" fill="none" />
+      <Glow color={`${from}77`} blur={7}>
+        <motion.path
+          d={GAUGE_PATH}
+          stroke={`url(#${uid}-stroke)`}
+          strokeWidth="7"
+          strokeLinecap="round"
+          fill="none"
+          style={{ pathLength: progress }}
+        />
+      </Glow>
+
+      <motion.text
+        x="100"
+        y="96"
+        textAnchor="middle"
+        dominantBaseline="central"
+        fill="#F8F9FA"
+        fontSize="44"
+        fontFamily="ClashGrotesk-Variable, sans-serif"
+        fontWeight="500"
+      >
+        {value}
+      </motion.text>
+      <text
+        x="100"
+        y="126"
+        textAnchor="middle"
+        fill="#5B6472"
+        fontSize="11"
+        letterSpacing="3"
+        fontFamily="Satoshi-Variable, sans-serif"
+      >
+        PAGESPEED
+      </text>
+    </IconStage>
+  );
+}
+
+/* ══ 02 — Arquitetura: blocos que se montam + fluxo até o botão ═══════════ */
+const BLOCKS = [
+  { x: 52, y: 44, w: 96, h: 11, rx: 5.5 },
+  { x: 52, y: 68, w: 96, h: 24, rx: 8 },
+  { x: 52, y: 100, w: 96, h: 24, rx: 8 },
+];
+const CTA_RECT = { x: 74, y: 138, w: 52, h: 19, rx: 9.5 };
+const FLOW_CYCLE = 3.4;
+const FLOW_LAND = 0.62; // fração do ciclo em que o ponto encosta no botão
+
+function ArchitectureIcon({ play, reduce, uid, from }) {
+  const loop = reduce ? undefined : { duration: FLOW_CYCLE, repeat: Infinity, ease: 'easeInOut' };
+
+  return (
+    <IconStage uid={uid}>
+      <SvgDefs uid={uid} from={from} to={ACCENTS.wireframe[1]} />
+
+      {BLOCKS.map((b, i) => (
+        <motion.rect
+          key={i}
+          x={b.x}
+          y={b.y}
+          width={b.w}
+          height={b.h}
+          rx={b.rx}
+          fill="rgba(255,255,255,0.02)"
+          stroke={i === 0 ? `url(#${uid}-stroke)` : TRACK}
+          strokeWidth="1.6"
+          initial={reduce ? false : { pathLength: 0, opacity: 0 }}
+          animate={play ? { pathLength: 1, opacity: 1 } : undefined}
+          transition={{ duration: 0.9, delay: 0.15 + i * 0.16, ease: DRAW_EASE }}
+        />
+      ))}
+
+      {/* botão-alvo — preenche e pulsa no instante em que o ponto chega */}
+      <motion.rect
+        x={CTA_RECT.x}
+        y={CTA_RECT.y}
+        width={CTA_RECT.w}
+        height={CTA_RECT.h}
+        rx={CTA_RECT.rx}
+        fill={`url(#${uid}-stroke)`}
+        style={{ willChange: 'opacity' }}
+        animate={reduce ? { opacity: 0.9 } : { opacity: [0.35, 0.35, 1, 0.5, 0.35] }}
+        transition={reduce ? undefined : { ...loop, times: [0, FLOW_LAND - 0.03, FLOW_LAND + 0.04, FLOW_LAND + 0.2, 1] }}
+      />
+
+      {/* anel de "clique" que expande no mesmo instante */}
+      {!reduce && (
+        <motion.circle
+          cx={CTA_RECT.x + CTA_RECT.w / 2}
+          cy={CTA_RECT.y + CTA_RECT.h / 2}
+          r="16"
+          fill="none"
+          stroke={from}
+          strokeWidth="1.5"
+          style={{ willChange: 'transform, opacity' }}
+          animate={{ scale: [0.6, 0.6, 1.5], opacity: [0, 0.7, 0] }}
+          transition={{ ...loop, times: [0, FLOW_LAND, FLOW_LAND + 0.24] }}
+        />
+      )}
+
+      {/* ponto de fluxo — desce pela coluna e encosta no botão */}
+      {play && !reduce && (
+        <Glow color={from}>
+          <motion.circle
+            r="4"
+            cx="100"
+            fill={from}
+            style={{ willChange: 'opacity' }}
+            animate={{ cy: [40, 80, 112, 147, 147], opacity: [0, 1, 1, 1, 0] }}
+            transition={{ ...loop, times: [0, 0.24, 0.44, FLOW_LAND, FLOW_LAND + 0.18] }}
+          />
+        </Glow>
+      )}
+    </IconStage>
+  );
+}
+
+/* ══ 03 — Autoridade: gema lapidada que se desenha + varredura de brilho ══ */
+const GEM_OUTLINE = 'M 70 54 L 130 54 L 152 86 L 100 150 L 48 86 Z';
+const GEM_FACETS = [
+  'M 48 86 L 152 86',
+  'M 70 54 L 84 86',
+  'M 130 54 L 116 86',
+  'M 84 86 L 100 150',
+  'M 116 86 L 100 150',
+];
+const SPARK = 'M 0 -7 L 1.8 -1.8 L 7 0 L 1.8 1.8 L 0 7 L -1.8 1.8 L -7 0 L -1.8 -1.8 Z';
+const SPARKS = [
+  { x: 44, y: 44, d: 0 },
+  { x: 158, y: 60, d: 0.5 },
+  { x: 150, y: 132, d: 1 },
+];
+
+function AuthorityIcon({ play, reduce, uid, from }) {
+  return (
+    <IconStage uid={uid}>
+      <SvgDefs uid={uid} from={from} to={ACCENTS.authority[1]} />
+      <clipPath id={`${uid}-gem`}>
+        <path d={GEM_OUTLINE} />
+      </clipPath>
+
+      {GEM_FACETS.map((d, i) => (
+        <motion.path
+          key={i}
+          d={d}
+          stroke={TRACK}
+          strokeWidth="1.4"
+          fill="none"
+          initial={reduce ? false : { pathLength: 0 }}
+          animate={play ? { pathLength: 1 } : undefined}
+          transition={{ duration: 0.8, delay: 0.5 + i * 0.1, ease: DRAW_EASE }}
+        />
+      ))}
+
+      <Glow color={`${from}66`} blur={9}>
+        <motion.path
+          d={GEM_OUTLINE}
+          stroke={`url(#${uid}-stroke)`}
+          strokeWidth="2.2"
+          strokeLinejoin="round"
+          fill="rgba(255,255,255,0.02)"
+          initial={reduce ? false : { pathLength: 0 }}
+          animate={play ? { pathLength: 1 } : undefined}
+          transition={{ duration: 1.3, delay: 0.1, ease: DRAW_EASE }}
+        />
+      </Glow>
+
+      {/* varredura de luz — barra clara atravessando, recortada pela gema.
+          O `rotate` é atributo ESTÁTICO no <g> (não animado pelo Framer),
+          então não cai no problema de transform-origin descrito no topo do
+          arquivo; só o `x` do filho é animado, e `x` no Framer vira
+          translateX, que é exatamente o movimento desejado. */}
+      {!reduce && (
+        <g clipPath={`url(#${uid}-gem)`}>
+          <g transform="rotate(16 100 100)">
+            <motion.rect
+              y="20"
+              width="34"
+              height="170"
+              fill={`url(#${uid}-shine)`}
+              style={{ willChange: 'transform' }}
+              animate={{ x: [-60, 190] }}
+              transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2.6, ease: 'easeInOut' }}
+            />
+          </g>
+        </g>
+      )}
+
+      {/* O `translate` fica num <g> ESTÁTICO e o `scale` no filho animado —
+          nunca os dois no mesmo nó. Motivo: o Framer escreve `style.transform`
+          pro scale, e a propriedade CSS `transform` VENCE o atributo de
+          apresentação `transform` (atributo tem specificity zero). Com os
+          dois juntos, o translate seria descartado e os três brilhos
+          colapsariam no canto (0,0) do viewBox. Mesmo cuidado da varredura
+          de luz acima. */}
+      {SPARKS.map((s, i) => (
+        <g key={i} transform={`translate(${s.x} ${s.y})`}>
+          <motion.path
+            d={SPARK}
+            fill={from}
+            style={{ willChange: 'transform, opacity' }}
+            animate={reduce ? { opacity: 0.8 } : { scale: [0, 1, 0], opacity: [0, 1, 0] }}
+            transition={reduce ? undefined : { duration: 2.2, repeat: Infinity, repeatDelay: 1.6, delay: s.d, ease: 'easeInOut' }}
+          />
+        </g>
+      ))}
+    </IconStage>
+  );
+}
+
+/* ══ 04 — 24/7: balão de conversa + ponto em órbita permanente ════════════ */
+const BUBBLE =
+  'M 74 68 H 126 A 15 15 0 0 1 141 83 V 107 A 15 15 0 0 1 126 122 H 94 L 78 136 V 122 H 74 A 15 15 0 0 1 59 107 V 83 A 15 15 0 0 1 74 68 Z';
+
+function AlwaysOnIcon({ play, reduce, uid, from }) {
+  return (
+    <IconStage uid={uid}>
+      <SvgDefs uid={uid} from={from} to={ACCENTS.whatsapp[1]} />
+
+      <circle cx="100" cy="100" r="78" fill="none" stroke={TRACK} strokeWidth="1.4" strokeDasharray="2 7" />
+
+      {/* órbita — `originX/originY` como STRING é o único caminho que o
+          Framer não sobrescreve (ver nota no topo do arquivo); com o default
+          (bbox do próprio <g>) o ponto giraria em torno de si mesmo. */}
+      {!reduce && (
+        <motion.g
+          style={{ originX: '100px', originY: '100px', willChange: 'transform' }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'linear' }}
         >
-          <Mockup play={play} />
+          <Glow color={from}>
+            <circle cx="100" cy="22" r="4.5" fill={from} />
+          </Glow>
+        </motion.g>
+      )}
+
+      <Glow color={`${from}55`} blur={10}>
+        <motion.path
+          d={BUBBLE}
+          stroke={`url(#${uid}-stroke)`}
+          strokeWidth="2.2"
+          strokeLinejoin="round"
+          fill="rgba(255,255,255,0.025)"
+          initial={reduce ? false : { pathLength: 0 }}
+          animate={play ? { pathLength: 1 } : undefined}
+          transition={{ duration: 1.4, delay: 0.15, ease: DRAW_EASE }}
+        />
+      </Glow>
+
+      {[82, 100, 118].map((cx, i) => (
+        <motion.circle
+          key={cx}
+          cx={cx}
+          cy="95"
+          r="5"
+          fill={from}
+          style={{ willChange: 'transform, opacity' }}
+          animate={reduce ? { opacity: 0.9 } : { cy: [95, 88, 95], opacity: [0.35, 1, 0.35] }}
+          transition={reduce ? undefined : { duration: 1.25, repeat: Infinity, delay: 1 + i * 0.16, ease: 'easeInOut' }}
+        />
+      ))}
+    </IconStage>
+  );
+}
+
+const ICONS = {
+  pagespeed: PerformanceIcon,
+  wireframe: ArchitectureIcon,
+  authority: AuthorityIcon,
+  whatsapp: AlwaysOnIcon,
+};
+
+/*
+  Cartão — v10. O ícone deixou de morar numa caixa própria (a v9 embrulhava
+  cada mockup num `bg-rv-surface-2 p-6` com sombra, uma moldura dentro da
+  moldura) e passou a flutuar direto sobre o cartão: menos bordas
+  competindo, é o "clean" pedido. `CellIcon` (o quadradinho lilás de 40px
+  que ficava acima do título) saiu junto — com um ícone grande e animado
+  logo acima, um segundo ícone estático do MESMO conceito era redundância,
+  não informação.
+*/
+function BentoCell({ cell, index, delay }) {
+  const [play, setPlay] = useState(false);
+  const uid = useId().replace(/:/g, ''); // `useId` devolve ":r0:" — ':' é inválido em seletor url(#...)
+  const Icon = ICONS[cell.mockup];
+  const [from, to] = ACCENTS[cell.mockup] ?? ACCENTS.pagespeed;
+  const reduce = prefersReducedMotion();
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      onViewportEnter={() => setPlay(true)}
+      transition={{ duration: 0.85, delay, ease: EASE_LUXE }}
+      className="group relative isolate flex flex-col overflow-hidden rounded-[28px] border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl transition-colors duration-700 hover:bg-white/[0.035]"
+      style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 40px 80px -40px rgba(0,0,0,0.8)' }}
+    >
+      {/* Borda em gradiente que acende no hover. Técnica de máscara dupla:
+          a camada é pintada só na faixa de 1px entre a borda externa e a
+          caixa de conteúdo (`content-box`), porque as duas máscaras se
+          cancelam no miolo (`exclude`/`xor`). É o jeito de ter borda em
+          gradiente SEM abrir mão do fundo de vidro translúcido — um
+          wrapper com `background:gradient` + filho opaco por cima só
+          funcionaria com fundo sólido. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-[28px] opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+        style={{
+          padding: 1,
+          background: `linear-gradient(140deg, ${from}AA, transparent 42%, transparent 58%, ${to}88)`,
+          WebkitMask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+          WebkitMaskComposite: 'xor',
+          mask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+          maskComposite: 'exclude',
+        }}
+      />
+
+      {/* Banho de cor atrás do ícone — sempre presente (fraco), reforça no
+          hover. É o "gradiente" do pedido aplicado como LUZ, não como fundo
+          chapado: nasce no topo, onde o ícone está, e morre antes do texto,
+          que continua sobre preto puro e legível. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[62%] opacity-60 transition-opacity duration-700 group-hover:opacity-100"
+        style={{ background: `radial-gradient(75% 100% at 50% 0%, ${from}1F, transparent 72%)` }}
+      />
+
+      <div className="relative z-10 flex h-[240px] items-center justify-center px-6 pt-2 md:h-[268px]">
+        <div className="h-full w-full max-w-[240px]">
+          <Icon play={play} reduce={reduce} uid={uid} from={from} />
         </div>
+      </div>
+
+      <div className="relative z-10 flex items-center justify-between gap-4 border-t border-white/[0.06] px-8 py-4 md:px-10">
+        <span className="font-satoshi text-[13px] tabular-nums tracking-widest text-rv-faint">
+          {String(index + 1).padStart(2, '0')}
+        </span>
         {cell.pill && (
           <span
-            className={`absolute right-2 top-0 rounded-full border border-white/15 px-3 py-1.5 font-satoshi font-medium text-rv-titanium ${TYPE.statLabel}`}
-            style={{ background: 'rgba(13,10,24,.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+            className="bg-clip-text font-grotesk text-[15px] font-medium text-transparent md:text-base"
+            style={{ backgroundImage: `linear-gradient(120deg, ${from}, ${to})` }}
           >
             {cell.pill}
           </span>
         )}
       </div>
 
-      <div>
-        <CellIcon name={cell.mockup} />
-        <h3 className="mt-4 font-grotesk text-xl font-medium text-rv-titanium md:text-2xl">{cell.title}</h3>
-        <p className={`mt-2 max-w-xs font-satoshi text-rv-slate ${TYPE.cardDesc}`}>{cell.body}</p>
+      <div className="relative z-10 px-8 pb-9 md:px-10 md:pb-10">
+        <h3 className="font-grotesk text-xl font-medium tracking-[-0.01em] text-rv-titanium md:text-2xl">
+          {cell.title}
+        </h3>
+        <p className={`mt-2.5 font-satoshi text-rv-slate ${TYPE.cardDesc}`}>{cell.body}</p>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }
 
-/* item 6 — mistura de SVG/gradiente no fundo da seção, sutil o bastante pra
-   não competir com os mockups: aurora violeta suave + um hairline moiré
-   diagonal (mesmo vocabulário visual do CornerMoire em ScrubStatement.jsx). */
 function BentoBackdrop() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden opacity-60">
@@ -261,6 +570,7 @@ export default function BentoValue({ data }) {
   return (
     <section id="bento" className={`relative overflow-hidden border-t border-white/[0.06] ${SECTION_PAD} ${GX}`}>
       <BentoBackdrop />
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -277,16 +587,9 @@ export default function BentoValue({ data }) {
         </h2>
       </motion.div>
 
-      <div className="relative z-10 grid grid-cols-1 border-t border-white/[0.08] md:grid-cols-2">
+      <div className="relative z-10 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
         {data.cells.map((cell, i) => (
-          <BentoCell
-            key={cell.key}
-            cell={cell}
-            delay={i * 0.1}
-            borderRight={i % 2 === 0}
-            isLastMobile={i === data.cells.length - 1}
-            isLastRowDesktop={i >= data.cells.length - 2}
-          />
+          <BentoCell key={cell.key} cell={cell} index={i} delay={i * 0.1} />
         ))}
       </div>
     </section>

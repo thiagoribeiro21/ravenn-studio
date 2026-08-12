@@ -71,12 +71,53 @@ export default {
       'O paciente particular. O cliente corporativo. O comprador de alto padrão. Todos julgam sua credibilidade pelo site antes de qualquer contato — e decidem em segundos se voltam ou se fecham com o concorrente que parecia mais preparado.',
   },
 
-  // Item 5 do refinamento v3: virou "as três abas" (ThreeTabs.jsx), estrutura
-  // própria em vez do GlassCard que também é usado no Processo — só a
-  // punchline sobrevive do conteúdo antigo, os 3 painéis viraram genéricos
-  // (janelas de navegador sem texto real, nunca um site/concorrente).
+  /* Ato 3 — "O WhatsApp que não toca" (SilentInbox.jsx). Substituiu a cena
+     abstrata de partículas + punchline (CostReveal.jsx): ver o cabeçalho do
+     componente para o porquê.
+
+     Regra de conteúdo desta seção, válida para TODA LP clonada daqui: nada
+     de número. A cena é sobre o silêncio da caixa de entrada, e um "68% dos
+     visitantes" inventado aqui cairia no mesmo erro já corrigido duas vezes
+     nesta página (o badge "4 projetos por mês" e o CPL sem fonte) — numa
+     página que vende confiança, o número sem fonte custa mais do que
+     entrega. `ghosts` e `chats` são micro-UI ilustrativa dentro de um
+     mockup declaradamente fictício, não depoimento de cliente. */
   consequence: {
-    punchline: 'Você paga pelo clique. O seu site decide se ele vira contrato.',
+    eyebrow: 'O que acontece depois do clique',
+    headlineLines: ['O clique você já pagou.', '_A conversa, você nunca teve._'],
+
+    /* Legendas curtas de propósito (~130 caracteres): num iPhone SE cada
+       linha custa altura que sai direto do tamanho do mockup — e o mockup é
+       a prova. Se precisar alongar numa LP clonada, confira o Ato 3 nesse
+       aparelho antes de fechar. */
+    lossLabel: 'Site comum',
+    lossCaption:
+      'Seu anúncio entrega gente pronta pra comprar. O site não convence, ela volta pro Google — e fecha com o concorrente. Você pagou por esse clique.',
+    ghosts: ['Saiu sem falar com você', 'Foi para o concorrente', 'Fechou a aba em segundos'],
+    emptyState: 'Nenhuma mensagem nova',
+
+    gainLabel: 'Padrão Ravenn',
+    gainCaption:
+      'Mesmo anúncio, mesmo orçamento, mesmo clique. Só que agora ele cai num site feito pra fechar — e vira conversa no seu WhatsApp.',
+    /* 6 conversas (era 3) — pedido explícito de "parecer um WhatsApp
+       lotado". Ordem = mais recente no topo (mesma convenção do app real),
+       times decrescentes ao longo de ~35min pra ler como um fluxo contínuo
+       de leads chegando, não uma rajada implausível no mesmo minuto. Só UMA
+       com `typing: true` — mais de uma pessoa "digitando" ao mesmo tempo
+       quebraria a ilusão de realismo em vez de reforçá-la. */
+    chats: [
+      { name: 'Marina A.', preview: 'Oi! Vi o site de vocês e queria agendar…', time: '21:47' },
+      { name: 'Ricardo M.', preview: 'Boa noite, vocês atendem particular?', time: '21:44' },
+      { name: 'Camila F.', typing: true, time: '21:41' },
+      { name: 'Fernanda L.', preview: 'Perfeito, muito obrigada! Vou chamar já', time: '21:36' },
+      { name: 'João Pedro', preview: 'Qual o valor do diagnóstico?', time: '21:29' },
+      { name: 'Beatriz S.', preview: 'Adorei o site de vocês, parabéns', time: '21:15' },
+    ],
+
+    cta: {
+      label: 'Quero meu WhatsApp tocando',
+      href: buildWaLink('Olá! Vi a página de sites institucionais e quero um site que traga conversas no WhatsApp.'),
+    },
   },
 
   bento: {
@@ -160,6 +201,28 @@ export default {
     labels: ['Design autoral', 'Performance obsessiva', 'Arquitetura de conversão', 'Autoridade local'],
   },
 
+  audience: {
+    eyebrow: 'Para quem é',
+    heading: 'Para quem é o Padrão Ravenn.',
+    slides: [
+      {
+        title: 'Para quem cobra pelo padrão que entrega.',
+        body: 'Profissionais de ticket alto que precisam de autoridade visual antes da primeira reunião — o site que justifica o preço antes de qualquer conversa.',
+        image: '/ideal-lp-institucional/autoridade_profissional.webp',
+      },
+      {
+        title: 'Para quem paga pelo clique e perde pelo design.',
+        body: 'Negócios que já investem em tráfego pago e veem o lead qualificado escolher o concorrente — só porque o site atual parece mais barato.',
+        image: '/ideal-lp-institucional/conversao_lead.webp',
+      },
+      {
+        title: 'Para quem trata o site como investimento, não despesa.',
+        body: 'Fundadores que entendem o site como uma máquina de vendas ativa 24 horas — um ativo que se paga, não um custo fixo.',
+        image: '/ideal-lp-institucional/visionario_maquina_vendas.webp',
+      },
+    ],
+  },
+
   process: {
     eyebrow: 'Como funciona',
     heading: 'Do diagnóstico ao site no ar.',
@@ -177,12 +240,19 @@ export default {
         body: 'Site no ar com nota 90+ no PageSpeed, SEO local configurado e rastreamento de cada conversão. O resultado é medido, não prometido.',
       },
     ],
-    bg: '/lp-institucional/process-bg.webp',
+    // Objeto por breakpoint (era um único path) — o enquadramento muda de
+    // verdade entre as duas imagens (a peça de vidro fica concentrada à
+    // direita no desktop, embaixo-à-direita no mobile), não é a mesma foto
+    // redimensionada. `ConsequenceCarousel.jsx` resolve isso via `<picture>`.
+    bg: {
+      mobile: '/funciona-bg-lp/bg-mobile.webp',
+      desktop: '/funciona-bg-lp/bg-desktop.webp',
+    },
     cta: { label: 'Começar pelo diagnóstico', href: buildWaLink('Olá! Quero começar pelo diagnóstico gratuito.') },
   },
 
   faq: {
-    bg: '/lp-institucional/faq-bg.webp',
+    bg: '/bg-faq-institucional.webp',
     items: [
       {
         q: 'Quanto custa um site institucional premium?',
