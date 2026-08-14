@@ -66,6 +66,19 @@ function DeviceShot({ images }) {
   return (
     <picture>
       <source media="(min-width: 768px)" srcSet={images.desktop} />
+      {/* Teto de altura em `dvh` além do teto de largura (v11) — antes só
+          havia `max-w`, então a altura do mockup era refém da proporção da
+          imagem (1426×1201, quase quadrada): 820px de largura no desktop
+          viravam 691px de ALTURA, e o hero inteiro passava de 1780px numa
+          viewport de 900. Resultado medido: só 12% do mockup aparecia no
+          desktop e 0% num iPhone SE — ele existia, carregava e ficava
+          inteiro abaixo da dobra.
+
+          Com `max-h` em `dvh` o mockup passa a ser dimensionado pelo
+          espaço VERTICAL que sobra, que é o recurso escasso aqui, e
+          `object-contain` garante que encolher pela altura não distorça
+          nem corte. Os dois tetos convivem: o que for atingido primeiro
+          manda. */}
       <img
         src={images.mobile}
         alt=""
@@ -73,7 +86,7 @@ function DeviceShot({ images }) {
         fetchpriority="high"
         width={1426}
         height={1201}
-        className="mx-auto w-full max-w-[440px] md:max-w-[820px]"
+        className="mx-auto h-auto w-full max-h-[38dvh] max-w-[440px] object-contain md:max-h-[42dvh] md:max-w-[820px]"
         style={{ filter: 'drop-shadow(0 60px 120px rgba(0,0,0,0.7))' }}
       />
     </picture>
@@ -273,30 +286,42 @@ function StatsRow({ stats }) {
 }
 
 export default function HeroDevice({ data }) {
+  /* `pt` reduzido no mobile (era `pt-32` fixo = 128px em toda tela): o
+     clearance da navbar pílula não muda com o breakpoint, mas 128px num
+     viewport de 667px é 19% da tela gasta em respiro antes da primeira
+     palavra — e era parte do que empurrava o mockup pra fora da dobra. */
   return (
-    <section id="hero" className={`relative flex min-h-[100dvh] flex-col overflow-hidden pt-32 pb-10 ${GX}`}>
+    <section id="hero" className={`relative flex min-h-[100dvh] flex-col overflow-hidden pt-20 pb-10 md:pt-32 ${GX}`}>
       <Aurora variant="hero" />
       <ParticleField className="pointer-events-none absolute inset-0 z-0" scale={1.3} opacity={0.4} offsetY={-40} />
 
       {/* item 1 — hero em coluna centralizada, não lado a lado com o device */}
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center text-center">
         <Fade y={16}>
+          {/* Traços decorativos só a partir de `md`: no mobile eles são dois
+              itens flex de 32px que roubam largura de uma linha já apertada e
+              empurravam o eyebrow de 1 pra 3 linhas (68px medidos num
+              viewport de 667). Some a decoração, o texto respira, e o mockup
+              ganha essa altura de volta — no desktop nada muda. */}
           <p className={`flex items-center justify-center gap-3 font-satoshi font-medium uppercase tracking-widest2 text-rv-faint ${TYPE.eyebrow}`}>
-            <span aria-hidden className="h-px w-8 bg-rv-purple/60" />
+            <span aria-hidden className="hidden h-px w-8 bg-rv-purple/60 md:block" />
             {data.eyebrow}
-            <span aria-hidden className="h-px w-8 bg-rv-purple/60" />
+            <span aria-hidden className="hidden h-px w-8 bg-rv-purple/60 md:block" />
           </p>
         </Fade>
 
-        <Fade delay={0.1} className="mt-6">
+        <Fade delay={0.1} className="mt-4 md:mt-6">
           <Headline lines={data.headlineLines} />
         </Fade>
 
-        <Fade delay={0.3} className="mx-auto mt-7 max-w-xl">
+        <Fade delay={0.3} className="mx-auto mt-5 max-w-xl md:mt-7">
           <p className={`font-satoshi text-rv-slate ${TYPE.body}`}>{data.subheadline}</p>
         </Fade>
 
-        <Fade delay={0.45} className="mt-10 flex flex-wrap items-center justify-center gap-4">
+        {/* Margens verticais menores só até `md` — no desktop o ritmo
+            original continua intacto; no mobile cada folga dessas competia
+            diretamente com a área do mockup. */}
+        <Fade delay={0.45} className="mt-7 flex flex-wrap items-center justify-center gap-3 md:mt-10 md:gap-4">
           <MagneticCta href={data.ctaPrimary.href} variant="solid">
             {data.ctaPrimary.label}
           </MagneticCta>
@@ -340,7 +365,7 @@ export default function HeroDevice({ data }) {
             href={data.scarcity.cta.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex shrink-0 items-center gap-2 rounded-full px-5 py-3 font-satoshi text-[14px] font-medium text-white transition-shadow duration-300"
+            className="group flex shrink-0 items-center gap-2 rounded-full px-5 py-3 font-satoshi text-[15px] font-medium text-white transition-shadow duration-300"
             style={{ background: '#25D366', boxShadow: '0 0 24px rgba(37,211,102,0.3)' }}
           >
             <svg aria-hidden width="16" height="16" viewBox="0 0 24 24" fill="currentColor">

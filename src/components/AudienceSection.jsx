@@ -41,7 +41,7 @@ function ServiceRow({ item, index }) {
     >
       {/* Número */}
       <span
-        className="text-[10px] font-mono tracking-[0.20em] text-white/20 group-hover:text-violet-400 transition-colors duration-300 shrink-0 md:w-10 mb-1.5 md:mb-0"
+        className="text-[15px] font-mono tracking-[0.12em] text-white/40 group-hover:text-violet-400 transition-colors duration-300 shrink-0 md:w-10 mb-1.5 md:mb-0"
         aria-hidden
       >
         {item.num}

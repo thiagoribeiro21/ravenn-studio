@@ -401,7 +401,7 @@ function ConceptTabs({ items, active, progress, onSelect, reduce }) {
               )}
 
               <span
-                className={`relative z-10 block truncate font-satoshi text-[13px] font-medium transition-colors duration-300 md:text-[15px] ${
+                className={`relative z-10 block truncate font-satoshi text-[15px] font-medium transition-colors duration-300 md:text-[16px] ${
                   isActive ? 'text-rv-titanium' : 'text-rv-faint group-hover:text-rv-slate'
                 }`}
               >

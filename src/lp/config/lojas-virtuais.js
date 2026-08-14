@@ -38,7 +38,7 @@ export default {
   },
 
   hero: {
-    eyebrow: 'Lojas virtuais de alta performance — E-commerce',
+    eyebrow: 'Lojas virtuais de alta performance para e-commerce',
     headlineLines: ['Sua loja fecha às 18h.', '_Seu faturamento não deveria._'],
     subheadline:
       'Lojas virtuais mobile-first com checkout em três etapas, Pix integrado e velocidade que não deixa o cliente desistir no meio do caminho.',
@@ -73,7 +73,7 @@ export default {
       'carrinho', { glyph: 'cross' }, { persist: true, glyph: 'diamond', text: 'abandonado.' },
     ],
     paragraph:
-      'O cliente já decidiu comprar — colocou o produto no carrinho. O que faz ele desistir agora não é falta de interesse, é fricção: uma página lenta, um checkout confuso, uma dúvida sem resposta. Cada segundo a mais de espera é uma chance a mais dele fechar a aba.',
+      'O cliente já decidiu comprar: colocou o produto no carrinho. O que faz ele desistir agora não é falta de interesse, é fricção: uma página lenta, um checkout confuso, uma dúvida sem resposta. Cada segundo a mais de espera é uma chance a mais dele fechar a aba.',
   },
 
   consequence: {
@@ -82,13 +82,13 @@ export default {
 
     lossLabel: 'Loja sem suporte',
     lossCaption:
-      'O cliente teve uma dúvida no checkout — sobre frete, prazo, tamanho — e não tinha ninguém pra perguntar. Ele fechou a aba, e o carrinho ficou lá, abandonado.',
+      'O cliente teve uma dúvida no checkout (sobre frete, prazo, tamanho) e não tinha ninguém pra perguntar. Ele fechou a aba, e o carrinho ficou lá, abandonado.',
     ghosts: ['Abandonou o carrinho', 'Não tirou a dúvida', 'Comprou em outra loja'],
     emptyState: 'Nenhuma mensagem nova',
 
     gainLabel: 'Padrão Ravenn',
     gainCaption:
-      'Mesma dúvida, mesmo carrinho. Só que agora tem um WhatsApp visível oferecendo ajuda no momento certo — e o carrinho vira pedido confirmado.',
+      'Mesma dúvida, mesmo carrinho. Só que agora tem um WhatsApp visível oferecendo ajuda no momento certo, e o carrinho vira pedido confirmado.',
     chats: [
       { name: 'Renata F.', preview: 'Vocês têm esse produto no tamanho M?', time: '18:22' },
       { name: 'Thiago C.', preview: 'Perfeito, acabei de fechar o pedido!', time: '18:05' },
@@ -111,7 +111,7 @@ export default {
       {
         key: 'performance',
         title: 'PageSpeed 90+ pra não perder venda por lentidão',
-        body: 'Cada segundo de carregamento reduz a taxa de conversão — sua loja carrega rápido mesmo em conexão de mobile fraca.',
+        body: 'Cada segundo de carregamento reduz a taxa de conversão: sua loja carrega rápido mesmo em conexão de mobile fraca.',
         mockup: 'pagespeed',
         gaugeLabel: 'RÁPIDA',
         pill: '90+ score',
@@ -119,14 +119,14 @@ export default {
       {
         key: 'checkout',
         title: 'Checkout em até 3 etapas, sem fricção',
-        body: 'Do carrinho ao pagamento em poucos cliques — cada etapa a mais é uma chance do cliente desistir no meio do caminho.',
+        body: 'Do carrinho ao pagamento em poucos cliques: cada etapa a mais é uma chance do cliente desistir no meio do caminho.',
         mockup: 'wireframe',
         pill: '3 etapas',
       },
       {
         key: 'vitrine',
         title: 'Vitrine que já parece de marca grande',
-        body: 'Design exclusivo, sem tema genérico de plataforma — sua loja com a cara da sua marca, não da milésima loja igual.',
+        body: 'Design exclusivo, sem tema genérico de plataforma: sua loja com a cara da sua marca, não da milésima loja igual.',
         mockup: 'authority',
         pill: '100% autoral',
       },
@@ -145,24 +145,24 @@ export default {
     eyebrow: 'Cada produto, sua vitrine',
     heading: 'Loja virtual não é um formato. É uma vitrine sob medida.',
     intro:
-      'Três arquiteturas autorais que aplicamos conforme o tipo de produto. Não são clientes — é o padrão exato de vitrine e checkout que usamos quando a loja é sua.',
+      'Três arquiteturas autorais que aplicamos conforme o tipo de produto. Não são clientes: é o padrão exato de vitrine e checkout que usamos quando a loja é sua.',
     items: [
       {
         nicho: 'Moda · Vestuário',
         src: `${PH}/concept-moda-placeholder.mp4`,
         poster: `${PH}/concept-moda-poster.svg`,
-        pain: 'Roupa se vende pela experiência visual — uma vitrine mal fotografada ou lenta faz o cliente desistir antes de ver o produto direito.',
+        pain: 'Roupa se vende pela experiência visual: uma vitrine mal fotografada ou lenta faz o cliente desistir antes de ver o produto direito.',
         solution:
-          'Galeria rápida, zoom fluido e checkout em poucos cliques — a peça chega no carrinho antes do cliente perder o interesse.',
+          'Galeria rápida, zoom fluido e checkout em poucos cliques: a peça chega no carrinho antes do cliente perder o interesse.',
         wa: buildWaLink('Olá! Vi o conceito de moda na página de lojas virtuais e quero esse padrão na minha loja.'),
       },
       {
         nicho: 'Eletrônicos · Alto ticket',
         src: `${PH}/concept-eletronicos-placeholder.mp4`,
         poster: `${PH}/concept-eletronicos-poster.svg`,
-        pain: 'Produto caro exige confiança — checkout confuso ou site lento faz o cliente desistir por medo, não por preço.',
+        pain: 'Produto caro exige confiança: checkout confuso ou site lento faz o cliente desistir por medo, não por preço.',
         solution:
-          'Ficha técnica clara, comparação de produtos e checkout transparente — a confiança certa pra fechar uma compra de ticket alto.',
+          'Ficha técnica clara, comparação de produtos e checkout transparente: a confiança certa pra fechar uma compra de ticket alto.',
         wa: buildWaLink('Olá! Vi o conceito de eletrônicos na página de lojas virtuais e quero esse padrão na minha loja.'),
       },
       {
@@ -171,7 +171,7 @@ export default {
         poster: `${PH}/concept-cosmeticos-poster.svg`,
         pain: 'Cliente que já comprou some se recomprar não for tão fácil quanto a primeira vez.',
         solution:
-          'Conta salva, histórico de pedido e recompra em um clique — pensado pra quem vende produto de uso recorrente.',
+          'Conta salva, histórico de pedido e recompra em um clique, pensado pra quem vende produto de uso recorrente.',
         wa: buildWaLink('Olá! Vi o conceito de cosméticos na página de lojas virtuais e quero esse padrão na minha loja.'),
       },
     ],
@@ -192,12 +192,12 @@ export default {
     slides: [
       {
         title: 'Para quem vende só pelo Instagram ou WhatsApp hoje.',
-        body: 'Negócios que fecham venda manualmente, mensagem por mensagem, e perdem tempo — e cliente — que uma loja automatizada resolveria sozinha.',
+        body: 'Negócios que fecham venda manualmente, mensagem por mensagem, e perdem tempo (e cliente) que uma loja automatizada resolveria sozinha.',
         image: '/para-quem-e-lps/13-instagram-whatsapp.webp',
       },
       {
         title: 'Para quem já tem loja, mas ela não vende no automático.',
-        body: 'Lojas em plataforma genérica, lentas ou com checkout confuso — perdendo venda que já estava praticamente fechada.',
+        body: 'Lojas em plataforma genérica, lentas ou com checkout confuso, perdendo venda que já estava praticamente fechada.',
         image: '/para-quem-e-lps/14-loja-nao-automatizada.webp',
       },
       {
@@ -214,7 +214,7 @@ export default {
     steps: [
       {
         title: 'Briefing e catálogo',
-        body: 'Organizamos seu catálogo, categorias e meios de pagamento — a base que vai sustentar toda a loja.',
+        body: 'Organizamos seu catálogo, categorias e meios de pagamento: a base que vai sustentar toda a loja.',
       },
       {
         title: 'Design e desenvolvimento',
@@ -237,7 +237,7 @@ export default {
     items: [
       {
         q: 'Quanto custa uma loja virtual?',
-        a: 'Cada projeto é orçado pelo escopo — número de produtos, integrações de pagamento e frete. O diagnóstico gratuito define o escopo antes de qualquer proposta.',
+        a: 'Cada projeto é orçado pelo escopo: número de produtos, integrações de pagamento e frete. O diagnóstico gratuito define o escopo antes de qualquer proposta.',
       },
       {
         q: 'Em quanto tempo a loja fica pronta?',
@@ -245,11 +245,11 @@ export default {
       },
       {
         q: 'Quais formas de pagamento a loja aceita?',
-        a: 'Pix, cartão de crédito e boleto, integrados aos principais gateways — configurados antes do lançamento.',
+        a: 'Pix, cartão de crédito e boleto, integrados aos principais gateways, configurados antes do lançamento.',
       },
       {
         q: 'A loja já vem com gestão de estoque?',
-        a: 'Sim — controle de estoque integrado, com aviso automático de produto em falta antes que o cliente tente comprar.',
+        a: 'Sim, controle de estoque integrado, com aviso automático de produto em falta antes que o cliente tente comprar.',
       },
     ],
     cta: { label: 'Perguntar no WhatsApp', href: buildWaLink('Olá! Tenho uma dúvida sobre lojas virtuais que não vi no FAQ.') },

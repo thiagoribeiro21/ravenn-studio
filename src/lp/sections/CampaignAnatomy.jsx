@@ -44,7 +44,7 @@ function StageRow({ index, stage, total }) {
           whileInView em vez de amarrado a um scroll-progress pinado. */}
       <div className="relative flex w-9 shrink-0 flex-col items-center md:w-11">
         <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-rv-purple/50 bg-rv-void font-satoshi text-[13px] font-medium tabular-nums text-rv-purple-400 md:h-11 md:w-11"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-rv-purple/50 bg-rv-void font-satoshi text-[15px] font-medium tabular-nums text-rv-purple-400 md:h-11 md:w-11 md:text-[16px]"
           style={{ boxShadow: '0 0 20px -4px rgba(124,58,237,0.55)' }}
         >
           {String(index + 1).padStart(2, '0')}

@@ -25,24 +25,43 @@ export const NOISE_URI =
 /* Margem lateral do grid — constante sagrada da página. */
 export const GX = 'px-[6vw]';
 
-/* ── Escala tipográfica v3 (Regra transversal 1) ──────────────────────────
-   Fonte única de verdade — proibido tamanho solto em componente. Nada
-   abaixo de 15px desktop / 14px mobile, exceto a exceção documentada no
-   plano: micro-UI *dentro* dos mockups animados do bento (timestamp de
-   chat, chips de métrica) é fac-símile de interface real em miniatura —
-   esses continuam usando tamanho literal pequeno no próprio componente,
-   não este token. Tracking já está correto em toda a página hoje (sempre
-   `tracking-widest2`, nunca widest3/4) — não repetido aqui. */
+/* ── Escala tipográfica v4 (Regra transversal 1) ──────────────────────────
+   Fonte única de verdade — proibido tamanho solto em componente.
+
+   v4 — PISO DE 15px EM TODOS OS BREAKPOINTS (era 15px desktop / 14px
+   mobile). Pedido explícito de acessibilidade: a página tem que ser
+   confortável pra quem tem dificuldade de leitura, e o breakpoint em que
+   o texto encolhia era justamente o mobile — onde a maior parte do
+   tráfego pago cai e onde a tela já é pequena. Um piso que só vale no
+   desktop protege exatamente quem menos precisa.
+
+   A antiga exceção pra "micro-UI dentro dos mockups" (timestamp de chat,
+   chips) foi reduzida, não mantida: o facsímile de WhatsApp do
+   `SilentInbox` agora escala numa base bem maior (ver `SCREEN_BASE_RATIO`
+   lá), então nome e prévia de mensagem — o texto que carrega significado —
+   passaram dos ~11px pra faixa legível. Só carimbo de hora e placeholder
+   de campo de busca seguem menores, e por um motivo estrutural: são
+   ELEMENTOS DE MOLDURA de um aparelho desenhado em escala real, não
+   conteúdo da página. Aumentá-los mais quebraria o layout da linha de
+   conversa e o mockup deixaria de ler como um celular.
+
+   `h1` teve o PISO reduzido (era 3.5rem) — não é regressão de leitura: a
+   3.5rem num viewport de 375px a headline quebrava em ~6 linhas e sozinha
+   empurrava o mockup do hero inteiro pra fora da dobra (ver HeroDevice).
+   2.5rem = 40px continua muito acima de qualquer limiar de conforto.
+
+   Tracking já está correto em toda a página hoje (sempre `tracking-widest2`,
+   nunca widest3/4) — não repetido aqui. */
 export const TYPE = {
-  eyebrow:   'text-[14px] md:text-[15px]',
-  statLabel: 'text-[14px] md:text-[16px]',
+  eyebrow:   'text-[15px] md:text-[16px]',
+  statLabel: 'text-[15px] md:text-[16px]',
   body:      'text-[16px] md:text-[18px] leading-[1.6]',
   cardDesc:  'text-[15px] md:text-[16px] leading-[1.55]',
   nav:       'text-[16px]',
   button:    'text-[16px]',
   statNum:   'text-[clamp(1.75rem,7vw,2.25rem)] md:text-[clamp(2.5rem,4vw,3.5rem)]',
   h2:        'text-[clamp(2.5rem,5vw,4.5rem)]',
-  h1:        'text-[clamp(3.5rem,7vw,7rem)]',
+  h1:        'text-[clamp(2.5rem,6.4vw,6.5rem)]',
 };
 
 /* ── Raios e sombras padronizados (Regra transversal / item 11) ─────────── */

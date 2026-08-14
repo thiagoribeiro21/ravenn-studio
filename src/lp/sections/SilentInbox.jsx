@@ -132,7 +132,7 @@ function SideButtons() {
 function StatusBar() {
   return (
     <div className="flex shrink-0 items-center justify-between px-[1.05em] pb-[0.2em] pt-[0.75em]">
-      <span className="font-satoshi text-[0.52em] font-semibold tracking-tight text-white/95">21:47</span>
+      <span className="font-satoshi text-[0.58em] font-semibold tracking-tight text-white/95">21:47</span>
       <span aria-hidden className="flex items-center gap-[0.16em]">
         {[0.22, 0.32, 0.42, 0.52].map((h) => (
           <span key={h} className="w-[0.1em] rounded-full bg-white/85" style={{ height: `${h}em` }} />
@@ -176,7 +176,7 @@ function AppHeader() {
           <circle cx="11" cy="11" r="7" />
           <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
         </svg>
-        <span className="font-satoshi text-[0.5em] text-white/30">Pesquisar</span>
+        <span className="font-satoshi text-[0.58em] text-white/30">Pesquisar</span>
       </div>
     </div>
   );
@@ -222,7 +222,7 @@ function GhostLead({ progress, window: win, text }) {
         </svg>
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate font-satoshi text-[0.55em] font-medium text-white/50">{text}</span>
+        <span className="block truncate font-satoshi text-[0.64em] font-medium text-white/50">{text}</span>
         <span aria-hidden className="mt-[0.3em] block h-[0.16em] w-[62%] rounded-full bg-white/[0.1]" />
       </span>
     </motion.div>
@@ -249,7 +249,7 @@ function EmptyState({ label, reduce }) {
           />
         </svg>
       </motion.span>
-      <span className="font-satoshi text-[0.55em] font-medium tracking-wide text-white/28">{label}</span>
+      <span className="font-satoshi text-[0.64em] font-medium tracking-wide text-white/28">{label}</span>
     </div>
   );
 }
@@ -274,7 +274,7 @@ function ChatRow({ progress, window: win, chat, tone, reduce }) {
       <span className="relative shrink-0">
         <span
           aria-hidden
-          className="flex h-[2.1em] w-[2.1em] items-center justify-center rounded-full font-satoshi text-[0.62em] font-bold text-white/90"
+          className="flex h-[2.1em] w-[2.1em] items-center justify-center rounded-full font-satoshi text-[0.66em] font-bold text-white/90"
           style={{ background: tone }}
         >
           {chat.name.charAt(0)}
@@ -289,8 +289,13 @@ function ChatRow({ progress, window: win, chat, tone, reduce }) {
 
       <span className="min-w-0 flex-1">
         <span className="flex items-baseline justify-between gap-[0.4em]">
-          <span className="truncate font-satoshi text-[0.62em] font-semibold text-white/95">{chat.name}</span>
-          <motion.span className="shrink-0 font-satoshi text-[0.46em] font-medium" style={{ color: WA_GREEN, opacity: badge }}>
+          {/* Nome e prévia subiram (0.62→0.68 / 0.54→0.64) SEM mexer na altura
+              da linha: quem dita a altura aqui é o avatar (`h-[2.1em]`), e o
+              bloco de texto empilhado soma ~1.7em mesmo depois do aumento —
+              continua com folga dentro dos 2.1em. Por isso o aumento é de
+              graça em layout. */}
+          <span className="truncate font-satoshi text-[0.68em] font-semibold text-white/95">{chat.name}</span>
+          <motion.span className="shrink-0 font-satoshi text-[0.52em] font-medium" style={{ color: WA_GREEN, opacity: badge }}>
             {chat.time}
           </motion.span>
         </span>
@@ -309,11 +314,11 @@ function ChatRow({ progress, window: win, chat, tone, reduce }) {
               ))}
             </span>
           ) : (
-            <span className="truncate font-satoshi text-[0.54em] text-white/50">{chat.preview}</span>
+            <span className="truncate font-satoshi text-[0.64em] text-white/50">{chat.preview}</span>
           )}
 
           <motion.span
-            className="flex h-[0.95em] min-w-[0.95em] shrink-0 items-center justify-center rounded-full px-[0.2em] font-satoshi text-[0.46em] font-bold text-[#04140b]"
+            className="flex h-[0.95em] min-w-[0.95em] shrink-0 items-center justify-center rounded-full px-[0.2em] font-satoshi text-[0.5em] font-bold text-[#04140b]"
             style={{ background: WA_GREEN, opacity: badge, scale: badge, boxShadow: '0 0 0.7em rgba(37,211,102,0.55)' }}
           >
             1
@@ -340,7 +345,18 @@ function ChatRow({ progress, window: win, chat, tone, reduce }) {
    aparelhos antigos que mais aparecem em tráfego pago. Medir é algumas linhas
    a mais e funciona em qualquer navegador; é o mesmo padrão que
    GlassPanelMockup.jsx já usa pra escalar os iframes do portfólio. */
-const SCREEN_BASE_RATIO = 0.074;
+/* v11 — 0.074 → 0.085 (+15%) por acessibilidade. Na base antiga a prévia de
+   mensagem saía a ~11px e o nome do contato a ~13px num desktop de 1440:
+   texto que CARREGA a mensagem da seção ("Oi! Vi o anúncio, quero saber
+   mais" é o argumento inteiro do ato) renderizado abaixo do limiar
+   confortável de leitura.
+
+   Subir a base escala a UI inteira junto (é esse o ponto do `em`), inclusive
+   alturas de linha — então cabem menos conversas na tela. Isso é
+   deliberado e não é perda: um celular real mostra quantas conversas
+   couberem, e a leitura de "caixa de entrada cheia" vem da densidade
+   visível, não de um número exato de linhas. */
+const SCREEN_BASE_RATIO = 0.085;
 
 function Phone({ children, reduce }) {
   const screenRef = useRef(null);
@@ -716,7 +732,7 @@ export default function SilentInbox({ data }) {
                     <path d="M6 6l12 12M18 6L6 18" />
                   </svg>
                 </span>
-                <span className="font-satoshi text-[10.5px] font-semibold uppercase tracking-widest2 text-white/55 md:text-[13px]">
+                <span className="font-satoshi text-[15px] font-semibold uppercase tracking-widest2 text-white/60 md:text-[16px]">
                   {data.lossLabel}
                 </span>
               </motion.div>
@@ -738,7 +754,7 @@ export default function SilentInbox({ data }) {
                     <path d="M5 13l4 4L19 7" />
                   </svg>
                 </span>
-                <span className="font-satoshi text-[10.5px] font-semibold uppercase tracking-widest2 md:text-[13px]" style={{ color: WA_GREEN }}>
+                <span className="font-satoshi text-[15px] font-semibold uppercase tracking-widest2 md:text-[16px]" style={{ color: WA_GREEN }}>
                   {data.gainLabel}
                 </span>
               </motion.div>

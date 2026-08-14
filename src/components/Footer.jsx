@@ -116,7 +116,7 @@ export default function Footer() {
 
           {/* ── Navegação ─────────────────────────────────────────────────── */}
           <motion.nav variants={fadeUp} aria-label="Navegação principal" className="lg:col-span-2">
-            <span className="block text-[11px] uppercase tracking-widest text-white/25 font-medium mb-6">
+            <span className="block text-[15px] uppercase tracking-widest text-white/45 font-medium mb-6">
               Navegação
             </span>
             <ul className="list-none p-0 m-0 space-y-3.5">
@@ -137,7 +137,7 @@ export default function Footer() {
 
           {/* ── Serviços ──────────────────────────────────────────────────── */}
           <motion.nav variants={fadeUp} aria-label="Nossos Serviços" className="lg:col-span-3">
-            <span className="block text-[11px] uppercase tracking-widest text-white/25 font-medium mb-6">
+            <span className="block text-[15px] uppercase tracking-widest text-white/45 font-medium mb-6">
               Serviços
             </span>
             <ul className="list-none p-0 m-0 space-y-3.5">
@@ -158,7 +158,7 @@ export default function Footer() {
 
           {/* ── Contato ───────────────────────────────────────────────────── */}
           <motion.nav variants={fadeUp} aria-label="Contato e Atendimento" className="lg:col-span-2">
-            <span className="block text-[11px] uppercase tracking-widest text-white/25 font-medium mb-6">
+            <span className="block text-[15px] uppercase tracking-widest text-white/45 font-medium mb-6">
               Contato
             </span>
             <ul className="list-none p-0 m-0 space-y-3.5">

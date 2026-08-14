@@ -266,7 +266,7 @@ export default function PortfolioSection() {
       >
         <a
           href="#contact"
-          className="inline-flex items-center whitespace-nowrap gap-2 md:gap-3 h-11 md:h-[52px] px-5 md:px-9 text-[10px] md:text-[12px] tracking-[0.09em] md:tracking-[0.14em] rounded"
+          className="inline-flex items-center whitespace-nowrap gap-2 md:gap-3 h-11 md:h-[52px] px-4 md:px-9 text-[15px] md:text-[16px] tracking-[0.03em] md:tracking-[0.09em] rounded"
           style={{
             fontWeight:     500,
             textTransform:  'uppercase',

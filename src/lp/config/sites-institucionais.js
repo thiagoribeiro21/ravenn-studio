@@ -31,14 +31,14 @@ export default {
   },
 
   hero: {
-    eyebrow: 'Sites institucionais premium — Niterói · RJ',
+    eyebrow: 'Sites institucionais premium em Niterói · RJ',
     headlineLines: ['O seu site deveria', '_fechar contratos._'],
     deviceImages: {
       desktop: '/lp-institucional/hero-device.webp',
       mobile: '/lp-institucional/hero-device-mobile.webp',
     },
     subheadline:
-      'Sites institucionais premium para clínicas, escritórios de advocacia e imobiliárias de alto padrão — construídos para transformar tráfego pago em reunião marcada, não em visita perdida.',
+      'Sites institucionais premium para clínicas, escritórios de advocacia e imobiliárias de alto padrão, construídos para transformar tráfego pago em reunião marcada, não em visita perdida.',
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
       href: buildWaLink('Olá! Vi a página de sites institucionais da Ravenn e quero o diagnóstico gratuito.'),
@@ -72,7 +72,7 @@ export default {
       'Nem', 'para', 'quem', 'parece', { glyph: 'cross' }, { persist: true, glyph: 'diamond', text: 'amador.' },
     ],
     paragraph:
-      'O paciente particular. O cliente corporativo. O comprador de alto padrão. Todos julgam sua credibilidade pelo site antes de qualquer contato — e decidem em segundos se voltam ou se fecham com o concorrente que parecia mais preparado.',
+      'O paciente particular. O cliente corporativo. O comprador de alto padrão. Todos julgam sua credibilidade pelo site antes de qualquer contato. Decidem em segundos se voltam ou se fecham com o concorrente que parecia mais preparado.',
   },
 
   /* Ato 3 — "O WhatsApp que não toca" (SilentInbox.jsx). Substituiu a cena
@@ -96,13 +96,13 @@ export default {
        aparelho antes de fechar. */
     lossLabel: 'Site comum',
     lossCaption:
-      'Seu anúncio entrega gente pronta pra comprar. O site não convence, ela volta pro Google — e fecha com o concorrente. Você pagou por esse clique.',
+      'Seu anúncio entrega gente pronta pra comprar. O site não convence, ela volta pro Google e fecha com o concorrente. Você pagou por esse clique.',
     ghosts: ['Saiu sem falar com você', 'Foi para o concorrente', 'Fechou a aba em segundos'],
     emptyState: 'Nenhuma mensagem nova',
 
     gainLabel: 'Padrão Ravenn',
     gainCaption:
-      'Mesmo anúncio, mesmo orçamento, mesmo clique. Só que agora ele cai num site feito pra fechar — e vira conversa no seu WhatsApp.',
+      'Mesmo anúncio, mesmo orçamento, mesmo clique. Só que agora ele cai num site feito pra fechar e vira conversa no seu WhatsApp.',
     /* 6 conversas (era 3) — pedido explícito de "parecer um WhatsApp
        lotado". Ordem = mais recente no topo (mesma convenção do app real),
        times decrescentes ao longo de ~35min pra ler como um fluxo contínuo
@@ -132,7 +132,7 @@ export default {
       {
         key: 'performance',
         title: 'Velocidade que vira confiança',
-        body: 'PageSpeed 90+ garantido — cada segundo de espera é um cliente a menos.',
+        body: 'PageSpeed 90+ garantido. Cada segundo de espera é um cliente a menos.',
         mockup: 'pagespeed',
         pill: '90+ score',
       },
@@ -153,7 +153,7 @@ export default {
       {
         key: 'whatsapp',
         title: 'Atendimento que nunca dorme',
-        body: 'Mensagem recebida, qualificada e respondida — mesmo às 3 da manhã.',
+        body: 'Mensagem recebida, qualificada e respondida, mesmo às 3 da manhã.',
         mockup: 'whatsapp',
         pill: '24/7',
         accent: '#25D366',
@@ -171,14 +171,14 @@ export default {
     eyebrow: 'O padrão aplicado',
     heading: 'É assim que o seu mercado deveria ver você.',
     intro:
-      'Três conceitos autorais criados pelo nosso estúdio para mercados de alto tíquete. Não são clientes — são o padrão exato de design e conversão que aplicamos quando o projeto é o seu.',
+      'Três conceitos autorais criados pelo nosso estúdio para mercados de alto tíquete. Não são clientes: são o padrão exato de design e conversão que aplicamos quando o projeto é o seu.',
     items: [
       {
         nicho: 'Clínica · Saúde & Estética',
         // `siteSrc` embute o HTML real do portfólio (mesmo arquivo da home)
         // em vez de tocar um vídeo gravado — ver ConceptStack.jsx.
         siteSrc: '/portfolio-heroes/pele.html',
-        pain: 'O paciente particular julga a sua clínica pelo site — antes de conhecer o seu trabalho.',
+        pain: 'O paciente particular julga a sua clínica pelo site antes de conhecer o seu trabalho.',
         solution:
           'Segurança clínica com estética de desejo. O paciente sente o padrão do consultório antes de agendar a primeira consulta.',
         wa: buildWaLink('Olá! Vi o conceito para clínicas na página de sites institucionais e quero esse padrão no meu site.'),
@@ -217,17 +217,17 @@ export default {
     slides: [
       {
         title: 'Para quem cobra pelo padrão que entrega.',
-        body: 'Profissionais de ticket alto que precisam de autoridade visual antes da primeira reunião — o site que justifica o preço antes de qualquer conversa.',
+        body: 'Profissionais de ticket alto que precisam de autoridade visual antes da primeira reunião: o site que justifica o preço antes de qualquer conversa.',
         image: '/ideal-lp-institucional/autoridade_profissional.webp',
       },
       {
         title: 'Para quem paga pelo clique e perde pelo design.',
-        body: 'Negócios que já investem em tráfego pago e veem o lead qualificado escolher o concorrente — só porque o site atual parece mais barato.',
+        body: 'Negócios que já investem em tráfego pago e veem o lead qualificado escolher o concorrente só porque o site atual parece mais barato.',
         image: '/ideal-lp-institucional/conversao_lead.webp',
       },
       {
         title: 'Para quem trata o site como investimento, não despesa.',
-        body: 'Fundadores que entendem o site como uma máquina de vendas ativa 24 horas — um ativo que se paga, não um custo fixo.',
+        body: 'Fundadores que entendem o site como uma máquina de vendas ativa 24 horas: um ativo que se paga, não um custo fixo.',
         image: '/ideal-lp-institucional/visionario_maquina_vendas.webp',
       },
     ],
@@ -239,7 +239,7 @@ export default {
     steps: [
       {
         title: 'Diagnóstico',
-        body: 'Em até 24 horas, analisamos performance, design e capacidade de conversão da sua presença digital atual — e mostramos exatamente onde você está perdendo clientes.',
+        body: 'Em até 24 horas, analisamos performance, design e capacidade de conversão da sua presença digital atual, e mostramos exatamente onde você está perdendo clientes.',
       },
       {
         title: 'Design & construção',
@@ -266,7 +266,7 @@ export default {
     items: [
       {
         q: 'Quanto custa um site institucional premium?',
-        a: 'Cada projeto é orçado sob escopo — número de páginas, integrações e prazo. O diagnóstico gratuito define o escopo antes de qualquer proposta. Trabalhamos abaixo de um certo patamar de qualidade, e não abrimos exceção pra ele.',
+        a: 'Cada projeto é orçado sob escopo: número de páginas, integrações e prazo. O diagnóstico gratuito define o escopo antes de qualquer proposta. Trabalhamos abaixo de um certo patamar de qualidade, e não abrimos exceção pra ele.',
       },
       {
         q: 'Em quanto tempo o site fica pronto?',
@@ -274,7 +274,7 @@ export default {
       },
       {
         q: 'Vocês atendem apenas Niterói?',
-        a: 'Nossa base é Niterói, RJ — e é onde dominamos o mercado local. Mas atendemos clientes em todo o Brasil de forma remota, com o mesmo padrão de entrega.',
+        a: 'Nossa base é Niterói, RJ, onde dominamos o mercado local. Mas atendemos clientes em todo o Brasil de forma remota, com o mesmo padrão de entrega.',
       },
       {
         q: 'O que está incluído no diagnóstico gratuito?',

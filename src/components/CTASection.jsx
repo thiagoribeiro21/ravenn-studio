@@ -119,7 +119,7 @@ export default function CTASection() {
           href={WA_LINK}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center whitespace-nowrap gap-2 md:gap-3 h-12 md:h-16 px-5 md:px-12 text-[11px] md:text-[13px] tracking-[0.09em] md:tracking-[0.14em] rounded"
+          className="inline-flex items-center whitespace-nowrap gap-2 md:gap-3 h-12 md:h-16 px-4 md:px-12 text-[15px] md:text-[16px] tracking-[0.03em] md:tracking-[0.09em] rounded"
           style={{
             fontWeight:     500,
             textTransform:  'uppercase',

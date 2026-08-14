@@ -36,7 +36,7 @@ export default {
   },
 
   hero: {
-    eyebrow: 'Gestão de Google Ads — Performance real',
+    eyebrow: 'Gestão de Google Ads com performance real',
     headlineLines: ['Você não quer cliques.', '_Quer clientes._'],
     subheadline:
       'Gestão de Google Ads orientada por custo de aquisição real: segmentação por intenção de compra, teste A/B contínuo e relatório que você entende sem precisar de tradutor.',
@@ -71,7 +71,7 @@ export default {
       'É', 'de', { glyph: 'cross' }, { persist: true, glyph: 'diamond', text: 'segmentação.' },
     ],
     paragraph:
-      'Aumentar orçamento numa campanha mal segmentada só compra mais do mesmo problema, mais rápido. O custo por aquisição não cai com mais dinheiro — cai com a palavra-chave certa, o público certo e o lance ajustado toda semana, não uma vez e esquecido.',
+      'Aumentar orçamento numa campanha mal segmentada só compra mais do mesmo problema, mais rápido. O custo por aquisição não cai com mais dinheiro: cai com a palavra-chave certa, o público certo e o lance ajustado toda semana, não uma vez e esquecido.',
   },
 
   consequence: {
@@ -80,13 +80,13 @@ export default {
 
     lossLabel: 'Conta sem gestão',
     lossCaption:
-      'Campanha configurada uma vez e esquecida. Palavra-chave genérica, lance parado, sem teste de criativo — o orçamento roda, mas ninguém sabe se está trazendo venda.',
+      'Campanha configurada uma vez e esquecida. Palavra-chave genérica, lance parado, sem teste de criativo: o orçamento roda, mas ninguém sabe se está trazendo venda.',
     ghosts: ['Custo por clique subindo', 'Sem rastreamento de conversão', 'Orçamento gasto sem retorno claro'],
     emptyState: 'Nenhuma mensagem nova',
 
     gainLabel: 'Padrão Ravenn',
     gainCaption:
-      'Mesmo orçamento, gestão ativa toda semana. Segmentação por intenção de compra, rastreamento configurado — e cada venda rastreada até o clique que a originou.',
+      'Mesmo orçamento, gestão ativa toda semana. Segmentação por intenção de compra, rastreamento configurado, e cada venda rastreada até o clique que a originou.',
     chats: [
       { name: 'Leandro F.', preview: 'O CPA caiu bastante esse mês, parabéns', time: '17:40' },
       { name: 'Vanessa R.', preview: 'Vi o relatório, ficou bem claro', time: '17:22' },
@@ -109,7 +109,7 @@ export default {
       {
         key: 'otimizacao',
         title: 'Otimização semanal, não configurar e esquecer',
-        body: 'Lances, orçamento e criativos revisados toda semana com base em dado real — nunca "configura e deixa rodando".',
+        body: 'Lances, orçamento e criativos revisados toda semana com base em dado real, nunca "configura e deixa rodando".',
         mockup: 'pagespeed',
         gaugeLabel: 'OTIMIZADO',
         pill: 'Semanal',
@@ -117,21 +117,21 @@ export default {
       {
         key: 'estrutura',
         title: 'Estrutura de campanha que segue o funil',
-        body: 'Campanha, grupo de anúncios e página de destino organizados por etapa de intenção — não uma pilha de anúncios genéricos.',
+        body: 'Campanha, grupo de anúncios e página de destino organizados por etapa de intenção, não uma pilha de anúncios genéricos.',
         mockup: 'wireframe',
         pill: 'Full-funnel',
       },
       {
         key: 'testes',
         title: 'Criativos e copy testados, não apostados',
-        body: 'Teste A/B contínuo entre variações de anúncio — o que não performa sai, o que performa recebe mais orçamento.',
+        body: 'Teste A/B contínuo entre variações de anúncio: o que não performa sai, o que performa recebe mais orçamento.',
         mockup: 'authority',
         pill: 'Teste A/B',
       },
       {
         key: 'relatorio',
         title: 'Relatório que você entende sem tradutor',
-        body: 'Métricas de custo por aquisição real, não vaidade de cliques — clareza de quanto cada venda custou de fato.',
+        body: 'Métricas de custo por aquisição real, não vaidade de cliques: clareza de quanto cada venda custou de fato.',
         mockup: 'whatsapp',
         pill: 'Relatório mensal',
         accent: '#25D366',
@@ -152,33 +152,33 @@ export default {
     eyebrow: 'Como uma campanha é construída',
     heading: 'Google Ads não é orçamento. É estrutura.',
     intro:
-      'Da campanha ao clique que vira venda — cada camada existe pra filtrar quem não vai comprar antes que custe caro. É o padrão exato de estrutura que aplicamos quando a conta é sua.',
+      'Da campanha ao clique que vira venda: cada camada existe pra filtrar quem não vai comprar antes que custe caro. É o padrão exato de estrutura que aplicamos quando a conta é sua.',
     stages: [
       {
         title: 'Campanha',
-        body: 'Definida pelo objetivo — vendas, leads ou reconhecimento. O objetivo muda como o Google otimiza cada lance, então começa por aqui, não pelo criativo.',
+        body: 'Definida pelo objetivo: vendas, leads ou reconhecimento. O objetivo muda como o Google otimiza cada lance, então começa por aqui, não pelo criativo.',
       },
       {
         title: 'Grupo de anúncios',
-        body: 'Agrupado por tema e intenção de busca — nunca uma pilha genérica de palavras-chave concorrendo entre si pelo mesmo orçamento.',
+        body: 'Agrupado por tema e intenção de busca, nunca uma pilha genérica de palavras-chave concorrendo entre si pelo mesmo orçamento.',
       },
       {
         title: 'Anúncio',
-        body: 'Testado em variações lado a lado (A/B) — texto, imagem e CTA competindo até o vencedor ficar claro, com dado real, não achismo.',
+        body: 'Testado em variações lado a lado (A/B): texto, imagem e CTA competindo até o vencedor ficar claro, com dado real, não achismo.',
       },
       {
         title: 'Página de destino',
-        body: 'A landing page certa pro objetivo específico daquela campanha — sem isso, o clique pago chega e não tem pra onde converter.',
+        body: 'A landing page certa pro objetivo específico daquela campanha. Sem isso, o clique pago chega e não tem pra onde converter.',
       },
       {
         title: 'Conversão rastreada',
-        body: 'Cada venda ligada de volta ao anúncio exato que a originou — é esse dado, não intuição, que orienta o ajuste de toda semana.',
+        body: 'Cada venda ligada de volta ao anúncio exato que a originou: é esse dado, não intuição, que orienta o ajuste de toda semana.',
       },
     ],
     closing: {
       lines: [
         { text: 'Você não paga por clique.', tone: 'bright' },
-        { text: 'Paga por venda —', tone: 'dim' },
+        { text: 'Paga por venda,', tone: 'dim' },
         { text: 'é assim que medimos sucesso.', tone: 'dim' },
       ],
       cta: {
@@ -204,7 +204,7 @@ export default {
       },
       {
         title: 'Para quem quer parar de gerenciar campanha sozinho.',
-        body: 'Times pequenos que não têm tempo de acompanhar lance, orçamento e criativo toda semana — e sabem que isso tem custo.',
+        body: 'Times pequenos que não têm tempo de acompanhar lance, orçamento e criativo toda semana e sabem que isso tem custo.',
         image: '/para-quem-e-lps/12-gerenciar-campanha.webp',
       },
     ],
@@ -216,7 +216,7 @@ export default {
     steps: [
       {
         title: 'Diagnóstico da conta',
-        body: 'Analisamos sua conta atual (ou desenhamos do zero) — estrutura de campanhas, segmentação e onde o orçamento está sendo mal aproveitado.',
+        body: 'Analisamos sua conta atual (ou desenhamos do zero): estrutura de campanhas, segmentação e onde o orçamento está sendo mal aproveitado.',
       },
       {
         title: 'Estruturação e lançamento',
@@ -224,7 +224,7 @@ export default {
       },
       {
         title: 'Otimização contínua',
-        body: 'Ajuste semanal de lances, orçamento e criativos com base em dado real — e relatório mensal explicando cada decisão.',
+        body: 'Ajuste semanal de lances, orçamento e criativos com base em dado real, e relatório mensal explicando cada decisão.',
       },
     ],
     bg: {
@@ -239,19 +239,19 @@ export default {
     items: [
       {
         q: 'Quanto custa a gestão de Google Ads?',
-        a: 'Cada conta é orçada pelo escopo — volume de campanhas e complexidade do funil. O diagnóstico gratuito define o escopo antes de qualquer proposta. Não inclui o valor investido em mídia, que vai direto pro Google.',
+        a: 'Cada conta é orçada pelo escopo: volume de campanhas e complexidade do funil. O diagnóstico gratuito define o escopo antes de qualquer proposta. Não inclui o valor investido em mídia, que vai direto pro Google.',
       },
       {
         q: 'Vocês exigem contrato de fidelidade?',
-        a: 'Não. Trabalhamos com transparência total — se o resultado não aparecer, você não fica preso a um contrato longo.',
+        a: 'Não. Trabalhamos com transparência total: se o resultado não aparecer, você não fica preso a um contrato longo.',
       },
       {
         q: 'Vocês também criam a landing page da campanha?',
-        a: 'A gestão de tráfego é o foco deste serviço — mas também criamos landing pages de alta conversão à parte, caso você precise das duas pontas.',
+        a: 'A gestão de tráfego é o foco deste serviço, mas também criamos landing pages de alta conversão à parte, caso você precise das duas pontas.',
       },
       {
         q: 'Tenho acesso total à minha conta de anúncios?',
-        a: 'Sim — a conta é sua, você tem acesso completo o tempo todo. Nós gerenciamos, você é dono dos dados e do histórico.',
+        a: 'Sim, a conta é sua, você tem acesso completo o tempo todo. Nós gerenciamos, você é dono dos dados e do histórico.',
       },
     ],
     cta: { label: 'Perguntar no WhatsApp', href: buildWaLink('Olá! Tenho uma dúvida sobre gestão de Google Ads que não vi no FAQ.') },

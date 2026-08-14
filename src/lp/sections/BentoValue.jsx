@@ -606,7 +606,7 @@ function BentoCell({ cell, index, delay }) {
       </div>
 
       <div className="relative z-10 flex items-center justify-between gap-4 border-t border-white/[0.06] px-8 py-4 md:px-10">
-        <span className="font-satoshi text-[13px] tabular-nums tracking-widest text-rv-faint">
+        <span className="font-satoshi text-[15px] tabular-nums tracking-widest text-rv-faint">
           {String(index + 1).padStart(2, '0')}
         </span>
         {cell.pill && (

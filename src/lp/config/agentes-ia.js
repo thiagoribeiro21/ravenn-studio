@@ -40,10 +40,10 @@ export default {
   },
 
   hero: {
-    eyebrow: 'Agentes de IA para WhatsApp — Atendimento 24h',
+    eyebrow: 'Agentes de IA para WhatsApp com atendimento 24h',
     headlineLines: ['Às 3 da manhã, alguém pediu orçamento.', '_Quem respondeu?_'],
     subheadline:
-      'Agentes de IA treinados no seu negócio respondem, qualificam e agendam pelo WhatsApp — 24 horas por dia, sem fila, sem lead esquecido.',
+      'Agentes de IA treinados no seu negócio respondem, qualificam e agendam pelo WhatsApp, 24 horas por dia, sem fila, sem lead esquecido.',
     deviceImages: {
       desktop: '/lp-institucional/hero-device.webp',
       mobile: '/lp-institucional/hero-device-mobile.webp',
@@ -75,7 +75,7 @@ export default {
       'vira', 'cliente', 'do', { glyph: 'cross' }, { persist: true, glyph: 'diamond', text: 'concorrente.' },
     ],
     paragraph:
-      'Enquanto ninguém responde, o cliente já mandou a mesma pergunta pro concorrente ao lado. Não é falta de interesse — é falta de resposta a tempo. E isso se perde às 3 da manhã com a mesma frequência que às 15h de uma terça.',
+      'Enquanto ninguém responde, o cliente já mandou a mesma pergunta pro concorrente ao lado. Não é falta de interesse: é falta de resposta a tempo. E isso se perde às 3 da manhã com a mesma frequência que às 15h de uma terça.',
   },
 
   consequence: {
@@ -84,13 +84,13 @@ export default {
 
     lossLabel: 'Atendimento manual',
     lossCaption:
-      'Fora do horário comercial, no fim de semana, na hora do almoço — a mensagem fica esperando. Quando alguém responde, o cliente já resolveu com outra empresa.',
+      'Fora do horário comercial, no fim de semana, na hora do almoço: a mensagem fica esperando. Quando alguém responde, o cliente já resolveu com outra empresa.',
     ghosts: ['Sem resposta em 40 minutos', 'Foi para o concorrente', 'Desistiu de esperar'],
     emptyState: 'Nenhuma mensagem nova',
 
     gainLabel: 'Padrão Ravenn',
     gainCaption:
-      'O agente responde no primeiro minuto, qualquer hora do dia. Quando sua equipe chega, o lead já está qualificado — só falta fechar.',
+      'O agente responde no primeiro minuto, qualquer hora do dia. Quando sua equipe chega, o lead já está qualificado, só falta fechar.',
     chats: [
       { name: 'Marcelo A.', preview: 'Vocês atendem final de semana?', time: '02:14' },
       { name: 'Juliana P.', preview: 'Perfeito, obrigada pela resposta rápida!', time: '01:52' },
@@ -117,7 +117,7 @@ export default {
       {
         key: 'resposta',
         title: 'Resposta no primeiro minuto, sempre',
-        body: 'O agente responde assim que a mensagem chega — de dia, de madrugada, feriado. Sem fila, sem lead esfriando.',
+        body: 'O agente responde assim que a mensagem chega: de dia, de madrugada, feriado. Sem fila, sem lead esfriando.',
         mockup: 'pagespeed',
         gaugeLabel: 'RESPOSTA',
         pill: '~1 min',
@@ -125,21 +125,21 @@ export default {
       {
         key: 'qualificacao',
         title: 'Fluxo pensado pra qualificar sozinho',
-        body: 'O agente segue um roteiro de perguntas que separa curioso de cliente pronto pra comprar — sem intervenção manual.',
+        body: 'O agente segue um roteiro de perguntas que separa curioso de cliente pronto pra comprar, sem intervenção manual.',
         mockup: 'wireframe',
         pill: 'Qualificação automática',
       },
       {
         key: 'treinamento',
         title: 'Treinado no seu negócio, não genérico',
-        body: 'Respostas no tom da sua marca, com as informações certas do seu produto ou serviço — não um robô que erra a pergunta simples.',
+        body: 'Respostas no tom da sua marca, com as informações certas do seu produto ou serviço, não um robô que erra a pergunta simples.',
         mockup: 'target',
         pill: 'Sob medida',
       },
       {
         key: 'disponibilidade',
         title: 'Atendimento que nunca dorme',
-        body: 'Mensagem recebida, qualificada e respondida — mesmo às 3 da manhã, mesmo no feriado.',
+        body: 'Mensagem recebida, qualificada e respondida, mesmo às 3 da manhã, mesmo no feriado.',
         mockup: 'whatsapp',
         pill: '24/7',
         accent: '#25D366',
@@ -151,13 +151,13 @@ export default {
     eyebrow: 'Cada objetivo, um fluxo de conversa',
     heading: 'Um agente de IA não improvisa. Ele segue um roteiro.',
     intro:
-      'Três fluxos autorais que aplicamos conforme o objetivo do atendimento. Não são clientes — é o padrão exato de roteiro e qualificação que usamos quando o agente é seu.',
+      'Três fluxos autorais que aplicamos conforme o objetivo do atendimento. Não são clientes: é o padrão exato de roteiro e qualificação que usamos quando o agente é seu.',
     items: [
       {
         nicho: 'Qualificação de Leads · Vendas',
         src: `${PH}/concept-qualificacao-placeholder.mp4`,
         poster: '/conceitos-agente-ia/qualificacao-de-leads.webp',
-        pain: 'Nem todo contato no WhatsApp está pronto pra comprar — atender todo mundo do mesmo jeito desperdiça tempo do seu time.',
+        pain: 'Nem todo contato no WhatsApp está pronto pra comprar, atender todo mundo do mesmo jeito desperdiça tempo do seu time.',
         solution:
           'O agente pergunta, filtra e só entrega ao seu time o lead que já demonstrou intenção real de compra.',
         wa: buildWaLink('Olá! Vi o conceito de qualificação de leads na página de agentes de IA e quero esse padrão no meu atendimento.'),
@@ -175,7 +175,7 @@ export default {
         nicho: 'Suporte Pós-venda · Recorrência',
         src: `${PH}/concept-suporte-placeholder.mp4`,
         poster: '/conceitos-agente-ia/suporte-pos-venda.webp',
-        pain: 'Cliente que já comprou também manda mensagem — e cada uma que demora vira risco de reputação.',
+        pain: 'Cliente que já comprou também manda mensagem, e cada uma que demora vira risco de reputação.',
         solution:
           'O agente responde dúvidas recorrentes na hora e escala pro seu time só o que realmente precisa de humano.',
         wa: buildWaLink('Olá! Vi o conceito de suporte pós-venda na página de agentes de IA e quero esse padrão no meu atendimento.'),
@@ -198,12 +198,12 @@ export default {
     slides: [
       {
         title: 'Para quem recebe mensagem fora do horário comercial.',
-        body: 'Negócios com fluxo de WhatsApp alto que não têm equipe disponível 24h — e perdem cliente pra quem responde primeiro.',
+        body: 'Negócios com fluxo de WhatsApp alto que não têm equipe disponível 24h e perdem cliente pra quem responde primeiro.',
         image: '/para-quem-e-lps/04-mensagem-fora-horario.webp',
       },
       {
         title: 'Para quem repete as mesmas perguntas todo dia.',
-        body: 'Times que gastam hora do dia respondendo "qual o valor", "vocês atendem tal bairro" — perguntas que um agente treinado resolve sozinho.',
+        body: 'Times que gastam hora do dia respondendo "qual o valor", "vocês atendem tal bairro": perguntas que um agente treinado resolve sozinho.',
         image: '/para-quem-e-lps/05-repete-perguntas.webp',
       },
       {
@@ -243,7 +243,7 @@ export default {
     items: [
       {
         q: 'Quanto custa um agente de IA para WhatsApp?',
-        a: 'Cada projeto é orçado pelo escopo — volume de mensagens, integrações e complexidade do roteiro. O diagnóstico gratuito define o escopo antes de qualquer proposta.',
+        a: 'Cada projeto é orçado pelo escopo: volume de mensagens, integrações e complexidade do roteiro. O diagnóstico gratuito define o escopo antes de qualquer proposta.',
       },
       {
         q: 'Em quanto tempo o agente fica pronto?',
@@ -251,11 +251,11 @@ export default {
       },
       {
         q: 'O agente substitui meu time de atendimento?',
-        a: 'Não — ele filtra e qualifica, e transfere pro seu time exatamente os casos que precisam de uma pessoa. A ideia é tirar o repetitivo do caminho, não substituir quem fecha negócio.',
+        a: 'Não, ele filtra e qualifica, e transfere pro seu time exatamente os casos que precisam de uma pessoa. A ideia é tirar o repetitivo do caminho, não substituir quem fecha negócio.',
       },
       {
         q: 'Funciona no meu número de WhatsApp atual?',
-        a: 'Sim — a integração usa a WhatsApp Business API conectada ao seu número, sem precisar trocar de aparelho ou linha.',
+        a: 'Sim, a integração usa a WhatsApp Business API conectada ao seu número, sem precisar trocar de aparelho ou linha.',
       },
     ],
     cta: { label: 'Perguntar no WhatsApp', href: buildWaLink('Olá! Tenho uma dúvida sobre agentes de IA que não vi no FAQ.') },

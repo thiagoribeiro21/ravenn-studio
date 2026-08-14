@@ -38,10 +38,10 @@ export default {
   },
 
   hero: {
-    eyebrow: 'Sites experienciais e imersivos — WebGL & Motion',
+    eyebrow: 'Sites experienciais e imersivos com WebGL & Motion',
     headlineLines: ['Seu concorrente tem um site.', '_Você precisa de uma experiência._'],
     subheadline:
-      'Cenas 3D que reagem ao scroll, transições cinematográficas e navegação que não parece um site — para marcas que não podem se dar ao luxo de parecer comuns.',
+      'Cenas 3D que reagem ao scroll, transições cinematográficas e navegação que não parece um site, para marcas que não podem se dar ao luxo de parecer comuns.',
     deviceImages: {
       desktop: '/lp-institucional/hero-device.webp',
       mobile: '/lp-institucional/hero-device-mobile.webp',
@@ -56,7 +56,7 @@ export default {
     },
     stats: [
       { big: '60fps', label: 'mesmo com gráficos 3D em tempo real' },
-      { big: '0', label: 'templates — cada cena é desenhada pro seu produto' },
+      { big: '0', label: 'templates: cada cena é desenhada pro seu produto' },
       { big: '100%', label: 'adaptado pra carregar leve no mobile' },
     ],
     scarcity: {
@@ -73,7 +73,7 @@ export default {
       'do', 'primeiro', { glyph: 'cross' }, { persist: true, glyph: 'diamond', text: 'scroll.' },
     ],
     paragraph:
-      'O visitante decide em segundos se aquele site merece o resto da atenção dele. Uma primeira tela estática, sem movimento, sem surpresa, não dá motivo nenhum pra continuar — e a marca perde a única chance que teria de ficar na memória.',
+      'O visitante decide em segundos se aquele site merece o resto da atenção dele. Uma primeira tela estática, sem movimento, sem surpresa, não dá motivo nenhum pra continuar, e a marca perde a única chance que teria de ficar na memória.',
   },
 
   consequence: {
@@ -82,13 +82,13 @@ export default {
 
     lossLabel: 'Site genérico',
     lossCaption:
-      'O visitante entra, rola rápido, não vê nada que pare o olho — e sai sem lembrar do nome da marca cinco minutos depois.',
+      'O visitante entra, rola rápido, não vê nada que pare o olho, e sai sem lembrar do nome da marca cinco minutos depois.',
     ghosts: ['Saiu sem rolar até o fim', 'Não lembrou da marca', 'Fechou a aba em segundos'],
     emptyState: 'Nenhuma mensagem nova',
 
     gainLabel: 'Padrão Ravenn',
     gainCaption:
-      'Mesmo anúncio, mesmo orçamento, mesmo clique. Só que agora ele cai numa experiência que prende a atenção — e vira conversa no seu WhatsApp.',
+      'Mesmo anúncio, mesmo orçamento, mesmo clique. Só que agora ele cai numa experiência que prende a atenção e vira conversa no seu WhatsApp.',
     chats: [
       { name: 'Fernanda K.', preview: 'Que site incrível, nunca vi nada assim', time: '20:33' },
       { name: 'Rodrigo A.', preview: 'Fiquei rolando a página só pra ver o efeito', time: '20:12' },
@@ -113,7 +113,7 @@ export default {
       {
         key: 'performance',
         title: 'Rápido mesmo com gráficos avançados',
-        body: 'Carregamento sob demanda de cada cena 3D e fallback automático em conexões lentas — WebGL nunca atrasa o resto da página.',
+        body: 'Carregamento sob demanda de cada cena 3D e fallback automático em conexões lentas: WebGL nunca atrasa o resto da página.',
         mockup: 'pagespeed',
         gaugeLabel: 'FLUIDO',
         pill: '60fps',
@@ -121,21 +121,21 @@ export default {
       {
         key: 'motion',
         title: 'Cada transição pensada, não decorativa',
-        body: 'Scroll, hover e entrada de seção seguem uma coreografia única — nada se move só por mover.',
+        body: 'Scroll, hover e entrada de seção seguem uma coreografia única: nada se move só por mover.',
         mockup: 'wireframe',
         pill: 'Motion autoral',
       },
       {
         key: 'direcao',
         title: 'Direção de arte exclusiva, nunca template',
-        body: 'Cada cena é desenhada pro seu produto — o mesmo cuidado aplicado neste próprio site, que você está navegando agora.',
+        body: 'Cada cena é desenhada pro seu produto, o mesmo cuidado aplicado neste próprio site, que você está navegando agora.',
         mockup: 'authority',
         pill: '100% autoral',
       },
       {
         key: 'conversao',
         title: 'Do impacto visual à conversa, sem fricção',
-        body: 'A experiência existe pra reter atenção — e transformar essa atenção em contato, não só em admiração passageira.',
+        body: 'A experiência existe pra reter atenção e transformar essa atenção em contato, não só em admiração passageira.',
         mockup: 'whatsapp',
         pill: 'Foco em conversão',
         accent: '#25D366',
@@ -147,24 +147,24 @@ export default {
     eyebrow: 'A prova está nesta própria página',
     heading: 'Não descrevemos a experiência. Você já está dentro dela.',
     intro:
-      'Os três elementos abaixo não são conceitos fictícios — são gravações do próprio site da Ravenn. É o padrão exato de cena, movimento e acabamento que aplicamos quando o projeto é o seu.',
+      'Os três elementos abaixo não são conceitos fictícios: são gravações do próprio site da Ravenn. É o padrão exato de cena, movimento e acabamento que aplicamos quando o projeto é o seu.',
     items: [
       {
         nicho: 'Hero Cinematográfico · Scroll-Sequence',
         src: `${PH}/concept-corvo-scroll-placeholder.mp4`,
         poster: `${PH}/concept-corvo-scroll-poster.svg`,
-        pain: 'A primeira tela do site é a única chance de provar que a marca não é mais uma genérica — e a maioria desperdiça isso num banner estático.',
+        pain: 'A primeira tela do site é a única chance de provar que a marca não é mais uma genérica, e a maioria desperdiça isso num banner estático.',
         solution:
-          'Uma sequência que reage ao scroll, como no hero deste próprio site — o visitante sente que está controlando a cena, não só rolando uma página.',
+          'Uma sequência que reage ao scroll, como no hero deste próprio site: o visitante sente que está controlando a cena, não só rolando uma página.',
         wa: buildWaLink('Olá! Vi o conceito de hero cinematográfico na página de sites imersivos e quero esse padrão no meu site.'),
       },
       {
         nicho: 'Objeto 3D Interativo · WebGL',
         src: `${PH}/concept-pilares-3d-placeholder.mp4`,
         poster: `${PH}/concept-pilares-3d-poster.svg`,
-        pain: 'Um ícone plano não segura o olhar por mais de um segundo — e um segundo não basta pra impressionar quem decide.',
+        pain: 'Um ícone plano não segura o olhar por mais de um segundo, e um segundo não basta pra impressionar quem decide.',
         solution:
-          'Um objeto 3D real, com luz e reflexo, reagindo ao movimento do mouse — o mesmo elemento que vive nesta página, rodando fluido mesmo em aparelhos mais simples.',
+          'Um objeto 3D real, com luz e reflexo, reagindo ao movimento do mouse: o mesmo elemento que vive nesta página, rodando fluido mesmo em aparelhos mais simples.',
         wa: buildWaLink('Olá! Vi o conceito de objeto 3D interativo na página de sites imersivos e quero esse padrão no meu site.'),
       },
       {
@@ -173,7 +173,7 @@ export default {
         poster: `${PH}/concept-portfolio-poster.svg`,
         pain: 'Um portfólio que só troca de imagem não convence ninguém de que o resto do site recebeu o mesmo nível de cuidado.',
         solution:
-          'Cada transição é parte da experiência — a própria vitrine já demonstra o padrão de acabamento antes do visitante clicar em qualquer projeto.',
+          'Cada transição é parte da experiência: a própria vitrine já demonstra o padrão de acabamento antes do visitante clicar em qualquer projeto.',
         wa: buildWaLink('Olá! Vi o conceito de vitrine de portfólio na página de sites imersivos e quero esse padrão no meu site.'),
       },
     ],
@@ -194,12 +194,12 @@ export default {
     slides: [
       {
         title: 'Para marcas de luxo que vendem percepção antes do produto.',
-        body: 'Empreendimentos, joalherias, hotelaria de alto padrão — onde o site é a primeira prova do nível da experiência que vem depois.',
+        body: 'Empreendimentos, joalherias, hotelaria de alto padrão, onde o site é a primeira prova do nível da experiência que vem depois.',
         image: '/para-quem-e-lps/07-luxo-percepcao.webp',
       },
       {
         title: 'Para estúdios criativos que precisam provar o próprio padrão.',
-        body: 'Arquitetura, design, produtoras — onde um site genérico contradiz exatamente o que a empresa vende.',
+        body: 'Arquitetura, design, produtoras, onde um site genérico contradiz exatamente o que a empresa vende.',
         image: '/para-quem-e-lps/08-estudio-criativo.webp',
       },
       {
@@ -216,15 +216,15 @@ export default {
     steps: [
       {
         title: 'Direção de arte e conceito',
-        body: 'Definimos a narrativa visual do site — que cena, que movimento, que sensação a marca precisa transmitir logo na primeira tela.',
+        body: 'Definimos a narrativa visual do site: que cena, que movimento, que sensação a marca precisa transmitir logo na primeira tela.',
       },
       {
         title: 'Prototipação 3D e motion',
-        body: 'Construímos e testamos as cenas interativas antes de integrar ao site inteiro — você aprova cada movimento antes dele ir pro ar.',
+        body: 'Construímos e testamos as cenas interativas antes de integrar ao site inteiro. Você aprova cada movimento antes dele ir pro ar.',
       },
       {
         title: 'Otimização e lançamento',
-        body: 'Cada cena passa por otimização de performance — WebGL no ar, sem pesar a experiência de quem acessa pelo celular.',
+        body: 'Cada cena passa por otimização de performance: WebGL no ar, sem pesar a experiência de quem acessa pelo celular.',
       },
     ],
     bg: {
@@ -243,11 +243,11 @@ export default {
       },
       {
         q: 'Quanto custa um site experiencial?',
-        a: 'Cada projeto é orçado pelo escopo — número de cenas, complexidade das animações e integrações. O diagnóstico gratuito define o escopo antes de qualquer proposta.',
+        a: 'Cada projeto é orçado pelo escopo: número de cenas, complexidade das animações e integrações. O diagnóstico gratuito define o escopo antes de qualquer proposta.',
       },
       {
         q: 'Funciona bem no celular?',
-        a: 'Sim — cada cena é adaptada ou substituída por uma versão mais leve em dispositivos móveis, sem perder a essência da experiência.',
+        a: 'Sim, cada cena é adaptada ou substituída por uma versão mais leve em dispositivos móveis, sem perder a essência da experiência.',
       },
       {
         q: 'Em quanto tempo o site fica pronto?',

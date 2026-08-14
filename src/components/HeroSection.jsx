@@ -115,7 +115,7 @@ export default function HeroSection() {
         <motion.div variants={item} className="flex flex-wrap gap-4" style={{ marginTop: 'clamp(16px, 5vh, 44px)' }}>
           <a
             href="#contact"
-            className="inline-flex items-center whitespace-nowrap gap-2 h-12 md:h-14 px-5 md:px-9 text-[11px] md:text-[13px] tracking-[0.08em] md:tracking-[0.12em] rounded"
+            className="inline-flex items-center whitespace-nowrap gap-2 h-12 md:h-14 px-4 md:px-9 text-[15px] md:text-[16px] tracking-[0.03em] md:tracking-[0.08em] rounded"
             style={{
               fontWeight:     500,
               textTransform:  'uppercase',
