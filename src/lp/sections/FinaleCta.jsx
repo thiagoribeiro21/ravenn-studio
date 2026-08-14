@@ -56,7 +56,7 @@ function genStarShadow(count, spread) {
 }
 const STAR_SHADOW = genStarShadow(90, 1400);
 
-function FloatingDevice({ className, imgClassName }) {
+function FloatingDevice({ className, imgClassName, src }) {
   const reduce = prefersReducedMotion();
   return (
     <motion.div
@@ -68,7 +68,7 @@ function FloatingDevice({ className, imgClassName }) {
       className={className}
     >
       <motion.img
-        src="/lp-institucional/cta-device.webp"
+        src={src}
         alt=""
         aria-hidden
         loading="lazy"
@@ -162,14 +162,21 @@ export default function FinaleCta({ data }) {
               (irmão do grid, não célula dele), pra "bottom-0" bater na
               borda real da seção em vez do fundo da row de texto. */}
           <FloatingDevice
+            src={data.deviceImage}
             className="absolute bottom-0 right-0 z-10 hidden w-[48%] md:block"
             imgClassName="block w-full"
           />
 
-          {/* mobile — faixa própria abaixo do texto, device à direita, sem sobrepor nada */}
+          {/* mobile — faixa própria abaixo do texto, device à direita, sem sobrepor nada.
+              w-[90%] (era 74%) a pedido do usuário — "maior no mobile". Continua cabendo
+              dentro do h-72 (mesmo em viewports maiores tipo iPhone Pro Max o excedente é
+              de poucos px, e como o overflow:hidden real fica no card inteiro — não nesta
+              faixa — não há corte visível, só o device crescendo um pouco além da caixa
+              nominal, ancorado no canto como sempre). */}
           <div className="relative z-10 mt-2 h-72 md:hidden">
             <FloatingDevice
-              className="absolute bottom-0 right-0 w-[74%]"
+              src={data.deviceImage}
+              className="absolute bottom-0 right-0 w-[90%]"
               imgClassName="block w-full"
             />
           </div>

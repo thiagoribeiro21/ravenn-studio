@@ -11,6 +11,7 @@ import ConsequenceCarousel from './sections/ConsequenceCarousel';
 import CurtainReveal from './sections/CurtainReveal';
 import BentoValue from './sections/BentoValue';
 import ConceptStack from './sections/ConceptStack';
+import CampaignAnatomy from './sections/CampaignAnatomy';
 import PillarsShaped from './sections/PillarsShaped';
 import TargetAudienceCarousel from './sections/TargetAudienceCarousel';
 import FaqPanel from './sections/FaqPanel';
@@ -141,8 +142,21 @@ export default function LPShell({ config }) {
         <ScrubStatement data={config.scrub} />
         <SilentInbox data={config.consequence} />
         <BentoValue data={config.bento} />
-        <ConceptStack data={config.concepts} />
-        <PillarsShaped data={config.pillars} />
+        {/* Ponto de extensão do molde: por padrão toda LP mostra a
+            vitrine de vídeo (ConceptStack) + o objeto 3D com declaração
+            (PillarsShaped). Uma LP pode trocar a primeira por
+            `config.concepts.kind === 'funnel'` (CampaignAnatomy — usado
+            hoje só em gestao-google-ads.js, onde vitrine-de-site e
+            "design premium" não são a linguagem certa pro comprador) e
+            pular a segunda deixando `config.pillars` de fora do config.
+            Sem isso, as duas seções padrão continuam exatamente como
+            eram — nenhuma LP existente muda de comportamento. */}
+        {config.concepts.kind === 'funnel' ? (
+          <CampaignAnatomy data={config.concepts} />
+        ) : (
+          <ConceptStack data={config.concepts} />
+        )}
+        {config.pillars && <PillarsShaped data={config.pillars} />}
         <TargetAudienceCarousel data={config.audience} />
         <CurtainReveal>
           <ConsequenceCarousel id="processo" eyebrow={config.process.eyebrow} heading={config.process.heading} items={config.process.steps} bg={config.process.bg} cta={config.process.cta} />

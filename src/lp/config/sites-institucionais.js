@@ -33,6 +33,10 @@ export default {
   hero: {
     eyebrow: 'Sites institucionais premium — Niterói · RJ',
     headlineLines: ['O seu site deveria', '_fechar contratos._'],
+    deviceImages: {
+      desktop: '/lp-institucional/hero-device.webp',
+      mobile: '/lp-institucional/hero-device-mobile.webp',
+    },
     subheadline:
       'Sites institucionais premium para clínicas, escritórios de advocacia e imobiliárias de alto padrão — construídos para transformar tráfego pago em reunião marcada, não em visita perdida.',
     ctaPrimary: {
@@ -171,8 +175,9 @@ export default {
     items: [
       {
         nicho: 'Clínica · Saúde & Estética',
-        src: '/videos-raven-portfolio/pele-raven.mp4',
-        poster: '/videos-raven-portfolio/pele-poster.webp',
+        // `siteSrc` embute o HTML real do portfólio (mesmo arquivo da home)
+        // em vez de tocar um vídeo gravado — ver ConceptStack.jsx.
+        siteSrc: '/portfolio-heroes/pele.html',
         pain: 'O paciente particular julga a sua clínica pelo site — antes de conhecer o seu trabalho.',
         solution:
           'Segurança clínica com estética de desejo. O paciente sente o padrão do consultório antes de agendar a primeira consulta.',
@@ -180,8 +185,7 @@ export default {
       },
       {
         nicho: 'Advocacia · Corporativo',
-        src: '/videos-raven-portfolio/advogado-raven.mp4',
-        poster: '/videos-raven-portfolio/advogado-poster.webp',
+        siteSrc: '/portfolio-heroes/advogado.html',
         pain: 'Nenhuma empresa contrata um escritório que parece amador no Google.',
         solution:
           'Sobriedade que impõe respeito: hierarquia clara, tipografia imponente e a credibilidade que o cliente corporativo exige antes da primeira reunião.',
@@ -189,8 +193,7 @@ export default {
       },
       {
         nicho: 'Imobiliário · Alto padrão',
-        src: '/videos-raven-portfolio/imovel-raven.mp4',
-        poster: '/videos-raven-portfolio/imovel-poster.webp',
+        siteSrc: '/portfolio-heroes/imovel.html',
         pain: 'Ninguém compra um imóvel de milhões numa vitrine de classificados.',
         solution:
           'Apresentação cinematográfica à altura do ativo: o imóvel extraordinário precisa parecer extraordinário em cada scroll.',
@@ -259,7 +262,7 @@ export default {
   },
 
   faq: {
-    bg: '/bg-faq-institucional.webp',
+    bg: { mobile: '/bg-faq-institucional-mobile.webp', desktop: '/bg-faq-institucional.webp' },
     items: [
       {
         q: 'Quanto custa um site institucional premium?',
@@ -282,6 +285,7 @@ export default {
   },
 
   finale: {
+    deviceImage: '/lp-institucional/cta-device.webp',
     headline: 'Descubra quanto o seu site está custando.',
     body: 'Em até 24 horas, analisamos a performance, o design e a capacidade de conversão da sua presença digital atual. Sem compromisso. Sem script de vendas.',
     cta: { label: 'Solicitar diagnóstico no WhatsApp', href: buildWaLink('Olá. Quero o diagnóstico gratuito do meu site.') },

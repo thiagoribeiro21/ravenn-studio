@@ -9,11 +9,17 @@ export default defineConfig({
   build: {
     sourcemap: true,
     rollupOptions: {
-      // Multi-page: index.html (site principal) + sites-institucionais.html
-      // (LP dedicada de Ads). Sem isso, `vite build` só emite o index.
+      // Multi-page: index.html (site principal) + uma entrada por LP nichada
+      // de Ads (sites-institucionais.html, landing-pages.html, ...). Sem
+      // isso, `vite build` só emite o index.
       input: {
         main: r('./index.html'),
         sitesInstitucionais: r('./sites-institucionais.html'),
+        landingPages: r('./landing-pages.html'),
+        agentesIA: r('./agentes-ia.html'),
+        sitesImersivos: r('./sites-imersivos.html'),
+        gestaoGoogleAds: r('./gestao-google-ads.html'),
+        lojasVirtuais: r('./lojas-virtuais.html'),
       },
       output: {
         manualChunks(id) {

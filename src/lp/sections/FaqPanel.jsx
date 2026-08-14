@@ -58,20 +58,29 @@ export default function FaqPanel({ data }) {
           imagem oversized de volta pros limites da seção; não precisa de
           mais uma camada de clip aqui. */}
       <div aria-hidden className="absolute inset-0">
-        <motion.img
-          src={data.bg}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-x-0 w-full object-cover"
-          style={{
-            top: '-15vh',
-            height: 'calc(100% + 30vh)',
-            y: bgY,
-            filter: 'brightness(0.4)',
-            willChange: 'transform',
-          }}
-        />
+        {/* `data.bg` é `{ mobile, desktop }` — mesmo padrão de `<picture>`
+            que `ConsequenceCarousel.jsx`/`DeviceShot` já usam. O
+            `motion.img` cai como o `<img>` de fallback dentro do
+            `<picture>`: o browser escolhe a fonte certa pelo `<source>`,
+            e o Framer segue controlando o parallax normalmente por cima
+            do elemento resultante. */}
+        <picture>
+          <source media="(max-width: 767px)" srcSet={data.bg.mobile} />
+          <motion.img
+            src={data.bg.desktop}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-x-0 w-full object-cover"
+            style={{
+              top: '-15vh',
+              height: 'calc(100% + 30vh)',
+              y: bgY,
+              filter: 'brightness(0.4)',
+              willChange: 'transform',
+            }}
+          />
+        </picture>
         <div className="absolute inset-0 bg-gradient-to-b from-rv-void/80 via-rv-void/60 to-rv-void/90" />
       </div>
 

@@ -34,12 +34,15 @@ import { EASE_LUXE, GX, SECTION_PAD, TYPE, prefersReducedMotion } from '../confi
       só, mesmo peso. Agora a dor é uma declaração grande (é o gancho
       emocional) e a solução vem como corpo abaixo dela.
 
-   ── Enquadramento 16:9 (mantido da v7, não mexer) ─────────────────────────
-   Os três vídeos são gravações de tela de sites inteiros, cada um com sua
-   navbar/logo/headline embutidos. `aspect-video` garante que o site apareça
-   INTEIRO: cobrir uma caixa mais quadrada com material 1.78:1 cortaria ~40%
-   da largura, comendo justamente logo e CTA — as partes que provam "isto é
-   um site de verdade". A seção existe pra demonstrar portfólio; o
+   ── Enquadramento (mantido da v7, não mexer no princípio) ─────────────────
+   Os vídeos são gravações de tela de sites inteiros, cada um com sua
+   navbar/logo/headline embutidos. O palco usa a proporção de
+   `data.frameAspect` (default 16:9, o formato das gravações-padrão);
+   configs cujo material real é mais largo (ex.: prints de página inteira em
+   landing-pages.js, ~2.1:1) sobrescrevem `frameAspect` pra casar o palco com
+   o material — sem isso, `object-contain` deixaria tarjas pretas. O
+   `<video>` usa `object-contain` (não `cover`) pra nunca cortar o material.
+   A seção existe pra demonstrar portfólio; o
    enquadramento não pode jogar a prova fora.
 
    ── Moldura de janela, sem URL (mantido) ──────────────────────────────────
@@ -51,6 +54,13 @@ import { EASE_LUXE, GX, SECTION_PAD, TYPE, prefersReducedMotion } from '../confi
    Um rAF só (não `setInterval` por slide), com pausa/retomada de verdade:
    hover pausa e continua de onde parou. Só avança com a seção VISÍVEL.
    ══════════════════════════════════════════════════════════════════════════ */
+
+/* Resolução de referência dos mockups de site (design fluido em vw/vh) — o
+   iframe sempre renderiza nesse tamanho fixo e é só ENCOLHIDO visualmente via
+   transform: scale(). Mesma constante e mesma técnica de
+   `GlassPanelMockup.jsx` (home) — ver `item.siteSrc` abaixo. */
+const SITE_REF_WIDTH = 1920;
+const SITE_REF_HEIGHT = 1080;
 
 const AUTOPLAY_MS = 7000;
 /* Curva mais lenta e "gorda no fim" que EASE_LUXE (a curva padrão da marca,
@@ -168,10 +178,27 @@ function AmbientStage({ tint, reduce }) {
   );
 }
 
-/* ── Showcase: a janela e o vídeo dentro dela ────────────────────────────── */
+/* ── Showcase: a janela e o conteúdo dentro dela ─────────────────────────────
+   Dois modos, escolhidos por qual campo o item tem:
+
+   `item.siteSrc` — SITE REAL embutido num iframe (mesma técnica de
+   `GlassPanelMockup.jsx`, a home): a página tem seu PRÓPRIO vídeo de fundo
+   em loop + sua própria timeline GSAP que revela esse vídeo (wipe) e depois
+   o HTML de verdade por cima dele (nav, título, card, CTA). Como é
+   literalmente o mesmo arquivo `.html` do portfólio da home, a sequência
+   "vídeo de entrada → HTML de verdade" fica IDÊNTICA à home, porque é a
+   mesma execução do mesmo código — nada replicado aqui, só embutido.
+
+   `item.src`/`item.poster` — vídeo GRAVADO (fallback pras LPs clonadas cujo
+   conceito não corresponde a nenhum site real existente ainda, ex.: os
+   "arquiteturas de LP" de landing-pages.js). Mantido como estava. */
 function ShowcaseMedia({ item, reduce, inView }) {
   const videoRef = useRef(null);
   const clipRef = useRef(null);
+  const previewRef = useRef(null);
+  const [scale, setScale] = useState(0);
+  const [siteStarted, setSiteStarted] = useState(false);
+  const [siteLoaded, setSiteLoaded] = useState(false);
 
   /* Pausa quando a seção sai da viewport (bateria/CPU) — mas o START de cada
      vídeo vem do atributo `autoPlay`, não daqui. Motivo: este efeito depende
@@ -182,20 +209,20 @@ function ShowcaseMedia({ item, reduce, inView }) {
      `autoPlay` (válido porque `muted` está presente) cobre esse caso. */
   useEffect(() => {
     const v = videoRef.current;
-    if (!v) return undefined;
+    if (!v || item.siteSrc) return undefined;
     if (inView) v.play().catch(() => {});
     else v.pause();
     return () => v.pause();
-  }, [inView]);
+  }, [inView, item.siteSrc]);
 
-  /* Abertura cinematográfica — mesmo padrão do hero real em
-     public/portfolio-heroes/pele.html: wipe vertical via clip-path +
-     zoom-out do vídeo, disparado uma vez a cada troca de conceito. Depois
-     que a timeline termina é só o `loop` nativo do <video> que assume —
-     nenhum JS controla o ciclo daí em diante, dá a sensação de "site de
-     verdade rodando", igual à home. */
+  /* Abertura cinematográfica do modo VÍDEO — wipe vertical via clip-path +
+     zoom-out, disparado uma vez a cada troca de conceito. No modo site esta
+     abertura não roda: o próprio HTML embutido já faz o wipe dele mesmo, e
+     rodar as duas juntas ficaria dessincronizado (nossa timeline começa
+     quando o React monta o iframe, a do site começa no `DOMContentLoaded`
+     dele — momentos diferentes). */
   useEffect(() => {
-    if (reduce) return undefined;
+    if (reduce || item.siteSrc) return undefined;
     const clip = clipRef.current;
     const video = videoRef.current;
     if (!clip || !video) return undefined;
@@ -207,7 +234,59 @@ function ShowcaseMedia({ item, reduce, inView }) {
     tl.to(video, { scale: 1, duration: 2, ease: 'power4.out' }, 0);
 
     return () => tl.kill();
-  }, [reduce]);
+  }, [reduce, item.siteSrc]);
+
+  /* Modo SITE — escala o iframe pro tamanho do palco (ResizeObserver, mesma
+     conta de GlassPanelMockup.jsx: largura real ÷ SITE_REF_WIDTH) e só
+     carrega o `src` quando a seção já está em vista (`inView`, o mesmo sinal
+     que o modo vídeo usa pra tocar/pausar) — nenhum dos 3 sites baixa Tailwind
+     CDN + GSAP CDN antes de alguém rolar até aqui. */
+  useEffect(() => {
+    const el = previewRef.current;
+    if (!el || !item.siteSrc) return undefined;
+    const ro = new ResizeObserver(([entry]) => setScale(entry.contentRect.width / SITE_REF_WIDTH));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [item.siteSrc]);
+
+  useEffect(() => {
+    if (item.siteSrc && inView && !siteStarted) setSiteStarted(true);
+  }, [inView, item.siteSrc, siteStarted]);
+
+  if (item.siteSrc) {
+    return (
+      <motion.div
+        initial={reduce ? false : { opacity: 0, scale: 1.03 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={reduce ? undefined : { opacity: 0, scale: 1.01 }}
+        transition={{ duration: MEDIA_DURATION, ease: MEDIA_EASE }}
+        className="absolute inset-0"
+        style={{ willChange: 'transform, opacity' }}
+      >
+        <div ref={previewRef} className="absolute inset-0 overflow-hidden bg-black">
+          <iframe
+            title={item.nicho}
+            src={siteStarted ? item.siteSrc : undefined}
+            onLoad={() => setSiteLoaded(true)}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: SITE_REF_WIDTH,
+              height: SITE_REF_HEIGHT,
+              border: 'none',
+              transformOrigin: 'top left',
+              transform: `scale(${scale || 0.001})`,
+              opacity: siteLoaded ? 1 : 0,
+              transition: 'opacity 700ms ease',
+              background: '#000',
+              pointerEvents: 'none',
+            }}
+          />
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
@@ -229,7 +308,7 @@ function ShowcaseMedia({ item, reduce, inView }) {
           playsInline
           preload="none"
           disablePictureInPicture
-          className="h-full w-full object-cover"
+          className="h-full w-full object-contain"
         />
       </div>
     </motion.div>
@@ -244,7 +323,7 @@ function ShowcaseMedia({ item, reduce, inView }) {
    igual em todas as arestas de um objeto real). Mesma técnica que
    GlassPanelMockup.jsx já usa no portfólio da home — não é invenção nova
    aqui, é o padrão de vidro já estabelecido no projeto. */
-function ShowcaseFrame({ item, reduce, frameRef, inView }) {
+function ShowcaseFrame({ item, reduce, frameRef, inView, aspect }) {
   return (
     <div
       ref={frameRef}
@@ -261,9 +340,13 @@ function ShowcaseFrame({ item, reduce, frameRef, inView }) {
           navegador, uma dentro da outra. A identificação do nicho continua
           nas abas logo acima, que é onde a pessoa acabou de clicar. */}
       <div className="overflow-hidden rounded-[21px] bg-rv-void/70 backdrop-blur-xl">
-        {/* palco 16:9 — `aspect-video` garante que o site apareça INTEIRO,
-            nunca cortado (ver nota do enquadramento no topo do arquivo). */}
-        <div className="relative aspect-video w-full overflow-hidden bg-black">
+        {/* palco — proporção vem de `data.frameAspect` (default 16:9). Antes
+            era `aspect-video` fixo com o vídeo em `object-contain`: quando o
+            material real (ex.: prints de página inteira, ~2.1:1) não batia
+            com 16:9, sobravam tarjas pretas no palco. Casar a proporção do
+            palco com a do material elimina a tarja sem precisar cortar
+            imagem (ver nota do enquadramento no topo do arquivo). */}
+        <div className="relative w-full overflow-hidden bg-black" style={{ aspectRatio: aspect }}>
           <AnimatePresence initial={false}>
             <ShowcaseMedia key={item.nicho} item={item} reduce={reduce} inView={inView} />
           </AnimatePresence>
@@ -495,8 +578,20 @@ export default function ConceptStack({ data }) {
         >
           <ConceptTabs items={data.items} active={active} progress={progress} onSelect={goTo} reduce={reduce} />
 
-          <div className="relative mt-8 md:mt-10">
-            <ShowcaseFrame item={activeItem} reduce={reduce} frameRef={stageRef} inView={inView} />
+          {/* Sangria no mobile — o `px-[6vw]` da seção (GX) deixava o palco
+              pequeno demais numa tela de celular, ainda mais com a moldura
+              de vidro comendo espaço por dentro. `-mx-[6vw]` cancela essa
+              margem só até `md`, o palco ocupa a largura inteira da tela e
+              o print vira o protagonista real da seção. Do `md` em diante
+              volta ao respiro normal do resto da LP. */}
+          <div className="relative mt-8 -mx-[6vw] md:mx-0 md:mt-10">
+            <ShowcaseFrame
+              item={activeItem}
+              reduce={reduce}
+              frameRef={stageRef}
+              inView={inView}
+              aspect={data.frameAspect || '16 / 9'}
+            />
 
             {/* Brilho de piso — a luz que o objeto derrama na superfície
                 embaixo dele. É o detalhe que faz o showcase ler como objeto

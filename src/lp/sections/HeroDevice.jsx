@@ -57,13 +57,17 @@ function FloatWrap({ children, className }) {
 /*
   Item 1 do refinamento v4 — mockups fotorrealistas prontos (transparentes
   de verdade). srcset troca a versão mobile pela desktop.
+
+  Paths vêm de `data.deviceImages` (config por LP) — antes eram hardcoded
+  aqui, o que quebrava a promessa desta LP ser MOLDE: clonar pra outro
+  serviço exigia editar este componente, não só o config.
 */
-function DeviceShot() {
+function DeviceShot({ images }) {
   return (
     <picture>
-      <source media="(min-width: 768px)" srcSet="/lp-institucional/hero-device.webp" />
+      <source media="(min-width: 768px)" srcSet={images.desktop} />
       <img
-        src="/lp-institucional/hero-device-mobile.webp"
+        src={images.mobile}
         alt=""
         aria-hidden
         fetchpriority="high"
@@ -208,37 +212,36 @@ function StatNumber({ raw, active, reduce }) {
 /* Hairline neutro (era um gradiente com ponta violeta) — o acento da régua
    agora vive só no sufixo do número; um segundo ponto violeta aqui
    competiria com ele em vez de emoldurar. Continua se desenhando
-   (scaleY/scaleX 0→1) ao entrar em vista, só a cor mudou. */
+   (scaleY 0→1) ao entrar em vista, só a cor mudou.
+
+   Sempre vertical agora (a variante horizontal existia só pra separar as
+   3 provas quando ficavam EMPILHADAS no mobile — item pedido pelo
+   usuário: alinhar as 3 na mesma linha em toda LP, não só no desktop). */
 function Divider({ active, reduce, delay }) {
   return (
-    <>
-      <motion.span
-        aria-hidden
-        className="pointer-events-none absolute left-0 top-0 hidden h-full w-px bg-white/10 md:block"
-        style={{ transformOrigin: 'top' }}
-        initial={reduce ? false : { scaleY: 0 }}
-        animate={active ? { scaleY: 1 } : undefined}
-        transition={{ duration: 0.9, delay, ease: EASE_LUXE }}
-      />
-      <motion.span
-        aria-hidden
-        className="pointer-events-none absolute left-0 top-0 block h-px w-full bg-white/10 md:hidden"
-        style={{ transformOrigin: 'left' }}
-        initial={reduce ? false : { scaleX: 0 }}
-        animate={active ? { scaleX: 1 } : undefined}
-        transition={{ duration: 0.7, delay, ease: EASE_LUXE }}
-      />
-    </>
+    <motion.span
+      aria-hidden
+      className="pointer-events-none absolute left-0 top-0 h-full w-px bg-white/10"
+      style={{ transformOrigin: 'top' }}
+      initial={reduce ? false : { scaleY: 0 }}
+      animate={active ? { scaleY: 1 } : undefined}
+      transition={{ duration: 0.9, delay, ease: EASE_LUXE }}
+    />
   );
 }
 
+/* `grid-cols-3` sempre (era `grid-cols-1 md:grid-cols-3` — as 3 provas
+   sociais empilhavam verticalmente no mobile). Pedido do usuário: alinhar
+   horizontalmente em toda LP, não só a partir do `md`. `TYPE.statNum` já
+   tem um clamp mobile menor especificamente pra caber 3 colunas numa tela
+   estreita sem estourar (ver config/_base.js). */
 function StatsRow({ stats }) {
   const rowRef = useRef(null);
   const reduce = prefersReducedMotion();
   const active = useInView(rowRef, { once: true, amount: 0.6 }) || reduce;
 
   return (
-    <div ref={rowRef} className="grid grid-cols-1 md:grid-cols-3">
+    <div ref={rowRef} className="grid grid-cols-3">
       {stats.map((s, i) => (
         <div key={s.label} className="relative">
           {i > 0 && <Divider active={active} reduce={reduce} delay={i * 0.15} />}
@@ -247,7 +250,7 @@ function StatsRow({ stats }) {
             initial={reduce ? false : { opacity: 0, y: 20, filter: 'blur(6px)' }}
             animate={active ? { opacity: 1, y: 0, filter: 'blur(0px)' } : undefined}
             transition={{ duration: 0.8, delay: 0.12 + i * 0.12, ease: EASE_LUXE }}
-            className="group flex flex-col items-center gap-2.5 rounded-2xl py-6 text-center transition-colors duration-500 ease-out first:pt-0 hover:bg-white/[0.02] md:items-start md:px-10 md:py-2 md:text-left md:first:pl-0"
+            className="group flex flex-col items-center gap-2 rounded-2xl px-3 py-4 text-center transition-colors duration-500 ease-out hover:bg-white/[0.02] md:items-start md:gap-2.5 md:px-10 md:py-2 md:text-left md:first:pl-0"
           >
             <p className={`font-grotesk font-semibold leading-none tracking-tight text-rv-titanium ${TYPE.statNum}`}>
               <StatNumber raw={s.big} active={active} reduce={reduce} />
@@ -312,7 +315,7 @@ export default function HeroDevice({ data }) {
           pinta imediatamente — só ganha o float contínuo do FloatWrap
           (transform puro, não atrasa paint). */}
       <FloatWrap className="relative z-10 mt-6 flex justify-center">
-        <DeviceShot />
+        <DeviceShot images={data.deviceImages} />
       </FloatWrap>
 
       <Fade

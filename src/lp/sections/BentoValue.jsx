@@ -55,6 +55,7 @@ const ACCENTS = {
   pagespeed: ['#C4B5FD', '#7C3AED'],
   wireframe: ['#A78BFA', '#7C3AED'],
   authority: ['#DDD6FE', '#8B5CF6'],
+  target: ['#C4B5FD', '#8B5CF6'],
   whatsapp: ['#25D366', '#0E8043'],
 };
 
@@ -131,7 +132,7 @@ function GaugeTick({ tick, progress, from }) {
   );
 }
 
-function PerformanceIcon({ play, reduce, uid, from }) {
+function PerformanceIcon({ play, reduce, uid, from, gaugeLabel = 'PAGESPEED' }) {
   const progress = useMotionValue(0);
   const value = useTransform(progress, (v) => Math.round(v * 100));
 
@@ -223,7 +224,7 @@ function PerformanceIcon({ play, reduce, uid, from }) {
         letterSpacing="3"
         fontFamily="Satoshi-Variable, sans-serif"
       >
-        PAGESPEED
+        {gaugeLabel}
       </text>
     </IconStage>
   );
@@ -401,6 +402,84 @@ function AuthorityIcon({ play, reduce, uid, from }) {
   );
 }
 
+/* ══ 05 — Precisão: alvo concêntrico que converge no centro ═══════════════
+   Adicionado pra resolver um encaixe fraco: o ícone de autoridade (gema
+   lapidada) comunica "luxo/caro", mas algumas células precisam comunicar
+   "sob medida, não genérico" — coisas diferentes. Um alvo com anéis que se
+   desenham de fora pra dentro e convergem num ponto central é a mesma
+   gramática visual dos outros 3 (SvgDefs, Glow, IconStage, pathLength),
+   só que a METÁFORA é "precisão/customização" em vez de "prestígio". */
+const TARGET_RINGS = [78, 56, 34];
+
+function TargetIcon({ play, reduce, uid, from }) {
+  return (
+    <IconStage uid={uid}>
+      <SvgDefs uid={uid} from={from} to={ACCENTS.target[1]} />
+
+      {/* 4 ticks cardeais — vocabulário de mira/precisão, reforça a leitura
+          de "alvo" em vez de só "círculos concêntricos". */}
+      {[0, 90, 180, 270].map((deg) => (
+        <line
+          key={deg}
+          x1="100"
+          y1="12"
+          x2="100"
+          y2="25"
+          stroke={TRACK}
+          strokeWidth="2"
+          strokeLinecap="round"
+          transform={`rotate(${deg} 100 100)`}
+        />
+      ))}
+
+      {TARGET_RINGS.map((r, i) => (
+        <motion.circle
+          key={r}
+          cx="100"
+          cy="100"
+          r={r}
+          fill="none"
+          stroke={i === TARGET_RINGS.length - 1 ? `url(#${uid}-stroke)` : TRACK}
+          strokeWidth={i === TARGET_RINGS.length - 1 ? 2.4 : 1.6}
+          initial={reduce ? false : { pathLength: 0, opacity: 0 }}
+          animate={play ? { pathLength: 1, opacity: 1 } : undefined}
+          transition={{ duration: 0.9, delay: 0.12 + i * 0.16, ease: DRAW_EASE }}
+        />
+      ))}
+
+      <Glow color={from}>
+        <motion.circle
+          cx="100"
+          cy="100"
+          r="7"
+          fill={from}
+          style={{ willChange: 'transform, opacity' }}
+          initial={reduce ? false : { scale: 0, opacity: 0 }}
+          animate={play ? { scale: reduce ? 1 : [0, 1.3, 1], opacity: 1 } : undefined}
+          transition={{ duration: 0.6, delay: 0.6, ease: DRAW_EASE }}
+        />
+      </Glow>
+
+      {/* anel de "acerto" pulsando a partir do centro — mesma ideia do
+          anel de clique do ArchitectureIcon, aqui em loop contínuo pra
+          reforçar "sempre no alvo", não um evento único. */}
+      {!reduce && (
+        <motion.circle
+          cx="100"
+          cy="100"
+          r="7"
+          fill="none"
+          stroke={from}
+          strokeWidth="1.5"
+          style={{ willChange: 'transform, opacity' }}
+          animate={{ scale: [1, 2.4], opacity: [0.6, 0] }}
+          transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.8, ease: 'easeOut' }}
+        />
+      )}
+    </IconStage>
+  );
+}
+
 /* ══ 04 — 24/7: balão de conversa + ponto em órbita permanente ════════════ */
 const BUBBLE =
   'M 74 68 H 126 A 15 15 0 0 1 141 83 V 107 A 15 15 0 0 1 126 122 H 94 L 78 136 V 122 H 74 A 15 15 0 0 1 59 107 V 83 A 15 15 0 0 1 74 68 Z';
@@ -460,6 +539,7 @@ const ICONS = {
   pagespeed: PerformanceIcon,
   wireframe: ArchitectureIcon,
   authority: AuthorityIcon,
+  target: TargetIcon,
   whatsapp: AlwaysOnIcon,
 };
 
@@ -521,7 +601,7 @@ function BentoCell({ cell, index, delay }) {
 
       <div className="relative z-10 flex h-[240px] items-center justify-center px-6 pt-2 md:h-[268px]">
         <div className="h-full w-full max-w-[240px]">
-          <Icon play={play} reduce={reduce} uid={uid} from={from} />
+          <Icon play={play} reduce={reduce} uid={uid} from={from} gaugeLabel={cell.gaugeLabel} />
         </div>
       </div>
 
