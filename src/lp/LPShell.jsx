@@ -12,6 +12,7 @@ import CurtainReveal from './sections/CurtainReveal';
 import BentoValue from './sections/BentoValue';
 import ConceptStack from './sections/ConceptStack';
 import CampaignAnatomy from './sections/CampaignAnatomy';
+import TechniqueStack from './sections/TechniqueStack';
 import PillarsShaped from './sections/PillarsShaped';
 import TargetAudienceCarousel from './sections/TargetAudienceCarousel';
 import FaqPanel from './sections/FaqPanel';
@@ -172,14 +173,19 @@ export default function LPShell({ config }) {
         {/* Ponto de extensão do molde: por padrão toda LP mostra a
             vitrine de vídeo (ConceptStack) + o objeto 3D com declaração
             (PillarsShaped). Uma LP pode trocar a primeira por
-            `config.concepts.kind === 'funnel'` (CampaignAnatomy — usado
-            hoje só em gestao-google-ads.js, onde vitrine-de-site e
-            "design premium" não são a linguagem certa pro comprador) e
-            pular a segunda deixando `config.pillars` de fora do config.
-            Sem isso, as duas seções padrão continuam exatamente como
-            eram — nenhuma LP existente muda de comportamento. */}
+            `config.concepts.kind === 'funnel'` (CampaignAnatomy — usado em
+            gestao-google-ads.js, onde vitrine-de-site e "design premium"
+            não são a linguagem certa pro comprador) ou `'tech'`
+            (TechniqueStack — usado em sites-imersivos.js desde que essa LP
+            parou de rodar em Ads: sem campanha ativa não fazia sentido
+            produzir vídeo só pra preencher o placeholder dos 3 conceitos
+            antigos) e pular a segunda deixando `config.pillars` de fora do
+            config. Sem isso, as duas seções padrão continuam exatamente
+            como eram — nenhuma LP existente muda de comportamento. */}
         {config.concepts.kind === 'funnel' ? (
           <CampaignAnatomy data={config.concepts} />
+        ) : config.concepts.kind === 'tech' ? (
+          <TechniqueStack data={config.concepts} />
         ) : (
           <ConceptStack data={config.concepts} />
         )}

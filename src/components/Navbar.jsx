@@ -52,8 +52,22 @@ function MenuIcon({ isOpen, large }) {
   );
 }
 
+/* `Navbar` agora também é usado fora da home, em `SolutionPageShell.jsx`
+   (subpáginas de serviço, `/solucoes/*.html`) — que reaproveita as MESMAS
+   seções de LP, incluindo `HeroDevice.jsx`, que também tem `id="hero"`.
+   Sem essa checagem, o logo/CTA (que apontavam pra `#hero`/`#contact` cru)
+   rolariam até o topo/nada DAQUELA subpágina em vez de ir pra home de
+   verdade — `#contact` nem existe fora da home (só `ContactSection.jsx`
+   tem esse id). `isHomePage()` decide em tempo de render: na home, nada
+   muda (mesmo comportamento de sempre); fora dela, os dois viram link real
+   pra `/` (ou `/#contact`), que o navegador já sabe resolver sozinho. */
+function isHomePage() {
+  return typeof window !== 'undefined' && (window.location.pathname === '/' || window.location.pathname === '/index.html');
+}
+
 export default function Navbar() {
   const { isOpen, toggleMenu, scrolled } = useMenu();
+  const isHome = isHomePage();
 
   /*
     pill = scrolled && !isOpen
@@ -121,7 +135,7 @@ export default function Navbar() {
 
         {/* ── Logo: mobile=esquerda (flux normal), desktop=centro absoluto ── */}
         <a
-          href="#hero"
+          href={isHome ? '#hero' : '/'}
           className="md:absolute md:left-1/2 md:-translate-x-1/2"
           style={{ display: 'flex', alignItems: 'center', lineHeight: 0 }}
         >
@@ -192,7 +206,7 @@ export default function Navbar() {
         */}
         <div className="hidden md:block" style={{ marginLeft: 'auto' }}>
           <a
-            href="#contact"
+            href={isHome ? '#contact' : '/#contact'}
             style={{
               display:        'inline-flex',
               alignItems:     'center',

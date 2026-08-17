@@ -22,6 +22,16 @@ export default defineConfig({
         lojasVirtuais: r('./lojas-virtuais.html'),
         politicaPrivacidade: r('./politica-de-privacidade.html'),
         termosDeUso: r('./termos-de-uso.html'),
+        // Subpáginas de serviço (header/footer da home, mesmo conteúdo das
+        // LPs de Ads acima — ver SolutionPageShell.jsx). Alcançadas pelo
+        // menu/CTAs da home; as LPs de Ads continuam sendo o destino das
+        // campanhas, intocadas.
+        solucaoSitesInstitucionais: r('./solucoes/sites-institucionais.html'),
+        solucaoLandingPages: r('./solucoes/landing-pages.html'),
+        solucaoAgentesIA: r('./solucoes/agentes-ia.html'),
+        solucaoSitesImersivos: r('./solucoes/sites-imersivos.html'),
+        solucaoGestaoGoogleAds: r('./solucoes/gestao-google-ads.html'),
+        solucaoLojasVirtuais: r('./solucoes/lojas-virtuais.html'),
       },
       output: {
         manualChunks(id) {

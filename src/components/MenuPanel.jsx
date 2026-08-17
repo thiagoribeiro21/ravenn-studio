@@ -4,17 +4,31 @@ import { useMenu } from '../context/MenuContext';
 
 const WA_LINK = 'https://wa.me/5521989211887?text=Olá%2C%20quero%20agendar%20um%20diagnóstico%20gratuito%20com%20a%20Ravenn%20Studio.';
 
+/* Antes todos os 6 apontavam pra `#services` (a seção de serviços da PRÓPRIA
+   home) — agora vão direto pra subpágina de cada serviço
+   (`SolutionPageShell.jsx`, mesmo conteúdo das LPs de Ads, com o header/
+   footer da casa). Não são âncora (`#...`), são navegação de página real —
+   ver o `.startsWith('#')` mais abaixo, que decide se um clique tenta
+   scroll-in-page ou deixa o `<a>` navegar normalmente. */
 const SUB_LINKS = [
-  { label: 'Sites Institucionais',      href: '#services' },
-  { label: 'Landing Pages',             href: '#services' },
-  { label: 'Sites Experienciais',       href: '#services' },
-  { label: 'Lojas Virtuais',            href: '#services' },
-  { label: 'Google Ads',                href: '#services' },
-  { label: 'Agentes de IA',             href: '#services' },
+  { label: 'Sites Institucionais',      href: '/solucoes/sites-institucionais.html' },
+  { label: 'Landing Pages',             href: '/solucoes/landing-pages.html' },
+  { label: 'Sites Experienciais',       href: '/solucoes/sites-imersivos.html' },
+  { label: 'Lojas Virtuais',            href: '/solucoes/lojas-virtuais.html' },
+  { label: 'Google Ads',                href: '/solucoes/gestao-google-ads.html' },
+  { label: 'Agentes de IA',             href: '/solucoes/agentes-ia.html' },
 ];
 
+/* `Início` virou `/` (era `#hero`) — "voltar ao início" precisa navegar de
+   verdade quando este painel é usado numa subpágina (`/solucoes/...`), que
+   também tem um elemento `id="hero"` (o próprio hero da LP) — um `#hero`
+   cru só rolaria até o topo DAQUELA página, nunca de volta pra home de
+   verdade. `Método`/`Contato` continuam âncora: `#processo` existe em
+   TODAS as páginas (home e subpáginas, cada uma com a sua seção de
+   processo), e `#contact` — que só existe na home — já cai no fallback de
+   `handleNav` abaixo quando a página atual não tem esse id. */
 const NAV_LINKS = [
-  { label: 'Início',   href: '#hero',     sub: null },
+  { label: 'Início',   href: '/',         sub: null },
   { label: 'Soluções', href: null,        sub: SUB_LINKS },
   { label: 'Método',   href: '#processo', sub: null },
   { label: 'Contato',  href: '#contact',  sub: null },
@@ -78,6 +92,14 @@ export default function MenuPanel() {
   const { isOpen, closeMenu, scrollContainerRef } = useMenu();
   const [solutionsOpen, setSolutionsOpen] = useState(false);
 
+  /* Só é chamado pra hrefs `#...` (ver `.startsWith('#')` no JSX abaixo) —
+     links de página real (Início, os 6 de Soluções) nunca passam por aqui,
+     são `<a href>` puros. Fallback pra navegação de verdade (era só
+     `if (!el || !cnt) return`, um no-op silencioso): numa subpágina sem o
+     id correspondente no DOM (ex.: `#contact`, que só existe na home), o
+     clique simplesmente não fazia nada — pior que um link quebrado, porque
+     nem parecia clicável de novo. `/${href}` sempre resolve pra home +
+     âncora, que o próprio navegador rola até o elemento ao carregar. */
   const handleNav = useCallback((e, href) => {
     e.preventDefault();
     closeMenu();
@@ -85,9 +107,12 @@ export default function MenuPanel() {
     setTimeout(() => {
       const el  = document.querySelector(href);
       const cnt = scrollContainerRef.current;
-      if (!el || !cnt) return;
-      const offset = el.getBoundingClientRect().top - cnt.getBoundingClientRect().top + cnt.scrollTop;
-      cnt.scrollTo({ top: offset, behavior: 'smooth' });
+      if (el && cnt) {
+        const offset = el.getBoundingClientRect().top - cnt.getBoundingClientRect().top + cnt.scrollTop;
+        cnt.scrollTo({ top: offset, behavior: 'smooth' });
+      } else {
+        window.location.href = `/${href}`;
+      }
     }, 480);
   }, [closeMenu, scrollContainerRef]);
 
@@ -103,6 +128,20 @@ export default function MenuPanel() {
         alignItems:     'center',
         pointerEvents:  isOpen ? 'auto' : 'none',
         background:     '#03000A',
+        /* Opacidade própria (era só `pointerEvents`) — na home, quem
+           esconde este painel quando fechado é o `SiteShell` (z-index 10,
+           por cima, recua no `transform` só quando abre). Em
+           `SolutionPageShell.jsx` (subpáginas de serviço) não existe esse
+           recuo — o conteúdo ali fica num container normal, sem o wrapper
+           de `transform` da home (ver o comentário lá sobre por que não
+           replicar o "push 3D" junto de seções pinadas do GSAP). Sem uma
+           forma própria de se esconder, este painel — que já é
+           `position:fixed`, `background` sólido, cobrindo a tela inteira —
+           ficaria permanentemente visível por cima de tudo ali. Aqui na
+           home não muda nada: o `SiteShell` já cobria fisicamente quando
+           fechado, esta opacidade é só reforço redundante e inofensivo. */
+        opacity:        isOpen ? 1 : 0,
+        transition:     'opacity 420ms cubic-bezier(0.16,1,0.3,1)',
       }}
     >
       {/* Aura violeta */}
@@ -253,7 +292,7 @@ export default function MenuPanel() {
                               key={sl}
                               label={sl}
                               href={sh}
-                              onClick={(e) => handleNav(e, sh)}
+                              onClick={sh.startsWith('#') ? (e) => handleNav(e, sh) : closeMenu}
                             />
                           ))}
                         </div>
@@ -265,7 +304,7 @@ export default function MenuPanel() {
                 /* ── Links normais ────────────────────────────────────── */
                 <a
                   href={href}
-                  onClick={(e) => handleNav(e, href)}
+                  onClick={href.startsWith('#') ? (e) => handleNav(e, href) : closeMenu}
                   className="group block"
                   style={{ textDecoration: 'none' }}
                 >

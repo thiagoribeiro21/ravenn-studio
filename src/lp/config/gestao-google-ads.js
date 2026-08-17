@@ -141,42 +141,62 @@ export default {
      vivia lá agora é o fechamento (`closing`) desta seção. */
   concepts: {
     kind: 'funnel',
-    eyebrow: 'Como uma campanha é construída',
+    eyebrow: 'Anatomia de uma campanha que vende',
     heading: 'Google Ads não é orçamento. É estrutura.',
     intro:
-      'Da campanha ao clique que vira venda: cada camada existe pra filtrar quem não vai comprar antes que custe caro. É o padrão exato de estrutura que aplicamos quando a conta é sua.',
+      'Toda conta que gasta demais tem o mesmo problema: uma das cinco camadas abaixo está faltando. Cada uma existe pra filtrar quem não vai comprar antes que esse clique custe caro.',
+    /* `short` alimenta o rótulo dentro da faixa do funil (espaço curto,
+       ~1 palavra); `leak` é o vazamento específico que acontece sem
+       aquela camada — o argumento de venda de cada estágio. */
     stages: [
       {
         title: 'Campanha',
-        body: 'Definida pelo objetivo: vendas, leads ou reconhecimento. O objetivo muda como o Google otimiza cada lance, então começa por aqui, não pelo criativo.',
+        short: 'Objetivo',
+        body: 'Definida pelo objetivo real: venda, lead ou reconhecimento. É o objetivo que ensina o Google quem procurar — por isso começa aqui, nunca pelo criativo.',
+        leak: 'o Google otimiza para o objetivo errado e entrega alcance quando você queria venda.',
       },
       {
         title: 'Grupo de anúncios',
-        body: 'Agrupado por tema e intenção de busca, nunca uma pilha genérica de palavras-chave concorrendo entre si pelo mesmo orçamento.',
+        short: 'Intenção',
+        body: 'Agrupado por tema e intenção de busca. Quem procura "preço de" está a um passo de comprar; quem procura "o que é" ainda não — e os dois não podem dividir o mesmo anúncio.',
+        leak: 'suas próprias palavras-chave disputam entre si e inflacionam o seu custo por clique.',
       },
       {
         title: 'Anúncio',
-        body: 'Testado em variações lado a lado (A/B): texto, imagem e CTA competindo até o vencedor ficar claro, com dado real, não achismo.',
+        short: 'Criativo',
+        body: 'Variações testadas lado a lado: título, descrição e chamada competindo até o vencedor ficar claro no dado, não no achismo de quem escreveu.',
+        leak: 'o anúncio mais fraco segue consumindo metade do orçamento por meses sem ninguém perceber.',
       },
       {
         title: 'Página de destino',
-        body: 'A landing page certa pro objetivo específico daquela campanha. Sem isso, o clique pago chega e não tem pra onde converter.',
+        short: 'Destino',
+        body: 'A página certa para o objetivo daquela campanha específica — não a home do site, que responde a todo mundo e converte ninguém.',
+        leak: 'o clique que você já pagou chega numa página genérica e vai embora sem converter.',
       },
       {
         title: 'Conversão rastreada',
-        body: 'Cada venda ligada de volta ao anúncio exato que a originou: é esse dado, não intuição, que orienta o ajuste de toda semana.',
+        short: 'Venda',
+        body: 'Cada venda ligada de volta ao anúncio exato que a originou. É esse dado que orienta o ajuste de lance de toda semana — e é ele que falta na maioria das contas.',
+        leak: 'você otimiza no escuro, sem saber qual anúncio traz venda e qual só traz clique.',
       },
     ],
+    funnelNote:
+      'Cada faixa estreita de propósito: quanto mais abaixo, mais perto da compra — e mais caro custa cada erro de estrutura.',
     closing: {
       lines: [
         { text: 'Você não paga por clique.', tone: 'bright' },
         { text: 'Paga por venda,', tone: 'dim' },
         { text: 'é assim que medimos sucesso.', tone: 'dim' },
       ],
+      chips: {
+        vanity: { label: 'Métrica de vaidade', value: 'Custo por clique' },
+        real: { label: 'Métrica que importa', value: 'Custo por venda' },
+      },
       cta: {
         label: 'Quero essa estrutura na minha conta',
         href: buildWaLink('Olá! Vi a anatomia de campanha na página de gestão de Google Ads e quero essa estrutura na minha conta.'),
       },
+      note: 'A conta é sua, com acesso total o tempo todo. Sem contrato de fidelidade.',
     },
   },
 

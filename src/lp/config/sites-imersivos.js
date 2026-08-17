@@ -8,15 +8,13 @@ import { buildWaLink } from './_base';
 
    ── Assets ────────────────────────────────────────────────────────────
    Hero, CTA final e os fundos de "Como Funciona"/FAQ reaproveitam os
-   arquivos de sites-institucionais.js. Os 3 conceitos de portfólio, ao
-   contrário das outras LPs, não são fictícios — são o PRÓPRIO site da
-   Ravenn (hero cinematográfico, objeto 3D, vitrine de portfólio): a
-   prova mais direta possível pra este serviço específico. Continuam
-   como placeholder até a gravação real em `/placeholder-sites-imersivos/`.
+   arquivos de sites-institucionais.js. A seção de "conceitos" usa
+   `TechniqueStack` (`kind: 'tech'`, ver comentário lá) em vez de
+   ConceptStack — zero vídeo/imagem pendente, só texto verificável na
+   própria página. Esta LP não roda mais em Google Ads.
    ══════════════════════════════════════════════════════════════════════ */
 
 const LOGO_H = '/logo-ravenn/logo-ravenn-studio-horizontal.webp';
-const PH = '/placeholder-sites-imersivos';
 
 export default {
   meta: {
@@ -135,40 +133,57 @@ export default {
     ],
   },
 
+  /* `kind: 'tech'` — troca ConceptStack (vitrine de vídeo) por
+     TechniqueStack (grid de técnicas, zero-asset), mesmo mecanismo que
+     `kind: 'funnel'` já usa pra trocar por CampaignAnatomy em
+     gestao-google-ads.js. Motivo: esta LP não roda mais em Google Ads, e
+     os 3 "conceitos" abaixo dependiam de vídeo/poster que nunca foram
+     gravados — sem campanha ativa, não faz sentido produzir esse material
+     só pra preencher placeholder. As 6 técnicas abaixo são a prova, só que
+     verificável na PRÓPRIA página em vez de em vídeo gravado (ver o
+     comentário completo em TechniqueStack.jsx). */
   concepts: {
+    kind: 'tech',
     eyebrow: 'A prova está nesta própria página',
     heading: 'Não descrevemos a experiência. Você já está dentro dela.',
     intro:
-      'Os três elementos abaixo não são conceitos fictícios: são gravações do próprio site da Ravenn. É o padrão exato de cena, movimento e acabamento que aplicamos quando o projeto é o seu.',
+      'Cada técnica abaixo não é uma promessa: é o que já está rodando nesta página, agora, enquanto você lê. Nenhuma delas depende de vídeo de demonstração — a demonstração é o site que você está navegando.',
     items: [
       {
-        nicho: 'Hero Cinematográfico · Scroll-Sequence',
-        src: `${PH}/concept-corvo-scroll-placeholder.mp4`,
-        poster: `${PH}/concept-corvo-scroll-poster.svg`,
-        pain: 'A primeira tela do site é a única chance de provar que a marca não é mais uma genérica, e a maioria desperdiça isso num banner estático.',
-        solution:
-          'Uma sequência que reage ao scroll, como no hero deste próprio site: o visitante sente que está controlando a cena, não só rolando uma página.',
-        wa: buildWaLink('Olá! Vi o conceito de hero cinematográfico na página de sites imersivos e quero esse padrão no meu site.'),
+        title: 'Partículas que morfam em WebGL',
+        body: 'O ícone que reage ao seu scroll mais abaixo não é uma animação de CSS: é uma nuvem de partículas real, renderizada em Three.js, recalculando a própria forma a cada frame.',
       },
       {
-        nicho: 'Objeto 3D Interativo · WebGL',
-        src: `${PH}/concept-pilares-3d-placeholder.mp4`,
-        poster: `${PH}/concept-pilares-3d-poster.svg`,
-        pain: 'Um ícone plano não segura o olhar por mais de um segundo, e um segundo não basta pra impressionar quem decide.',
-        solution:
-          'Um objeto 3D real, com luz e reflexo, reagindo ao movimento do mouse: o mesmo elemento que vive nesta página, rodando fluido mesmo em aparelhos mais simples.',
-        wa: buildWaLink('Olá! Vi o conceito de objeto 3D interativo na página de sites imersivos e quero esse padrão no meu site.'),
+        title: 'Cenas coreografadas pelo scroll',
+        body: 'Seções inteiras ficam presas na tela enquanto a história se desenrola — cada movimento amarrado ao seu gesto de rolar, nunca a um timer solto.',
       },
       {
-        nicho: 'Vitrine de Portfólio · Transições',
-        src: `${PH}/concept-portfolio-placeholder.mp4`,
-        poster: `${PH}/concept-portfolio-poster.svg`,
-        pain: 'Um portfólio que só troca de imagem não convence ninguém de que o resto do site recebeu o mesmo nível de cuidado.',
-        solution:
-          'Cada transição é parte da experiência: a própria vitrine já demonstra o padrão de acabamento antes do visitante clicar em qualquer projeto.',
-        wa: buildWaLink('Olá! Vi o conceito de vitrine de portfólio na página de sites imersivos e quero esse padrão no meu site.'),
+        title: 'Iluminação e reflexo em tempo real',
+        body: 'Luz, sombra e reflexo recalculados a cada frame, não texturas pré-renderizadas: o objeto responde ao seu mouse como um objeto real responderia à luz do ambiente.',
+      },
+      {
+        title: 'Fallback automático, sem downgrade visível',
+        body: 'Sem WebGL, conexão lenta ou aparelho mais fraco: o site detecta e troca sozinho para uma versão leve, antes de gastar um único byte a mais em bateria ou dados.',
+      },
+      {
+        title: 'Zero atraso no carregamento inicial',
+        body: 'O código de 3D só baixa quando a cena que o usa entra na tela — a promessa de WebGL nunca compete com a velocidade da primeira dobra.',
+      },
+      {
+        title: 'Física e easing calibrados à mão',
+        body: 'Nenhuma transição usa curva padrão de biblioteca: massa, atrito e velocidade são ajustados objeto por objeto até o movimento parecer real, não só suave.',
       },
     ],
+    closing: {
+      lines: [
+        { text: 'Isso não é um catálogo de efeitos.', tone: 'dim' },
+        { text: 'É o padrão que sua marca precisa ter.', tone: 'bright' },
+      ],
+      cta: {
+        label: 'Quero essa tecnologia no meu site',
+        href: buildWaLink('Olá! Vi as técnicas usadas na página de sites imersivos e quero esse padrão no meu site.'),
+      },
+    },
   },
 
   pillars: {

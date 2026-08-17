@@ -422,14 +422,30 @@ function ConceptTabs({ items, active, progress, onSelect, reduce }) {
      usuário — sem isto, num celular onde só 1-2 chips cabem na tela, a
      seção podia avançar pra um conceito cujo chip ficou fora da área
      visível, e a pessoa perderia a referência de "qual tab está ativa
-     agora". `scrollIntoView` mantém o chip ativo sempre alcançável, sem
-     forçar centralização agressiva (`block:'nearest'` não mexe se já
-     estiver visível — só corrige quando o autoplay empurrou pra fora). */
+     agora".
+
+     ERA `activeEl.scrollIntoView({ block:'nearest', inline:'center' })` —
+     bug real, achado em produção: `scrollIntoView` não se limita ao
+     ancestral mais próximo com scroll (este trilho horizontal); ele sobe
+     a árvore inteira procurando QUALQUER container rolável que ache que
+     precisa ajustar, e `block:'nearest'` não impede isso — só reduz a
+     chance. Como esta seção reaproveita o MESMO `id="conceitos"` de
+     página inteira dentro do container de scroll principal
+     (`data-lp-scroller`/`data-scroll-content`), o navegador ocasionalmente
+     decidia que a PÁGINA TODA precisava rolar pra "melhor" posicionar o
+     chip verticalmente — sequestrando quem clicava num link do menu/home e
+     jogando direto pra dentro desta seção, ignorando o Hero. Cálculo manual
+     com `scrollBy` no PRÓPRIO trilho substitui: `scrollBy`/`scrollTo`
+     nunca propagam pra ancestrais (diferente de `scrollIntoView`), então é
+     estruturalmente impossível isto voltar a mexer no scroll da página. */
   useEffect(() => {
     const track = scrollerRef.current;
     const activeEl = track?.children[active];
-    if (!activeEl) return;
-    activeEl.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest', inline: 'center' });
+    if (!track || !activeEl) return;
+    const trackRect = track.getBoundingClientRect();
+    const elRect = activeEl.getBoundingClientRect();
+    const delta = (elRect.left + elRect.width / 2) - (trackRect.left + trackRect.width / 2);
+    track.scrollBy({ left: delta, behavior: reduce ? 'auto' : 'smooth' });
   }, [active, reduce]);
 
   return (
