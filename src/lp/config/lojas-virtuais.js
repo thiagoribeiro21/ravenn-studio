@@ -8,15 +8,16 @@ import { buildWaLink } from './_base';
 
    ── Assets ────────────────────────────────────────────────────────────
    Hero, CTA final e os fundos de "Como Funciona"/FAQ reaproveitam os
-   arquivos de sites-institucionais.js. Diferente das outras 4 LPs, os 3
-   conceitos de portfólio aqui são a única categoria de asset que NÃO tem
-   equivalente reaproveitável em nenhuma LP anterior — é o único serviço
-   desta leva sem nenhum case de e-commerce ainda produzido. Placeholder
-   em `/placeholder-lojas-virtuais/` até a gravação real.
+   arquivos de sites-institucionais.js. Os 3 conceitos de portfólio usam
+   prints reais de página inteira (`public/prints-ecommerce/`, convertidos
+   pra WebP), não vídeo — cada `item` só tem `poster`, sem `src`:
+   `ShowcaseMedia` (ConceptStack.jsx) já trata a ausência de vídeo de
+   forma limpa (o `<video>` sem `src` nunca dispara `loadeddata`, então o
+   poster fica permanentemente visível) — não é preciso fabricar um
+   caminho de vídeo falso só pra cair no mesmo fallback.
    ══════════════════════════════════════════════════════════════════════ */
 
 const LOGO_H = '/logo-ravenn/logo-ravenn-studio-horizontal.webp';
-const PH = '/placeholder-lojas-virtuais';
 
 export default {
   meta: {
@@ -138,33 +139,35 @@ export default {
     heading: 'Loja virtual não é um formato. É uma vitrine sob medida.',
     intro:
       'Três arquiteturas autorais que aplicamos conforme o tipo de produto. Não são clientes: é o padrão exato de vitrine e checkout que usamos quando a loja é sua.',
+    /* Prints reais de página inteira (~1918×907, ver public/prints-ecommerce/),
+       não gravação de tela — mesmo motivo de `frameAspect` que
+       landing-pages.js já documenta: material mais largo que o 16:9
+       padrão, sobrescrever aqui evita tarja preta no palco. */
+    frameAspect: '1918 / 907',
     items: [
       {
-        nicho: 'Moda · Vestuário',
-        src: `${PH}/concept-moda-placeholder.mp4`,
-        poster: `${PH}/concept-moda-poster.svg`,
-        pain: 'Roupa se vende pela experiência visual: uma vitrine mal fotografada ou lenta faz o cliente desistir antes de ver o produto direito.',
+        nicho: 'Acessórios de Luxo · Alto padrão',
+        poster: '/prints-ecommerce/acessorios-print.webp',
+        pain: 'Peça de alto padrão se vende pela percepção de exclusividade: um site com cara de loja genérica faz até um produto caro parecer commodity.',
         solution:
-          'Galeria rápida, zoom fluido e checkout em poucos cliques: a peça chega no carrinho antes do cliente perder o interesse.',
-        wa: buildWaLink('Olá! Vi o conceito de moda na página de lojas virtuais e quero esse padrão na minha loja.'),
+          'Vitrine editorial, fotografia em alta definição e checkout discreto: a experiência de compra à altura do preço da peça.',
+        wa: buildWaLink('Olá! Vi o conceito de acessórios de luxo na página de lojas virtuais e quero esse padrão na minha loja.'),
+      },
+      {
+        nicho: 'Pet Shop · Recompra',
+        poster: '/prints-ecommerce/petshop-print.webp',
+        pain: 'Quem tem pet compra ração e produtos todo mês — se recomprar exige login, busca e catálogo cansativo, o cliente migra pro concorrente mais fácil.',
+        solution:
+          'Conta salva, recompra em um clique e categorias por tipo de pet: a loja facilita exatamente o que se repete todo mês.',
+        wa: buildWaLink('Olá! Vi o conceito de pet shop na página de lojas virtuais e quero esse padrão na minha loja.'),
       },
       {
         nicho: 'Eletrônicos · Alto ticket',
-        src: `${PH}/concept-eletronicos-placeholder.mp4`,
-        poster: `${PH}/concept-eletronicos-poster.svg`,
+        poster: '/prints-ecommerce/eletronico-print.webp',
         pain: 'Produto caro exige confiança: checkout confuso ou site lento faz o cliente desistir por medo, não por preço.',
         solution:
           'Ficha técnica clara, comparação de produtos e checkout transparente: a confiança certa pra fechar uma compra de ticket alto.',
         wa: buildWaLink('Olá! Vi o conceito de eletrônicos na página de lojas virtuais e quero esse padrão na minha loja.'),
-      },
-      {
-        nicho: 'Cosméticos · Recompra',
-        src: `${PH}/concept-cosmeticos-placeholder.mp4`,
-        poster: `${PH}/concept-cosmeticos-poster.svg`,
-        pain: 'Cliente que já comprou some se recomprar não for tão fácil quanto a primeira vez.',
-        solution:
-          'Conta salva, histórico de pedido e recompra em um clique, pensado pra quem vende produto de uso recorrente.',
-        wa: buildWaLink('Olá! Vi o conceito de cosméticos na página de lojas virtuais e quero esse padrão na minha loja.'),
       },
     ],
   },
