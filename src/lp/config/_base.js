@@ -57,7 +57,6 @@ export const TYPE = {
   statLabel: 'text-[15px] md:text-[16px]',
   body:      'text-[16px] md:text-[18px] leading-[1.6]',
   cardDesc:  'text-[15px] md:text-[16px] leading-[1.55]',
-  nav:       'text-[16px]',
   button:    'text-[16px]',
   statNum:   'text-[clamp(1.75rem,7vw,2.25rem)] md:text-[clamp(2.5rem,4vw,3.5rem)]',
   h2:        'text-[clamp(2.5rem,5vw,4.5rem)]',

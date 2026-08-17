@@ -24,8 +24,9 @@ import {
 
    `lazy()` — o import só dispara quando o componente de fato monta, que já
    é condicional a `canvasInView` + `useFallback` abaixo: navegador sem
-   WebGL, conexão lenta, ou mobile/reduced-motion (ver `pinned` em
-   `CanvasSlot`) nunca chegam a baixar o chunk. */
+   WebGL, conexão lenta, contexto perdido ou `prefers-reduced-motion` (ver
+   `tryThree` em `CanvasSlot`) nunca chegam a baixar o chunk — mas mobile
+   sozinho, sem nenhum desses motivos, já não é mais um deles (v6). */
 const PillarsCanvas = lazy(() => import('../../components/PillarsCanvas'));
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -197,18 +198,18 @@ function PillarRow({ index, label, activeIndex }) {
   );
 }
 
-/* `pinned`: só a versão PINADA (desktop) tenta Three.js — mobile/reduced
-   sempre usa o Canvas2D direto, sem nem cogitar o import do chunk. Não é só
-   economia: `StaticPillars` nunca tem um "pilar ativo" de verdade (os 4
-   ficam sempre visíveis, não existe scroll pra amarrar um `activeIndex`
-   variável), então uma única forma estática já é toda a informação que
-   existe pra mostrar ali — gastar 219KB gzip de WebGL numa forma que nunca
-   muda, no dispositivo tipicamente mais restrito (mobile) e mais provável
-   de estar numa webview de anúncio sem WebGL de verdade, seria o pior
-   lugar possível pra pagar esse custo. No desktop pinado o `activeIndex`
-   REALMENTE muda com o scroll — é ali que o morphing ganha o cliente. */
-function CanvasSlot({ canvasInView, wrapRef, velocityRef, reduced, activeIndex = 0, pinned = false, useFallback = false, onContextLost }) {
-  const tryThree = pinned && !useFallback;
+/* v6 — Three.js voltou a valer pra MOBILE também (era só desktop pinado).
+   Pedido explícito: o ícone real, não o fallback Canvas2D, também aí — o
+   Canvas2D continua vivo só como o que sempre foi por design, uma REDE DE
+   SEGURANÇA: `!reduced` decide "tenta o 3D", os guards de capacidade
+   (`useFallback` — sem WebGL, conexão lenta, contexto perdido) decidem se
+   essa tentativa é segura, e só `prefers-reduced-motion` corta o 3D de
+   propósito (não faz sentido gastar WebGL numa forma que, com motion
+   desligado, nem sequer vai morfar). `PillarsCanvas` recebe `mobile` pra
+   se ajustar sozinho (menos partículas, DPR mais baixo — ver o próprio
+   arquivo) em vez de duas variantes de componente. */
+function CanvasSlot({ canvasInView, wrapRef, velocityRef, reduced, activeIndex = 0, mobile = false, useFallback = false, onContextLost }) {
+  const tryThree = !reduced && !useFallback;
 
   return (
     <div ref={wrapRef} className="mt-8 flex justify-center md:mt-10 md:justify-start">
@@ -226,7 +227,7 @@ function CanvasSlot({ canvasInView, wrapRef, velocityRef, reduced, activeIndex =
              pro morphing 3D real, quando chega, lê como um upgrade suave
              em vez de um elemento novo aparecendo do nada. */
           <Suspense fallback={<PillarsMorphIcon activeIndex={activeIndex} reduceMotion={false} velocityRef={velocityRef} className="h-full w-full" />}>
-            <PillarsCanvas activeIndex={activeIndex} onContextLost={onContextLost} />
+            <PillarsCanvas activeIndex={activeIndex} mobile={mobile} onContextLost={onContextLost} />
           </Suspense>
         ) : (
           <PillarsMorphIcon activeIndex={activeIndex} reduceMotion={reduced} velocityRef={velocityRef} className="h-full w-full" />
@@ -242,7 +243,7 @@ function CanvasSlot({ canvasInView, wrapRef, velocityRef, reduced, activeIndex =
    assume o normal a partir daí) — é a folga de segurança pro
    WhatsAppButton fixo (56px + 24px de margem = ~80px de rodapé ocupado;
    128px de padding cobre isso com folga real, não uma estimativa). */
-function StaticPillars({ data, canvasInView, canvasWrapRef, velocityRef, reduced }) {
+function StaticPillars({ data, canvasInView, canvasWrapRef, velocityRef, reduced, useFallback, onContextLost }) {
   const playEntrance = !reduced;
 
   return (
@@ -250,7 +251,15 @@ function StaticPillars({ data, canvasInView, canvasWrapRef, velocityRef, reduced
       <div className="grid gap-12 md:grid-cols-12 md:gap-16">
         <div className="md:col-span-6">
           <StaticHeadline lines={data.declarationLines} playEntrance={playEntrance} />
-          <CanvasSlot canvasInView={canvasInView} wrapRef={canvasWrapRef} velocityRef={velocityRef} reduced={reduced} />
+          <CanvasSlot
+            canvasInView={canvasInView}
+            wrapRef={canvasWrapRef}
+            velocityRef={velocityRef}
+            reduced={reduced}
+            mobile
+            useFallback={useFallback}
+            onContextLost={onContextLost}
+          />
         </div>
 
         <div className="relative pl-6 md:col-span-6 md:pl-10">
@@ -304,7 +313,6 @@ function PinnedTimeline({ data, trackRef, progress, lineScale, activeIndex, canv
               velocityRef={velocityRef}
               reduced={false}
               activeIndex={activeIndex}
-              pinned
               useFallback={useFallback}
               onContextLost={onContextLost}
             />
@@ -392,6 +400,8 @@ export default function PillarsShaped({ data }) {
         canvasWrapRef={canvasWrapRef}
         velocityRef={velocityRef}
         reduced={reduced}
+        useFallback={useFallback}
+        onContextLost={() => setContextLost(true)}
       />
     );
   }

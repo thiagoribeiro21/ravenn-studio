@@ -41,6 +41,12 @@ import { ParticleMorpher, sampleShape } from './ThreeServicesCanvas';
 // não numa cena hero de tela cheia — a esta escala 900 partículas já lê
 // como uma nuvem sólida, e o custo por frame cai proporcionalmente.
 const N_PILLARS = 900;
+// Mobile (v6): metade das partículas. GPU de celular processa cada frame
+// no mesmo chip que faz tudo mais (scroll, decode de imagem, o resto da
+// página) — sem essa redução o ícone real competia por esse orçamento
+// bem mais apertado do que um desktop tem. 450 na mesma escala (~220px)
+// ainda lê como nuvem sólida, só perde densidade nas bordas da forma.
+const N_PILLARS_MOBILE = 450;
 const RADIUS = 1.05;
 
 /* 4 formas abstratas — mesmo espírito de "geometria pura, não ícone literal"
@@ -57,31 +63,49 @@ const RADIUS = 1.05;
    e o morph entre eles não se sentia. Um cubo tem cantos e arestas retas
    que nenhuma rotação disfarça, mesmo com poucas partículas — a distinção
    de silhueta é o que faz o morphing LER como morphing. */
-function buildShapes() {
+function buildShapes(count) {
   const cubeSide = RADIUS * 1.5;
   return [
-    sampleShape(new THREE.SphereGeometry(RADIUS, 32, 32), N_PILLARS),
-    sampleShape(new THREE.BoxGeometry(cubeSide, cubeSide, cubeSide), N_PILLARS),
-    sampleShape(new THREE.TorusGeometry(RADIUS * 0.78, RADIUS * 0.32, 24, 48), N_PILLARS),
-    sampleShape(new THREE.TorusKnotGeometry(RADIUS * 0.6, RADIUS * 0.2, 160, 24), N_PILLARS),
+    sampleShape(new THREE.SphereGeometry(RADIUS, 32, 32), count),
+    sampleShape(new THREE.BoxGeometry(cubeSide, cubeSide, cubeSide), count),
+    sampleShape(new THREE.TorusGeometry(RADIUS * 0.78, RADIUS * 0.32, 24, 48), count),
+    sampleShape(new THREE.TorusKnotGeometry(RADIUS * 0.6, RADIUS * 0.2, 160, 24), count),
   ];
 }
 
-function Scene({ activeIndex }) {
-  const shapes = useMemo(buildShapes, []);
+function Scene({ activeIndex, count }) {
+  const shapes = useMemo(() => buildShapes(count), [count]);
   return <ParticleMorpher shapes={shapes} activeIndex={activeIndex} />;
 }
 
 /* `onContextLost` — mesma razão de sempre: navegadores derrubam o contexto
    WebGL sob pressão de memória/GPU e por padrão ninguém é avisado, o
    `<canvas>` só fica preto e morto. Avisa `PillarsShaped.jsx` pra trocar
-   pelo fallback em vez de deixar um retângulo morto no lugar do ícone. */
-export default function PillarsCanvas({ activeIndex = 0, onContextLost }) {
+   pelo fallback em vez de deixar um retângulo morto no lugar do ícone.
+
+   `mobile` (v6) — três ajustes, mesma ideia em cada um: gastar menos por
+   frame num chip que tem menos orçamento pra dar.
+     · partículas: 900 → 450 (`N_PILLARS_MOBILE`, ver constante acima).
+     · `dpr` travado em 1 (era `[1, 1.5]`): 1.5x em telas de alta densidade
+       significa mais que o DOBRO de pixels reais pra rasterizar por
+       frame — o ganho visual num ícone de ~220px não paga esse custo em
+       mobile.
+     · `antialias: false` + `powerPreference: 'low-power'`: MSAA custa
+       amostragem extra por pixel: e "low-power" pede ao driver a GPU
+       integrada/modo eficiente em vez do modo que maximiza desempenho à
+       custa de bateria — no desktop o objetivo inverso (`high-performance`)
+       segue valendo. */
+export default function PillarsCanvas({ activeIndex = 0, mobile = false, onContextLost }) {
+  const count = mobile ? N_PILLARS_MOBILE : N_PILLARS;
   return (
     <Canvas
       camera={{ position: [0, 0, 4.2], fov: 38 }}
-      gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
-      dpr={[1, 1.5]}
+      gl={{
+        alpha: true,
+        antialias: !mobile,
+        powerPreference: mobile ? 'low-power' : 'high-performance',
+      }}
+      dpr={mobile ? 1 : [1, 1.5]}
       style={{ width: '100%', height: '100%', background: 'transparent' }}
       onCreated={({ gl }) => {
         gl.domElement.addEventListener('webglcontextlost', (e) => {
@@ -90,7 +114,7 @@ export default function PillarsCanvas({ activeIndex = 0, onContextLost }) {
         });
       }}
     >
-      <Scene activeIndex={activeIndex} />
+      <Scene activeIndex={activeIndex} count={count} />
     </Canvas>
   );
 }

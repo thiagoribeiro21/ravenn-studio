@@ -27,14 +27,6 @@ export default {
     logo: LOGO_H,
   },
 
-  nav: {
-    links: [
-      { label: 'Serviços', href: '#bento' },
-      { label: 'Conceitos', href: '#conceitos' },
-      { label: 'Contato', href: '#finale' },
-    ],
-  },
-
   whatsapp: {
     message: buildWaLink(
       'Olá! Vim pela página de landing pages e gostaria de agendar um diagnóstico gratuito.',

@@ -21,14 +21,6 @@ export default {
     logo: LOGO_H,
   },
 
-  nav: {
-    links: [
-      { label: 'Serviços', href: '#bento' },
-      { label: 'Conceitos', href: '#conceitos' },
-      { label: 'Contato', href: '#finale' },
-    ],
-  },
-
   whatsapp: {
     message: buildWaLink(
       'Olá! Vim pela página de gestão de Google Ads e gostaria de agendar um diagnóstico gratuito.',

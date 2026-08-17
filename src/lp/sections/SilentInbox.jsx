@@ -628,9 +628,35 @@ export default function SilentInbox({ data }) {
             verdes coladas no rodapé da tela. No desktop essa folga não faz
             falta (o grid já centraliza tudo verticalmente, longe do canto),
             por isso `md:pb-0`. */}
+        {/* `justify-start` no mobile (era `justify-center`) — rede de
+            segurança estrutural, não só o ajuste de fonte acima: se ALGUM
+            dia uma copy mais longa, um aparelho mais estreito que 320px, ou
+            uma fonte que renderiza mais larga numa engine específica
+            (WebKit/iOS mede diferente de Chromium) fizer o conteúdo passar
+            da altura de `100dvh` de novo, `justify-center` reparte o
+            excesso IGUALMENTE acima e abaixo — cortando o topo do título,
+            que é o elemento mais crítico da cena. `justify-start` garante
+            que qualquer sobra, se acontecer, saia sempre pela base (o
+            aparelho, que já é `flex-1 min-h-0` e teria menos margem de
+            respiro embaixo antes) — nunca pelo título. No desktop
+            (`md:grid`) isso não se aplica (`justify-center` unset). */}
         <div
-          className={`relative z-10 mx-auto flex h-full max-w-[1400px] flex-col items-center justify-center gap-[clamp(0.75rem,2dvh,1.75rem)] pb-[clamp(2.5rem,2rem+2dvh,3.5rem)] md:grid md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-x-[5vw] md:pb-0 ${GX}`}
-          style={{ paddingTop: 'clamp(3.5rem, 3.5rem + 2.5dvh, 6.5rem)' }}
+          className={`relative z-10 mx-auto flex h-full max-w-[1400px] flex-col items-center justify-start gap-[clamp(0.75rem,2dvh,1.75rem)] pb-[clamp(2.5rem,2rem+2dvh,3.5rem)] md:grid md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:justify-center md:gap-x-[5vw] md:pb-0 ${GX}`}
+          /* Piso subiu de 3.5rem (56px) pra 6.25rem (100px) — o header
+             (LPShell.jsx, `<header>` fixo, z-40) mede ~84px de altura no
+             estado "scrolled" (pílula com blur), e como esta é a 3ª seção
+             da página, a pessoa SEMPRE chega aqui já scrolled. Com 56px de
+             respiro, num iPhone SE 1ª geração (320×568, `2.5dvh` evapora
+             pra ~14px) o topo do título nascia atrás do header — não
+             cortado, só ilegível por trás do vidro fosco. 100px é o MESMO
+             número que `section[id] { scroll-margin-top: 100px }` já usa em
+             index.css pro mesmo header, documentado lá como "cobre com
+             folga a altura máxima medida (~86px)" — reaproveitar a
+             constante em vez de inventar outra. Como o header não escala
+             com a viewport, o piso passou a dominar em QUASE toda altura de
+             celular real (só destrava depois de ~1100px) — de propósito:
+             folga de leitura importa menos que nunca tampar o título. */
+          style={{ paddingTop: 'clamp(6.25rem, 6.25rem + 1.5dvh, 8rem)' }}
         >
           {/* ── A · Chamada + legenda + ação ─────────────────────────────
               O CTA mora AQUI dentro, logo após a legenda — sem amarra ao
@@ -655,7 +681,31 @@ export default function SilentInbox({ data }) {
               id="silent-inbox-title"
               className="mt-0 font-grotesk font-light leading-[1.06] tracking-[-0.025em] text-rv-titanium md:mt-[clamp(1.5rem,4dvh,3rem)]"
               style={{
-                fontSize: 'clamp(1.55rem, 2.6vw + 0.8dvh, 3.75rem)',
+                /* Piso do clamp deixou de ser uma constante (1.55rem) pra virar
+                   `min(1.55rem, 0.7rem + 3.65vw)` — só muda alguma coisa ABAIXO
+                   de ~375px de largura (onde `0.7rem + 3.65vw` cruza e passa a
+                   ficar menor que 1.55rem; dali pra cima o `min()` volta a
+                   escolher 1.55rem, idêntico ao valor original, então nenhum
+                   celular "normal" (375px+) muda de tamanho).
+
+                   O motivo de mexer nisso: com o piso fixo em 1.55rem (24.8px),
+                   a legenda mais longa entre as 6 LPs ("A conversão, você nunca
+                   teve.", 30 caracteres) media ~24.8px de necessidade mínima
+                   pra caber numa linha só num iPhone SE de 1ª geração (320px de
+                   largura, `px-[6vw]` de respiro nas duas margens) — MENOS de
+                   1px de folga, e às vezes estourava, quebrando a linha da
+                   `headlineLines` (cada item do array é DESENHADO pra ser uma
+                   linha só, ver o `.map` abaixo) em duas. Isso por si te
+                   perdoaria — quebra de linha não é pecado — mas combinado com
+                   `justify-center` no container (ver comentário lá embaixo),
+                   a altura extra empurrava o topo do título pra fora da caixa
+                   `overflow-hidden` da seção pinada, cortando a primeira linha
+                   inteira. Medido em Playwright contra as 6 LPs: ver o valor
+                   exato em `scratch-measure-headline.cjs` (298-317 nesta
+                   sessão) — a fórmula abaixo tem ~1.4px de folga a mais no pior
+                   caso, o suficiente pra sobreviver a variação de fonte entre
+                   engines (Chromium vs WebKit/iOS). */
+                fontSize: 'clamp(min(1.55rem, 0.7rem + 3.65vw), 2.6vw + 0.8dvh, 3.75rem)',
                 opacity: headlineOpacity,
                 y: headlineY,
               }}

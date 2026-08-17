@@ -15,14 +15,6 @@ export default {
     logo: LOGO_H,
   },
 
-  nav: {
-    links: [
-      { label: 'Serviços', href: '#padrao' },
-      { label: 'Conceitos', href: '#conceitos' },
-      { label: 'Contato', href: '#finale' },
-    ],
-  },
-
   whatsapp: {
     // botão flutuante persistente (reusa src/components/WhatsAppButton.jsx)
     message: buildWaLink(
