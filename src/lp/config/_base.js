@@ -61,7 +61,21 @@ export const TYPE = {
   button:    'text-[16px]',
   statNum:   'text-[clamp(1.75rem,7vw,2.25rem)] md:text-[clamp(2.5rem,4vw,3.5rem)]',
   h2:        'text-[clamp(2.5rem,5vw,4.5rem)]',
-  h1:        'text-[clamp(2.5rem,6.4vw,6.5rem)]',
+  /* v14 — teto reduzido (era 6.5rem puro-vw) e híbrido vw+dvh, mesmo padrão
+     já usado em `HEADLINE_SIZE` do ScrubStatement.jsx. `6.4vw` sozinho não
+     sabe nada sobre altura disponível: em 1920×1080 ele batia no teto de
+     104px, e nessa largura de coluna (`max-w-6xl`, ver HeroDevice.jsx) o
+     headline mais curto das 6 LPs ("Sua landing page deveria") já quebrava
+     em 4 linhas — comendo ~440px de altura sozinho e empurrando o mockup
+     quase inteiro pra fora da dobra, bem quando o pedido era o oposto
+     (mockup MAIOR). Medido nas 4 resoluções desktop mais comuns
+     (1280×720/1440×900/1536×864/1920×1080) contra as 6 LPs: com este
+     clamp, a LP de headline mais curto fica 2 linhas em todas; a mais
+     longa ("Você precisa de uma experiência.", 33 caracteres) cai pra 3
+     no pior caso, nunca mais 4. `_` no lugar de espaço porque isto é uma
+     classe Tailwind arbitrária, não `style` inline — o parser JIT quebra
+     em espaço solto. */
+  h1:        'text-[clamp(2.5rem,4.8vw_+_1.4dvh,5.8rem)]',
 };
 
 /* ── Raios e sombras padronizados (Regra transversal / item 11) ─────────── */

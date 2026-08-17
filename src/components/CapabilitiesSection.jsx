@@ -240,7 +240,7 @@ function ServiceModal({ service, onClose }) {
                     {/* Eyebrow */}
                     <span style={{
                       display:       'block',
-                      fontSize:      10,
+                      fontSize:      15,
                       fontWeight:    500,
                       textTransform: 'uppercase',
                       letterSpacing: '0.28em',
@@ -274,7 +274,7 @@ function ServiceModal({ service, onClose }) {
                     {/* Label */}
                     <span style={{
                       display:       'block',
-                      fontSize:      9,
+                      fontSize:      15,
                       fontWeight:    600,
                       textTransform: 'uppercase',
                       letterSpacing: '0.30em',
@@ -331,7 +331,7 @@ function ServiceModal({ service, onClose }) {
                           alignItems:    'center',
                           height:        24,
                           padding:       '0 12px',
-                          fontSize:      9,
+                          fontSize:      15,
                           fontWeight:    600,
                           textTransform: 'uppercase',
                           letterSpacing: '0.18em',
@@ -363,7 +363,7 @@ function ServiceModal({ service, onClose }) {
                       background:     '#7C3AED',
                       color:          '#fff',
                       borderRadius:   8,
-                      fontSize:       11,
+                      fontSize:       15,
                       fontWeight:     500,
                       textTransform:  'uppercase',
                       letterSpacing:  '0.16em',
@@ -375,7 +375,7 @@ function ServiceModal({ service, onClose }) {
                     </svg>
                     Agendar Diagnóstico Gratuito
                   </a>
-                  <p style={{ marginTop: 9, textAlign: 'center', fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.60)' }}>
+                  <p style={{ marginTop: 9, textAlign: 'center', fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.60)' }}>
                     Resposta em até 2 horas · Sem compromisso
                   </p>
                 </div>
@@ -420,7 +420,7 @@ function ServiceModal({ service, onClose }) {
                 <div className="absolute left-6 bottom-6 z-10 flex items-center gap-2">
                   <span aria-hidden style={{ width: 5, height: 5, borderRadius: '50%', background: '#A78BFA', boxShadow: '0 0 8px 1px rgba(167,139,250,0.85)' }} />
                   <span style={{
-                    fontSize:      9,
+                    fontSize:      15,
                     fontWeight:    600,
                     textTransform: 'uppercase',
                     letterSpacing: '0.24em',
@@ -474,10 +474,10 @@ function ServiceBlock({ service, index, onActive, onOpen }) {
     >
       {/* Index + category */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
-        <span style={{ fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.22em', color: '#5B6472' }}>
+        <span style={{ fontSize: 15, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.22em', color: '#5B6472' }}>
           {service.id}
         </span>
-        <span style={{ fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.22em', color: '#7C3AED' }}>
+        <span style={{ fontSize: 15, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.22em', color: '#7C3AED' }}>
           — {service.category}
         </span>
       </div>
@@ -506,7 +506,7 @@ function ServiceBlock({ service, index, onActive, onOpen }) {
           <span key={tag} style={{
             display: 'inline-flex', alignItems: 'center',
             height: 28, padding: '0 12px',
-            fontSize: 10, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.12em',
+            fontSize: 15, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.12em',
             border: '1px solid #1E1B4B', borderRadius: 4, color: '#5B6472',
           }}>
             {tag}
@@ -521,7 +521,7 @@ function ServiceBlock({ service, index, onActive, onOpen }) {
         <a
           href="#contact"
           className="group relative px-6 py-3 bg-[#7C3AED]/10 border border-[#7C3AED]/30 rounded-full overflow-hidden flex items-center gap-2 transition-all duration-300 hover:bg-[#7C3AED]/20 hover:border-[#7C3AED]/60 hover:shadow-[0_0_20px_rgba(124,58,237,0.20)]"
-          style={{ textDecoration: 'none', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.80)' }}
+          style={{ textDecoration: 'none', fontSize: 15, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.80)' }}
         >
           Solicitar Orçamento
           <span className="transition-transform duration-200 group-hover:translate-x-1" style={{ color: '#A78BFA' }}>
@@ -533,7 +533,7 @@ function ServiceBlock({ service, index, onActive, onOpen }) {
         <button
           onClick={() => onOpen(service)}
           className="group relative inline-flex items-center gap-2 uppercase tracking-widest text-white/50 hover:text-white transition-colors duration-300"
-          style={{ background: 'none', border: 'none', padding: '4px 0', cursor: 'pointer', fontSize: 11, letterSpacing: '0.20em' }}
+          style={{ background: 'none', border: 'none', padding: '4px 0', cursor: 'pointer', fontSize: 15, letterSpacing: '0.20em' }}
         >
           Explorar Serviço
           <span
@@ -593,7 +593,7 @@ export default function CapabilitiesSection() {
             borderBottom: '1px solid #1E1B4B',
           }}
         >
-          <span style={{ fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.22em', color: '#5B6472', display: 'block', marginBottom: 20 }}>
+          <span style={{ fontSize: 15, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.22em', color: '#5B6472', display: 'block', marginBottom: 20 }}>
             — Serviços
           </span>
           <h2 style={{
@@ -656,7 +656,7 @@ export default function CapabilitiesSection() {
                 )}
               </div>
               <div aria-hidden style={{ position: 'absolute', bottom: 40, left: 0, right: 0, textAlign: 'center', pointerEvents: 'none' }}>
-                <span style={{ fontSize: 9, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#5B6472' }}>
+                <span style={{ fontSize: 15, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#5B6472' }}>
                   — {SERVICES[activeIdx]?.category ?? ''} —
                 </span>
               </div>

@@ -170,7 +170,7 @@ export default function Navbar() {
               exit={{ opacity: 0, y: 5 }}
               transition={{ duration: 0.20, ease: 'easeOut' }}
               style={{
-                fontSize:      pill ? 10 : 11,
+                fontSize:      15,
                 fontWeight:    500,
                 textTransform: 'uppercase',
                 letterSpacing: '0.26em',
@@ -200,7 +200,7 @@ export default function Navbar() {
               padding:        pill
                 ? '0 clamp(12px,1.5vw,20px)'
                 : '0 clamp(18px,2vw,32px)',
-              fontSize:       pill ? 10 : 11,
+              fontSize:       15,
               fontWeight:     500,
               textTransform:  'uppercase',
               letterSpacing:  '0.18em',

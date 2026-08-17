@@ -56,7 +56,7 @@ export default function PortfolioSection() {
         style={{ maxWidth: 600 }}
       >
         <span style={{
-          fontSize:      10,
+          fontSize:      15,
           fontWeight:    500,
           textTransform: 'uppercase',
           letterSpacing: '0.3em',
@@ -138,7 +138,7 @@ export default function PortfolioSection() {
                   <path d="M12 6.5C12 5.67 12.67 5 13.5 5S15 5.67 15 6.5V10C15 12.76 12.76 15 10 15H8.5C6.97 15 5.56 14.27 4.65 13.1L2.22 10.02C1.72 9.38 1.83 8.46 2.47 7.96 3.1 7.46 4.02 7.57 4.52 8.21L6 10V4.5" stroke="#7C3AED" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
                 </motion.svg>
                 <span style={{
-                  fontSize:      9,
+                  fontSize:      15,
                   fontWeight:    500,
                   textTransform: 'uppercase',
                   letterSpacing: '0.22em',

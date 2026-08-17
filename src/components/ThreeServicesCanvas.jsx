@@ -7,7 +7,7 @@ const VIOLET = '#7C3AED';
 const N      = 3000;
 
 // ── Amostra N pontos uniformes da superfície de uma geometry ──────────────────
-function sampleShape(geometry, n) {
+export function sampleShape(geometry, n) {
   const dummy   = new THREE.Mesh(geometry);
   const sampler = new MeshSurfaceSampler(dummy).build();
   const arr = new Float32Array(n * 3);
@@ -38,9 +38,17 @@ function sampleShape(geometry, n) {
 //   5. Integração Euler: vel += ΣF·dt,  disp += vel·dt
 //   6. renderBuf = morphPos + disp
 //
-function ParticleMorpher({ shapes, activeIndex }) {
+/* Exportado (era local): reaproveitado por `PillarsCanvas.jsx` pra morfar
+   entre os 4 conceitos do Ato "Pilares" com a MESMA física, sem duplicar
+   ~90 linhas de integração de mola/repulsão. A única mudança pra permitir
+   isso foi tirar a dependência da constante `N` do módulo (3000, calibrada
+   pro objeto grande da home) — os buffers agora nascem do tamanho real de
+   `shapes[0]`, então quem chama decide a contagem de partículas passando
+   shapes já amostrados no tamanho que quiser (ver `sampleShape` acima). */
+export function ParticleMorpher({ shapes, activeIndex }) {
   const groupRef  = useRef(null);
   const activeRef = useRef(activeIndex);
+  const count     = shapes[0].length; // já é n×3 (Float32Array plano)
 
   // ── Buffers Float32Array ──────────────────────────────────────────────────
   const renderBuf = useRef(null);
@@ -50,8 +58,8 @@ function ParticleMorpher({ shapes, activeIndex }) {
 
   if (!renderBuf.current) renderBuf.current = shapes[0].slice();
   if (!morphPos.current)  morphPos.current  = shapes[0].slice();
-  if (!dispPos.current)   dispPos.current   = new Float32Array(N * 3); // zeros
-  if (!dispVel.current)   dispVel.current   = new Float32Array(N * 3); // zeros
+  if (!dispPos.current)   dispPos.current   = new Float32Array(count); // zeros
+  if (!dispVel.current)   dispVel.current   = new Float32Array(count); // zeros
 
   // ── Objetos THREE pré-alocados — sem `new` dentro do loop de frame ────────
   const _plane  = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)); // XY plane (z=0)
@@ -112,7 +120,7 @@ function ParticleMorpher({ shapes, activeIndex }) {
 
     // ── 3. Loop de partículas ─────────────────────────────────────────────────
     let i = 0;
-    const len = N * 3;
+    const len = count;
 
     while (i < len) {
       // a) Lerp morphPos → target (shape atual do acordeão)

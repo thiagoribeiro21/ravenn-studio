@@ -76,12 +76,17 @@ export default function FaqPanel({ data }) {
               top: '-15vh',
               height: 'calc(100% + 30vh)',
               y: bgY,
-              filter: 'brightness(0.4)',
+              // Overlay reduzido um pouco (era brightness 0.4 + gradiente
+              // 80/60/90) — o fundo tinha pouca presença real, quase todo
+              // o peso vinha do véu por cima. Ainda escuro o bastante pra
+              // manter o texto (accordion à direita, título à esquerda)
+              // confortável de ler, só menos pesado.
+              filter: 'brightness(0.55)',
               willChange: 'transform',
             }}
           />
         </picture>
-        <div className="absolute inset-0 bg-gradient-to-b from-rv-void/80 via-rv-void/60 to-rv-void/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-rv-void/65 via-rv-void/45 to-rv-void/78" />
       </div>
 
       <motion.div

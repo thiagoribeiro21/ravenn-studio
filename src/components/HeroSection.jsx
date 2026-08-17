@@ -48,7 +48,7 @@ export default function HeroSection() {
         <motion.div variants={item} className="flex items-center" style={{ marginBottom: 'clamp(12px, 3vh, 28px)' }}>
           <span
             style={{
-              fontSize:      11,
+              fontSize:      15,
               fontWeight:    500,
               textTransform: 'uppercase',
               letterSpacing: '0.22em',
@@ -146,7 +146,7 @@ export default function HeroSection() {
               gap:            10,
               height:         56,
               padding:        '0 36px',
-              fontSize:       13,
+              fontSize:       15,
               fontWeight:     500,
               textTransform:  'uppercase',
               letterSpacing:  '0.12em',
@@ -180,7 +180,7 @@ export default function HeroSection() {
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         style={{ pointerEvents: 'none' }}
       >
-        <span style={{ fontSize: 9, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.28em', color: '#5B6472' }}>
+        <span style={{ fontSize: 15, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.28em', color: '#5B6472' }}>
           Scroll
         </span>
         <motion.div

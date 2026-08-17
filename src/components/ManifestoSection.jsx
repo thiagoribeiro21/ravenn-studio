@@ -111,7 +111,7 @@ export default function ManifestoSection() {
           style={{ display: 'block', marginBottom: 36 }}
         >
         <span style={{
-          fontSize:      10,
+          fontSize:      15,
           fontWeight:    500,
           textTransform: 'uppercase',
           letterSpacing: '0.3em',
@@ -221,7 +221,7 @@ export default function ManifestoSection() {
           >
             {/* Número */}
             <span style={{
-              fontSize:      'clamp(11px, 1vw, 13px)',
+              fontSize:      'clamp(15px, 1vw, 16px)',
               fontWeight:    500,
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
@@ -298,7 +298,7 @@ export default function ManifestoSection() {
             gap:            10,
             height:         48,
             padding:        '0 28px',
-            fontSize:       11,
+            fontSize:       15,
             fontWeight:     500,
             textTransform:  'uppercase',
             letterSpacing:  '0.14em',

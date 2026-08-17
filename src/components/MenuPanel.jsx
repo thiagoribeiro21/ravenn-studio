@@ -140,7 +140,7 @@ export default function MenuPanel() {
           borderRadius:  999,
           cursor:        'pointer',
           color:         'rgba(255,255,255,0.70)',
-          fontSize:      11,
+          fontSize:      15,
           fontWeight:    500,
           textTransform: 'uppercase',
           letterSpacing: '0.22em',
@@ -313,7 +313,7 @@ export default function MenuPanel() {
               background:     '#7C3AED',
               color:          '#fff',
               borderRadius:   4,
-              fontSize:       11,
+              fontSize:       15,
               fontWeight:     500,
               textTransform:  'uppercase',
               letterSpacing:  '0.18em',
@@ -346,7 +346,7 @@ export default function MenuPanel() {
           <div style={{ width: 40, height: 1, background: 'linear-gradient(to right, rgba(124,58,237,0.50), transparent)', marginBottom: 14 }} />
           <a
             href="mailto:contato@ravennstudio.com"
-            style={{ display: 'block', fontSize: 11, letterSpacing: '0.10em', color: 'rgba(255,255,255,0.40)', textDecoration: 'none', marginBottom: 6, transition: 'color 200ms', fontFamily: 'monospace' }}
+            style={{ display: 'block', fontSize: 15, letterSpacing: '0.10em', color: 'rgba(255,255,255,0.40)', textDecoration: 'none', marginBottom: 6, transition: 'color 200ms', fontFamily: 'monospace' }}
             onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.80)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.40)'; }}
           >
@@ -356,7 +356,7 @@ export default function MenuPanel() {
             href={WA_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ display: 'block', fontSize: 11, letterSpacing: '0.10em', color: 'rgba(255,255,255,0.40)', textDecoration: 'none', transition: 'color 200ms', fontFamily: 'monospace' }}
+            style={{ display: 'block', fontSize: 15, letterSpacing: '0.10em', color: 'rgba(255,255,255,0.40)', textDecoration: 'none', transition: 'color 200ms', fontFamily: 'monospace' }}
             onMouseEnter={(e) => { e.currentTarget.style.color = '#A78BFA'; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.40)'; }}
           >

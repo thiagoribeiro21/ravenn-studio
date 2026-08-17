@@ -125,7 +125,7 @@ export default function Footer() {
                   <a
                     href={href}
                     title={title}
-                    className="text-sm text-white/50 hover:text-white transition-colors duration-300 no-underline"
+                    className="text-[15px] text-white/50 hover:text-white transition-colors duration-300 no-underline"
                     style={{ textDecoration: 'none' }}
                   >
                     {label}
@@ -146,7 +146,7 @@ export default function Footer() {
                   <a
                     href={href}
                     title={title}
-                    className="text-sm text-white/50 hover:text-white transition-colors duration-300 no-underline"
+                    className="text-[15px] text-white/50 hover:text-white transition-colors duration-300 no-underline"
                     style={{ textDecoration: 'none' }}
                   >
                     {label}
@@ -171,7 +171,7 @@ export default function Footer() {
                       title={title}
                       target={isExternal ? '_blank' : undefined}
                       rel={isExternal ? 'noopener noreferrer' : undefined}
-                      className="text-sm text-white/50 hover:text-white transition-colors duration-300 no-underline"
+                      className="text-[15px] text-white/50 hover:text-white transition-colors duration-300 no-underline"
                       style={{ textDecoration: 'none' }}
                     >
                       {label}
@@ -241,7 +241,7 @@ export default function Footer() {
         className="relative flex flex-col items-center gap-3 px-[clamp(32px,5vw,96px)] pb-8 text-center"
         style={{ zIndex: 10, marginTop: '-4vw' }}
       >
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 w-full text-xs text-white/40 font-mono">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 w-full text-[15px] text-white/40 font-mono">
           <span>© 2026 RAVENN STUDIO. Todos os direitos reservados.</span>
           <div className="flex gap-6">
             {['Política de Privacidade', 'Termos de Uso'].map((l) => (

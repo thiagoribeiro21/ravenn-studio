@@ -199,6 +199,11 @@ function ShowcaseMedia({ item, reduce, inView }) {
   const [scale, setScale] = useState(0);
   const [siteStarted, setSiteStarted] = useState(false);
   const [siteLoaded, setSiteLoaded] = useState(false);
+  // Começa falso a cada MONTAGEM (este componente inteiro remonta via
+  // `key={item.nicho}` no AnimatePresence pai — não precisa de reset
+  // explícito ao trocar de conceito). Só vira `true` no evento real
+  // `loadeddata`; nunca é assumido a partir do atributo `poster`.
+  const [videoReady, setVideoReady] = useState(false);
 
   /* Pausa quando a seção sai da viewport (bateria/CPU) — mas o START de cada
      vídeo vem do atributo `autoPlay`, não daqui. Motivo: este efeito depende
@@ -298,17 +303,42 @@ function ShowcaseMedia({ item, reduce, inView }) {
       style={{ willChange: 'transform, opacity' }}
     >
       <div ref={clipRef} className="absolute inset-0 overflow-hidden">
+        {/* Poster como CAMADA PRÓPRIA, não como atributo `poster` do
+            `<video>` — o comportamento nativo do atributo quando o `src`
+            falha (404, o caso de TODA LP hoje: ver nota do topo do
+            arquivo) não é padronizado entre navegadores. Alguns mantêm o
+            poster visível no erro, outros limpam pra um retângulo preto
+            sem aviso — era exatamente esse segundo caso, mais comum em
+            mobile, a causa mais provável da tela preta ao trocar de
+            conceito repetidamente. Como `<img>` independente por baixo,
+            o poster NUNCA depende do estado do vídeo pra aparecer. */}
+        <img
+          src={item.poster}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-contain"
+        />
+        {/* O vídeo só fica opaco depois de confirmar dados reais
+            (`loadeddata`) — nunca por suposição. Enquanto não confirma
+            (inclusive pra sempre, já que o `src` de todo item hoje aponta
+            pra um .mp4 que não existe de propósito), fica transparente e
+            o poster por baixo é tudo que se vê: impossível mostrar preto,
+            não importa quantas instâncias fiquem sobrepostas durante uma
+            troca rápida de aba (cada uma decide sozinha, pelo próprio
+            evento, sem depender de nenhuma outra). */}
         <video
           ref={videoRef}
           src={item.src}
-          poster={item.poster}
           autoPlay
           loop
           muted
           playsInline
           preload="none"
           disablePictureInPicture
-          className="h-full w-full object-contain"
+          onLoadedData={() => setVideoReady(true)}
+          onError={() => setVideoReady(false)}
+          className="absolute inset-0 h-full w-full object-contain transition-opacity duration-500"
+          style={{ opacity: videoReady ? 1 : 0 }}
         />
       </div>
     </motion.div>
@@ -386,7 +416,12 @@ function ConceptTabs({ items, active, progress, onSelect, reduce }) {
               role="tab"
               aria-selected={isActive}
               onClick={() => onSelect(i)}
-              className="group relative flex-1 rounded-full px-2 py-2.5 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rv-purple/60 md:px-4"
+              /* `min-w-0`: filho `flex-1` sem isso ignora `truncate` no
+                 texto (o default de flex item é `min-width: auto`, que
+                 recusa encolher abaixo do conteúdo intrínseco — o "Diagnóstico
+                 Gratuito" vazava pra fora da pílula em telas estreitas em vez
+                 de truncar com reticências, mesmo com `truncate` no span). */
+              className="group relative min-w-0 flex-1 rounded-full px-2 py-2.5 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rv-purple/60 md:px-4"
             >
               {isActive && !reduce && (
                 <motion.span
@@ -485,7 +520,25 @@ export default function ConceptStack({ data }) {
   const inViewRef = useRef(false);
   inViewRef.current = inView;
 
+  /* Trava cliques repetidos enquanto o crossfade anterior ainda está no ar
+     (`MEDIA_DURATION`, 0.9s). Sem isso, alguém tocando várias abas em
+     sequência rápida no mobile empilha várias instâncias de
+     `ShowcaseMedia` saindo ao mesmo tempo (o AnimatePresence não desmonta
+     a anterior até a animação de saída terminar) — cada uma com seu
+     próprio `<video autoPlay>`, e navegadores mobile têm limite baixo de
+     contextos de vídeo simultâneos. O poster em camada própria (ver
+     `ShowcaseMedia`) já torna isso visualmente seguro por si só, mas
+     evitar o acúmulo de instâncias é a defesa de verdade — mais barata e
+     resolve na raiz, não só no sintoma. */
+  const transitioningRef = useRef(false);
+
   const goTo = (i) => {
+    if (transitioningRef.current) return;
+    transitioningRef.current = true;
+    setTimeout(() => {
+      transitioningRef.current = false;
+    }, MEDIA_DURATION * 1000);
+
     progress.set(0);
     setActive(((i % total) + total) % total);
   };

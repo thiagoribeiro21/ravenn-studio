@@ -325,15 +325,59 @@ export default function ScrubStatement({ data }) {
       const anchor = anchorRef.current;
       if (!ghost || !anchor) return;
 
-      const g = ghost.getBoundingClientRect();
+      /* A âncora vive PERMANENTEMENTE sob o transform do voo — o Framer
+         reescreve `style.transform` dela a cada frame (x/y/scale/rotate).
+         `getBoundingClientRect()` devolve a caixa JÁ TRANSFORMADA, então
+         medir sem neutralizar grava um flip calculado contra a posição
+         momentânea da palavra em vez da posição de layout dela.
+
+         Isso não é hipotético e não depende de o scroll estar parado no
+         lugar errado: `flightY` e `flightRotate` NÃO dependem de `flip`
+         (são [0,-46,0] e [0,-4,0] literais), então já valem -46px e -4°
+         no meio do voo mesmo na primeiríssima medição. Qualquer measure()
+         disparado nesse instante nasce errado — medido em 1440x900: 39px
+         de erro vertical e 5px de largura, o bastante pra palavra decolar
+         visivelmente fora do título.
+
+         E o disparo tardio é justamente o que separa visita nova de
+         visita com cache. As fontes carregam com `display=optional` (ver
+         landing-pages.html): na primeira visita elas perdem a janela de
+         ~100ms e o navegador trava o fallback pelo resto da sessão — nada
+         refluxa depois, nenhum re-measure tardio acontece. Na visita
+         seguinte a fonte já está em cache, entra assim que o `<link>`
+         vira `media="all"`, o texto refluxa e o ResizeObserver abaixo
+         redispara measure() — se a pessoa já começou a rolar, isso cai
+         exatamente dentro da janela de voo. Era este o bug de "só quebra
+         quando não é a primeira visita".
+
+         Neutralizar é escrita → leitura → restauração no MESMO task,
+         antes de qualquer paint: não há flash, e o Framer reescreve o
+         valor dele no frame seguinte de qualquer forma. */
+      const prevTransform = anchor.style.transform;
+      anchor.style.transform = 'none';
       const a = anchor.getBoundingClientRect();
+      const g = ghost.getBoundingClientRect();
+      anchor.style.transform = prevTransform;
+
       if (!a.width || !g.width) return;
 
-      setFlip({
+      const next = {
         x: g.right - a.right,
         y: g.top + g.height / 2 - (a.top + a.height / 2),
         scale: g.width / a.width,
-      });
+      };
+
+      /* Só re-renderiza se a medida mudou de verdade. O ResizeObserver
+         dispara em qualquer reflow da vizinhança e, sem esta comparação,
+         cada disparo recriaria as MotionValues do voo à toa. */
+      setFlip((prev) =>
+        prev &&
+        Math.abs(prev.x - next.x) < 0.5 &&
+        Math.abs(prev.y - next.y) < 0.5 &&
+        Math.abs(prev.scale - next.scale) < 0.001
+          ? prev
+          : next,
+      );
     };
 
     // useLayoutEffect roda antes do paint e o setState aqui é aplicado de forma
@@ -346,24 +390,30 @@ export default function ScrubStatement({ data }) {
     if (anchorRef.current) ro.observe(anchorRef.current);
     window.addEventListener('resize', measure);
 
-    // Reforço "à prova de balas" contra a corrida de fonte: o `<link>` da
-    // ClashGrotesk/Satoshi em index.html carrega de forma NÃO-bloqueante
-    // (`media="print" onload="this.media='all'"`, ver o próprio comentário
-    // lá — decisão deliberada pra não travar o LCP na fonte). Isso significa
-    // que a MEDIDA síncrona acima pode rodar antes da fonte trocar, usando
-    // métricas da fonte de fallback do sistema — geometria diferente da
-    // versão final. O `ResizeObserver` já pega essa mudança na maioria dos
-    // casos (a troca de fonte quase sempre muda a largura do texto, que é
-    // exatamente o que ele observa), mas depender só disso pra um efeito
-    // "sem erro nenhum" é fé demais num "quase sempre". `document.fonts`
-    // pode não existir (Safari antigo, browsers exóticos) — daí o optional
-    // chaining; sem a API, o ResizeObserver continua sendo a rede de
-    // segurança.
+    // Reforço contra a corrida de fonte: o `<link>` da ClashGrotesk/Satoshi
+    // carrega de forma NÃO-bloqueante (`media="print" onload="this.media='all'"`
+    // — decisão deliberada pra não travar o LCP na fonte), então a medida
+    // síncrona acima pode rodar com métricas da fonte de fallback.
+    //
+    // `fonts.ready` sozinho NÃO cobre isso: enquanto o `<link>` ainda está
+    // em `media="print"`, as regras `@font-face` nem foram registradas, não
+    // há nenhum download pendente e a promise resolve NA HORA — feliz e
+    // inútil, porque a fonte real ainda vai entrar depois. `loadingdone`
+    // fecha essa brecha: dispara quando o conjunto de fontes efetivamente
+    // termina de carregar, inclusive nas que só foram descobertas quando o
+    // stylesheet virou `media="all"`. Os dois juntos + o ResizeObserver
+    // cobrem as três ordens possíveis de chegada.
+    //
+    // `document.fonts` pode não existir (Safari antigo, browsers exóticos) —
+    // daí o optional chaining; sem a API, o ResizeObserver continua sendo a
+    // rede de segurança.
     document.fonts?.ready?.then(measure);
+    document.fonts?.addEventListener?.('loadingdone', measure);
 
     return () => {
       ro.disconnect();
       window.removeEventListener('resize', measure);
+      document.fonts?.removeEventListener?.('loadingdone', measure);
     };
   }, [persistToken]);
 
@@ -490,7 +540,10 @@ export default function ScrubStatement({ data }) {
                       ref={ghostRef}
                       className="pointer-events-none mx-[0.18em] inline-flex select-none items-center gap-[0.3em] align-middle opacity-0"
                     >
-                      <Glyph name={token.glyph} />
+                      {/* `nudge={false}`: este glifo vive num `inline-flex
+                          items-center`, não em fluxo de texto normal — ver
+                          nota do BASELINE_NUDGE em Glyph.jsx. */}
+                      <Glyph name={token.glyph} nudge={false} />
                       <span>{token.text}</span>
                     </span>
                   );
@@ -568,7 +621,9 @@ export default function ScrubStatement({ data }) {
                   willChange: 'transform, opacity, filter',
                 }}
               >
-                <Glyph name={persistToken.glyph} spin glow />
+                {/* `nudge={false}`: mesmo `inline-flex items-center` do
+                    ghost acima — ver nota do BASELINE_NUDGE em Glyph.jsx. */}
+                <Glyph name={persistToken.glyph} spin glow nudge={false} />
                 {persistToken.text}
               </motion.span>
             </div>

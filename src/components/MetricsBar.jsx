@@ -79,7 +79,7 @@ export default function MetricsBar() {
               style={{
                 display:       'block',
                 marginTop:     10,
-                fontSize:      11,
+                fontSize:      15,
                 fontWeight:    500,
                 textTransform: 'uppercase',
                 letterSpacing: '0.20em',

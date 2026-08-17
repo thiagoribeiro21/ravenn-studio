@@ -69,7 +69,7 @@ function ServiceRow({ item, index }) {
 
       {/* Tag */}
       <div className="md:w-1/3 flex md:justify-end">
-        <span className="px-4 py-1.5 rounded-full text-xs md:text-sm font-mono tracking-widest text-white/90 bg-white/10 border border-white/20 uppercase">
+        <span className="px-4 py-1.5 rounded-full text-[15px] font-mono tracking-widest text-white/90 bg-white/10 border border-white/20 uppercase">
           {item.tag}
         </span>
       </div>
@@ -125,7 +125,7 @@ export default function AudienceSection() {
           style={{
             y:             eyebrowY,
             display:       'block',
-            fontSize:      11,
+            fontSize:      15,
             fontWeight:    500,
             textTransform: 'uppercase',
             letterSpacing: '0.22em',
@@ -191,7 +191,7 @@ export default function AudienceSection() {
             <span
               className="cta-lbl"
               style={{
-                fontSize:      11,
+                fontSize:      15,
                 fontWeight:    500,
                 textTransform: 'uppercase',
                 letterSpacing: '0.18em',
@@ -205,7 +205,7 @@ export default function AudienceSection() {
               className="cta-arr"
               style={{
                 color:      '#7C3AED',
-                fontSize:   14,
+                fontSize:   15,
                 display:    'inline-block',
                 transition: 'transform 200ms ease',
               }}

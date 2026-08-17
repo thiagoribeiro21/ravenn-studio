@@ -86,7 +86,7 @@ function DeviceShot({ images }) {
         fetchpriority="high"
         width={1426}
         height={1201}
-        className="mx-auto h-auto w-full max-h-[38dvh] max-w-[440px] object-contain md:max-h-[42dvh] md:max-w-[820px]"
+        className="mx-auto h-auto w-full max-h-[42dvh] max-w-[470px] object-contain md:max-h-[58dvh] md:max-w-[1080px]"
         style={{ filter: 'drop-shadow(0 60px 120px rgba(0,0,0,0.7))' }}
       />
     </picture>
@@ -295,15 +295,32 @@ export default function HeroDevice({ data }) {
       <Aurora variant="hero" />
       <ParticleField className="pointer-events-none absolute inset-0 z-0" scale={1.3} opacity={0.4} offsetY={-40} />
 
-      {/* item 1 — hero em coluna centralizada, não lado a lado com o device */}
-      <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center text-center">
+      {/* item 1 — hero em coluna centralizada, não lado a lado com o device.
+          `max-w-6xl` (era `max-w-4xl`, +256px de coluna): dá margem pro h1
+          maior (ver TYPE.h1 em config/_base.js) não quebrar em excesso de
+          linhas nas LPs de headline mais longo. Subheadline mantém sua
+          própria largura menor (`max-w-xl`, no Fade abaixo) — só o
+          headline e os CTAs usam a coluna cheia. */}
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center text-center">
         <Fade y={16}>
-          {/* Traços decorativos só a partir de `md`: no mobile eles são dois
-              itens flex de 32px que roubam largura de uma linha já apertada e
-              empurravam o eyebrow de 1 pra 3 linhas (68px medidos num
-              viewport de 667). Some a decoração, o texto respira, e o mockup
-              ganha essa altura de volta — no desktop nada muda. */}
-          <p className={`flex items-center justify-center gap-3 font-satoshi font-medium uppercase tracking-widest2 text-rv-faint ${TYPE.eyebrow}`}>
+          {/* Traços decorativos só a partir de `md` (mesmo motivo de sempre:
+              no mobile eles são dois itens flex de 32px que roubam largura de
+              uma linha já apertada).
+
+              Tamanho e tracking do MOBILE deliberadamente fora de
+              `TYPE.eyebrow` (usado por outras 8 seções em cada LP — mexer
+              nele encolheria eyebrow em toda a página, não só aqui). Pedido
+              explícito: só o eyebrow do HERO ocupava espaço demais no
+              mobile. Duas causas, a tracking pesa mais que o font-size:
+              `tracking-widest2` é 0.35em — num texto de ~50 caracteres
+              (o pior caso entre as 6 LPs, ex. "Sites experienciais e
+              imersivos com WebGL & Motion") isso sozinho soma ~250px de
+              largura extra, o bastante pra quebrar em 3 linhas mesmo com
+              fonte pequena. Reduzindo os dois juntos (15px→12px,
+              0.35em→0.08em) o pior caso cai de 3 pra 2 linhas — medido:
+              68px → 46px de altura no iPhone SE. `md:` continua idêntico
+              ao token da marca, nada muda no desktop. */}
+          <p className="flex items-center justify-center gap-3 font-satoshi font-medium uppercase text-rv-faint text-[12px] tracking-[0.08em] md:text-[16px] md:tracking-widest2">
             <span aria-hidden className="hidden h-px w-8 bg-rv-purple/60 md:block" />
             {data.eyebrow}
             <span aria-hidden className="hidden h-px w-8 bg-rv-purple/60 md:block" />
@@ -339,7 +356,7 @@ export default function HeroDevice({ data }) {
           elementos acima dele (headline, CTAs) continuam animando; este
           pinta imediatamente — só ganha o float contínuo do FloatWrap
           (transform puro, não atrasa paint). */}
-      <FloatWrap className="relative z-10 mt-6 flex justify-center">
+      <FloatWrap className="relative z-10 mt-3 flex justify-center md:mt-6">
         <DeviceShot images={data.deviceImages} />
       </FloatWrap>
 

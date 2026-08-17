@@ -189,7 +189,7 @@ export default function FAQSection() {
         >
           <span
             style={{
-              fontSize:      11,
+              fontSize:      15,
               fontWeight:    500,
               textTransform: 'uppercase',
               letterSpacing: '0.22em',

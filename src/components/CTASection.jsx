@@ -85,7 +85,7 @@ export default function CTASection() {
         {/* Eyebrow */}
         <span
           style={{
-            fontSize:      11,
+            fontSize:      15,
             fontWeight:    500,
             textTransform: 'uppercase',
             letterSpacing: '0.22em',
@@ -150,7 +150,7 @@ export default function CTASection() {
         <p
           style={{
             marginTop:     24,
-            fontSize:      11,
+            fontSize:      15,
             textTransform: 'uppercase',
             letterSpacing: '0.14em',
             color:         'rgba(255,255,255,0.70)',

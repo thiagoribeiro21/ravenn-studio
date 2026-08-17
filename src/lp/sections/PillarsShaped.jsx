@@ -1,6 +1,6 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useMemo, useRef, useState } from 'react';
 import { motion, useInView, useMotionValueEvent, useSpring, useTransform, useVelocity } from 'framer-motion';
-import { PillarsCanvasFallback } from '../../components/PillarsCanvasFallback';
+import PillarsMorphIcon from '../primitives/PillarsMorphIcon';
 import {
   EASE_LUXE,
   GX,
@@ -14,18 +14,18 @@ import {
   useTrackProgress,
 } from '../config/_base';
 
-/* Import DINÂMICO — não estático. `PillarsCanvas.jsx` puxa `three` +
-   `@react-three/fiber` + `@react-three/drei` no topo do arquivo: um
-   `import` normal aqui faz o Vite gerar `<link rel="modulepreload">` pro
-   chunk de Three.js (815KB / 219KB gzip, confirmado no build de produção)
-   no `<head>` do HTML — TODO visitante desta LP paga esse download/parse
-   ANTES de decidir se vai rolar até esta seção, numa página cujo único
-   objetivo é conversão via Ads. Com `lazy()`, o chunk só é buscado quando
-   este componente de fato monta — que já é condicional a `canvasInView`
-   (a seção estar a 240px da viewport) mais os guards de capacidade abaixo
-   (`useFallback`). `PillarsCanvasFallback` fica de fora deste import porque
-   precisa pintar IMEDIATAMENTE nos casos de fallback, sem esperar um
-   round-trip de import — por isso vive num arquivo próprio, sem Three.js. */
+/* Ícone — v5, voltou a ser Three.js (era Canvas2D puro na v4). Pedido
+   explícito: os MESMOS ícones/morphing da home, mantendo PageSpeed alto —
+   a prova de que os dois não são contraditórios É a própria home, que já
+   roda Three.js com nota alta porque nunca deixa o chunk entrar no
+   caminho crítico. A estratégia aqui é idêntica, ver `PillarsCanvas.jsx`
+   pro raciocínio completo (reaproveita a física de `ParticleMorpher` de
+   `ThreeServicesCanvas.jsx`, não duplica).
+
+   `lazy()` — o import só dispara quando o componente de fato monta, que já
+   é condicional a `canvasInView` + `useFallback` abaixo: navegador sem
+   WebGL, conexão lenta, ou mobile/reduced-motion (ver `pinned` em
+   `CanvasSlot`) nunca chegam a baixar o chunk. */
 const PillarsCanvas = lazy(() => import('../../components/PillarsCanvas'));
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -197,7 +197,19 @@ function PillarRow({ index, label, activeIndex }) {
   );
 }
 
-function CanvasSlot({ useFallback, onContextLost, canvasInView, wrapRef, velocityRef, reduced, activeIndex = 0 }) {
+/* `pinned`: só a versão PINADA (desktop) tenta Three.js — mobile/reduced
+   sempre usa o Canvas2D direto, sem nem cogitar o import do chunk. Não é só
+   economia: `StaticPillars` nunca tem um "pilar ativo" de verdade (os 4
+   ficam sempre visíveis, não existe scroll pra amarrar um `activeIndex`
+   variável), então uma única forma estática já é toda a informação que
+   existe pra mostrar ali — gastar 219KB gzip de WebGL numa forma que nunca
+   muda, no dispositivo tipicamente mais restrito (mobile) e mais provável
+   de estar numa webview de anúncio sem WebGL de verdade, seria o pior
+   lugar possível pra pagar esse custo. No desktop pinado o `activeIndex`
+   REALMENTE muda com o scroll — é ali que o morphing ganha o cliente. */
+function CanvasSlot({ canvasInView, wrapRef, velocityRef, reduced, activeIndex = 0, pinned = false, useFallback = false, onContextLost }) {
+  const tryThree = pinned && !useFallback;
+
   return (
     <div ref={wrapRef} className="mt-8 flex justify-center md:mt-10 md:justify-start">
       {/* Mobile: teto de altura explícito (~30vh / 220px) — o pedido do
@@ -205,19 +217,19 @@ function CanvasSlot({ useFallback, onContextLost, canvasInView, wrapRef, velocit
           `h-64 w-64` fixo, 256px, igual em toda tela) competia por espaço
           vertical numa viewport que já não tinha sobra nenhuma. */}
       <div className="h-[30vh] max-h-[220px] w-[30vh] max-w-[220px] md:h-80 md:w-80">
-        {useFallback ? (
-          <PillarsCanvasFallback className="h-full w-full" />
-        ) : canvasInView ? (
+        {!canvasInView ? (
+          <div className="h-full w-full" />
+        ) : tryThree ? (
           /* Suspense cobre a janela entre "decidiu montar" e "o chunk de
-             Three.js terminou de chegar" — nesse intervalo mostra o MESMO
-             fallback em CSS (não um spinner solto), então a troca pro objeto
-             3D real, quando chega, lê como um upgrade suave em vez de um
-             elemento novo aparecendo do nada. */
-          <Suspense fallback={<PillarsCanvasFallback className="h-full w-full" />}>
-            <PillarsCanvas velocityRef={velocityRef} reduceMotion={reduced} activeIndex={activeIndex} onContextLost={onContextLost} />
+             Three.js terminou de chegar" — mostra o MESMO ícone em
+             Canvas2D nesse intervalo (não um spinner solto), então a troca
+             pro morphing 3D real, quando chega, lê como um upgrade suave
+             em vez de um elemento novo aparecendo do nada. */
+          <Suspense fallback={<PillarsMorphIcon activeIndex={activeIndex} reduceMotion={false} velocityRef={velocityRef} className="h-full w-full" />}>
+            <PillarsCanvas activeIndex={activeIndex} onContextLost={onContextLost} />
           </Suspense>
         ) : (
-          <div className="h-full w-full" />
+          <PillarsMorphIcon activeIndex={activeIndex} reduceMotion={reduced} velocityRef={velocityRef} className="h-full w-full" />
         )}
       </div>
     </div>
@@ -230,7 +242,7 @@ function CanvasSlot({ useFallback, onContextLost, canvasInView, wrapRef, velocit
    assume o normal a partir daí) — é a folga de segurança pro
    WhatsAppButton fixo (56px + 24px de margem = ~80px de rodapé ocupado;
    128px de padding cobre isso com folga real, não uma estimativa). */
-function StaticPillars({ data, useFallback, onContextLost, canvasInView, canvasWrapRef, velocityRef, reduced }) {
+function StaticPillars({ data, canvasInView, canvasWrapRef, velocityRef, reduced }) {
   const playEntrance = !reduced;
 
   return (
@@ -238,7 +250,7 @@ function StaticPillars({ data, useFallback, onContextLost, canvasInView, canvasW
       <div className="grid gap-12 md:grid-cols-12 md:gap-16">
         <div className="md:col-span-6">
           <StaticHeadline lines={data.declarationLines} playEntrance={playEntrance} />
-          <CanvasSlot useFallback={useFallback} onContextLost={onContextLost} canvasInView={canvasInView} wrapRef={canvasWrapRef} velocityRef={velocityRef} reduced={reduced} />
+          <CanvasSlot canvasInView={canvasInView} wrapRef={canvasWrapRef} velocityRef={velocityRef} reduced={reduced} />
         </div>
 
         <div className="relative pl-6 md:col-span-6 md:pl-10">
@@ -272,7 +284,7 @@ function StaticPillars({ data, useFallback, onContextLost, canvasInView, canvasW
 }
 
 /* Layout PINADO — só monta em desktop (`isDesktop`) com motion ligado. */
-function PinnedTimeline({ data, trackRef, progress, lineScale, activeIndex, useFallback, onContextLost, canvasInView, canvasWrapRef, velocityRef }) {
+function PinnedTimeline({ data, trackRef, progress, lineScale, activeIndex, canvasInView, canvasWrapRef, velocityRef, useFallback, onContextLost }) {
   return (
     <section id="padrao" ref={trackRef} className="relative h-[400dvh] bg-rv-void">
       {/* Palco: uma viewport de altura, colado no topo enquanto o trilho de
@@ -286,7 +298,16 @@ function PinnedTimeline({ data, trackRef, progress, lineScale, activeIndex, useF
         <div className={`relative z-10 grid h-full items-center gap-16 md:grid-cols-12 ${GX}`}>
           <div className="md:col-span-6">
             <ScrubHeadline progress={progress} lines={data.declarationLines} />
-            <CanvasSlot useFallback={useFallback} onContextLost={onContextLost} canvasInView={canvasInView} wrapRef={canvasWrapRef} velocityRef={velocityRef} reduced={false} activeIndex={activeIndex} />
+            <CanvasSlot
+              canvasInView={canvasInView}
+              wrapRef={canvasWrapRef}
+              velocityRef={velocityRef}
+              reduced={false}
+              activeIndex={activeIndex}
+              pinned
+              useFallback={useFallback}
+              onContextLost={onContextLost}
+            />
           </div>
 
           <div className="relative pl-10 md:col-span-6">
@@ -327,11 +348,12 @@ export default function PillarsShaped({ data }) {
   const isDesktop = useIsDesktop();
   const total = data.labels.length;
 
-  // Três motivos independentes pra cair no fallback em CSS: rede lenta
-  // (`isSlowConnection`), navegador/webview sem WebGL de verdade
-  // (`hasWebGL` — o caso mais provável de "o ícone não aparece" num
-  // aparelho real, ver nota da função em config/_base.js) e perda de
-  // contexto DEPOIS de já ter montado (`contextLost`, avisado pelo próprio
+  // Três motivos independentes pra cair no fallback em Canvas2D: rede lenta
+  // (`isSlowConnection` — não baixar 219KB gzip a mais numa 3G não é
+  // negociável, mesmo no desktop pinado), navegador/webview sem WebGL de
+  // verdade (`hasWebGL` — o caso mais provável de "o ícone não aparece" num
+  // aparelho real, ver a função em config/_base.js) e perda de contexto
+  // DEPOIS de já ter montado (`contextLost`, avisado pelo próprio
   // `<PillarsCanvas>` via `onContextLost`). Os dois primeiros são checados
   // uma vez só (não mudam durante a sessão); o terceiro é estado porque
   // pode acontecer a qualquer momento, inclusive depois de renderizar com
@@ -339,7 +361,7 @@ export default function PillarsShaped({ data }) {
   const noWebGL = useMemo(() => !hasWebGL(), []);
   const slow = useMemo(() => isSlowConnection(), []);
   const [contextLost, setContextLost] = useState(false);
-  const useFallback = slow || noWebGL || contextLost;
+  const useFallback = noWebGL || slow || contextLost;
 
   // Só a versão pinada usa isto de verdade — mas os hooks precisam rodar
   // incondicionalmente (Regras dos Hooks), então ficam aqui em cima
@@ -366,8 +388,6 @@ export default function PillarsShaped({ data }) {
     return (
       <StaticPillars
         data={data}
-        useFallback={useFallback}
-        onContextLost={() => setContextLost(true)}
         canvasInView={canvasInView}
         canvasWrapRef={canvasWrapRef}
         velocityRef={velocityRef}
@@ -383,11 +403,11 @@ export default function PillarsShaped({ data }) {
       progress={progress}
       lineScale={lineScale}
       activeIndex={activeIndex}
-      useFallback={useFallback}
-      onContextLost={() => setContextLost(true)}
       canvasInView={canvasInView}
       canvasWrapRef={canvasWrapRef}
       velocityRef={velocityRef}
+      useFallback={useFallback}
+      onContextLost={() => setContextLost(true)}
     />
   );
 }

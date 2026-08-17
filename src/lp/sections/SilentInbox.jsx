@@ -527,6 +527,13 @@ export default function SilentInbox({ data }) {
 
   const lossOpacity = useTransform(progress, [STAGE.turn[0], turnMid], [1, 0]);
   const gainOpacity = useTransform(progress, [turnMid - 0.02, STAGE.turn[1]], [0, 1]);
+  /* Deslocamento vertical do rótulo de estado — a troca deixa de ser um
+     crossfade plano (opacidade só) e ganha um pequeno movimento de saída/
+     chegada: o "antes" sobe e se desfaz, o "depois" nasce um pouco abaixo
+     e assenta no lugar. Mesmo motion value de sempre (`progress`), então
+     continua congelando exatamente onde o scroll parar. */
+  const lossLabelY = useTransform(progress, [STAGE.turn[0], turnMid], [0, -10]);
+  const gainLabelY = useTransform(progress, [turnMid - 0.02, STAGE.turn[1]], [8, 0]);
 
   /* Varredura de luz violeta atravessando o vidro no instante da virada —
      o "flash" que marca a troca. Um pulso só, amarrado ao mesmo progresso:
@@ -551,12 +558,49 @@ export default function SilentInbox({ data }) {
       className="relative h-[340dvh] bg-rv-void"
     >
       <div className="sticky top-0 h-[100dvh] overflow-hidden">
+        {/* Gradiente de fundo — v2, pedido explícito de "clean porém mais
+            bonito". Antes só existia o brilho central (camada 2 abaixo);
+            sozinho, ele mal aparecia contra o `bg-rv-void` quase preto da
+            seção — a cena lia como um vazio chapado com um aparelho em
+            cima, não como um palco com luz de verdade.
+
+            Três camadas ESTÁTICAS (sem animação nova — "clean" pede
+            composição, não mais movimento) mais o brilho central que já
+            existia:
+              1. véu superior, ancora a cena no topo e costura com a seção
+                 anterior — mesma ideia de "aurora do topo" que
+                 ConceptStack.jsx já usa, dose bem mais discreta aqui;
+              2. brilho central respirando (mantido, só levemente mais
+                 presente — 0.2→0.26 de pico);
+              3. véu inferior, assenta a cena numa base em vez de terminar
+                 num corte seco;
+            Todas violeta-sobre-preto (a única cor de acento da marca) e
+            com paradas suficientes pra não gerar banding em 8 bits sobre
+            fundo quase preto (mesmo cuidado de AmbientStage em
+            ConceptStack.jsx). */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-[55%]"
+          style={{
+            background:
+              'radial-gradient(ellipse 90% 70% at 50% 0%, rgba(124,58,237,0.16) 0%, rgba(124,58,237,0.08) 32%, rgba(124,58,237,0.02) 58%, transparent 80%)',
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%]"
+          style={{
+            background:
+              'radial-gradient(ellipse 85% 65% at 50% 100%, rgba(76,29,149,0.14) 0%, rgba(76,29,149,0.07) 34%, transparent 78%)',
+          }}
+        />
+
         {/* Brilho ambiente violeta — respira em loop, independente do scroll */}
         <motion.div
           aria-hidden
           className="pointer-events-none absolute left-1/2 top-1/2 h-[110vh] w-[110vh] -translate-x-1/2 -translate-y-1/2"
-          style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.2), transparent 62%)', filter: 'blur(30px)' }}
-          animate={reduce ? {} : { scale: [1, 1.12, 1], opacity: [0.7, 1, 0.7] }}
+          style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.22), transparent 62%)', filter: 'blur(30px)' }}
+          animate={reduce ? {} : { scale: [1, 1.12, 1], opacity: [0.72, 1, 0.72] }}
           transition={reduce ? {} : { duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
 
@@ -721,11 +765,29 @@ export default function SilentInbox({ data }) {
                 competindo no rodapé da tela, sem contar que também não
                 explicava o que estava rotulando. Aqui em cima ele nunca
                 encosta em nada, e o ícone (✕ cinza vs ✓ verde) faz o
-                significado ler antes mesmo do texto. */}
+                significado ler antes mesmo do texto.
+
+                v2 — os dois chips ganharam profundidade de vidro de verdade
+                (gradiente em vez de cor chapada) e um leve `y` na troca (o
+                "antes" sobe e se desfaz, o "depois" nasce um pouco abaixo e
+                assenta — não é mais um crossfade plano). O chip "Padrão
+                Ravenn" foi além: a cor de marca (violeta) virou a
+                protagonista dele — antes era inteiramente verde-WhatsApp,
+                o que lia como "chegou mensagem" mas não como "o padrão da
+                CASA está aparecendo". Agora o violeta lidera (fundo, borda
+                em gradiente, glow) e o verde volta pro papel que já era
+                dele por natureza: só o check, o sinal específico de
+                conversão, não a cor do chip inteiro. Ainda em `text-[15px]`
+                — nenhuma redução de tamanho, só de cor/textura. */}
             <motion.div aria-hidden className="grid shrink-0" style={{ opacity: stateLabelOpacity }}>
               <motion.div
-                className="col-start-1 row-start-1 flex items-center gap-1.5 whitespace-nowrap rounded-full border border-white/10 bg-white/[0.05] py-1 pl-1 pr-2.5 backdrop-blur-md md:gap-2 md:py-2 md:pl-2 md:pr-4"
-                style={{ opacity: lossOpacity }}
+                className="col-start-1 row-start-1 flex items-center gap-1.5 whitespace-nowrap rounded-full py-1 pl-1 pr-2.5 backdrop-blur-md md:gap-2 md:py-2 md:pl-2 md:pr-4"
+                style={{
+                  opacity: lossOpacity,
+                  y: lossLabelY,
+                  background: 'linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.025))',
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), inset 0 0 0 1px rgba(255,255,255,0.1), 0 6px 18px -8px rgba(0,0,0,0.5)',
+                }}
               >
                 <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white/10 md:h-[22px] md:w-[22px]">
                   <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="3" strokeLinecap="round" className="h-2 w-2 md:h-[10px] md:w-[10px]">
@@ -738,23 +800,40 @@ export default function SilentInbox({ data }) {
               </motion.div>
 
               <motion.div
-                className="col-start-1 row-start-1 flex items-center gap-1.5 whitespace-nowrap rounded-full py-1 pl-1 pr-2.5 md:gap-2 md:py-2 md:pl-2 md:pr-4"
+                className="relative col-start-1 row-start-1 flex items-center gap-1.5 whitespace-nowrap overflow-hidden rounded-full py-1 pl-1 pr-2.5 md:gap-2 md:py-2 md:pl-2 md:pr-4"
                 style={{
                   opacity: gainOpacity,
-                  background: 'rgba(4,20,11,0.8)',
-                  border: '1px solid rgba(37,211,102,0.4)',
-                  boxShadow: '0 0 26px rgba(37,211,102,0.28)',
+                  y: gainLabelY,
+                  background: 'linear-gradient(165deg, rgba(46,23,94,0.94), rgba(11,7,22,0.96))',
+                  boxShadow:
+                    'inset 0 1px 0 rgba(255,255,255,0.07), 0 0 0 1px rgba(167,139,250,0.42), 0 0 30px -6px rgba(124,58,237,0.6)',
                 }}
               >
+                {/* Varredura de luz periódica — o "chamativo" clean pedido:
+                    um pulso a cada ~3.4s, mesma família de sweep que o CTA
+                    desta seção já usa no hover (`from-transparent
+                    via-white/X to-transparent`), aqui em loop espaçado em
+                    vez de gatilho de mouse (não há hover num rótulo). */}
+                {!reduce && (
+                  <motion.span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                    animate={{ x: ['-100%', '100%'] }}
+                    transition={{ duration: 1.3, repeat: Infinity, repeatDelay: 3.4, ease: 'easeInOut' }}
+                  />
+                )}
                 <span
-                  className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full md:h-[22px] md:w-[22px]"
-                  style={{ background: WA_GREEN }}
+                  className="relative flex h-4 w-4 shrink-0 items-center justify-center rounded-full md:h-[22px] md:w-[22px]"
+                  style={{ background: WA_GREEN, boxShadow: '0 0 8px rgba(37,211,102,0.75)' }}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="#04140b" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" className="h-2 w-2 md:h-[11px] md:w-[11px]">
                     <path d="M5 13l4 4L19 7" />
                   </svg>
                 </span>
-                <span className="font-satoshi text-[15px] font-semibold uppercase tracking-widest2 md:text-[16px]" style={{ color: WA_GREEN }}>
+                <span
+                  className="relative bg-clip-text font-satoshi text-[15px] font-semibold uppercase tracking-widest2 text-transparent md:text-[16px]"
+                  style={{ backgroundImage: 'linear-gradient(120deg, #F5F3FF, #C4B5FD)' }}
+                >
                   {data.gainLabel}
                 </span>
               </motion.div>

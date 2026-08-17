@@ -10,7 +10,7 @@ function Field({ tag: Tag = 'input', label, name, ...props }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       {label && (
         <label htmlFor={id} style={{
-          fontSize: 10, fontWeight: 500, textTransform: 'uppercase',
+          fontSize: 15, fontWeight: 500, textTransform: 'uppercase',
           letterSpacing: '0.18em', color: '#5B6472',
         }}>
           {label}
@@ -55,7 +55,7 @@ function SelectField({ label, options, name, ...props }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       {label && (
         <label htmlFor={id} style={{
-          fontSize: 10, fontWeight: 500, textTransform: 'uppercase',
+          fontSize: 15, fontWeight: 500, textTransform: 'uppercase',
           letterSpacing: '0.18em', color: '#5B6472',
         }}>
           {label}
@@ -219,7 +219,7 @@ export default function ContactSection() {
         >
           {/* Eyebrow */}
           <span style={{
-            fontSize: 11, fontWeight: 500, textTransform: 'uppercase',
+            fontSize: 15, fontWeight: 500, textTransform: 'uppercase',
             letterSpacing: '0.22em', color: '#7C3AED',
             display: 'block', marginBottom: 24,
           }}>
@@ -297,7 +297,7 @@ export default function ContactSection() {
                     {icon}
                   </span>
                   <div>
-                    <div style={{ fontSize: 10, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.18em', color: '#5B6472', marginBottom: 4 }}>
+                    <div style={{ fontSize: 15, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.18em', color: '#5B6472', marginBottom: 4 }}>
                       {label}
                     </div>
                     <div
@@ -333,7 +333,7 @@ export default function ContactSection() {
               }}
             >
               <p style={{
-                fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.22em',
+                fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.22em',
                 color: '#A78BFA', marginBottom: 16,
               }}>
                 Mensagem enviada
@@ -400,7 +400,7 @@ export default function ContactSection() {
                   color:         '#fff',
                   border:        'none',
                   borderRadius:  4,
-                  fontSize:      12,
+                  fontSize:      15,
                   fontWeight:    500,
                   textTransform: 'uppercase',
                   letterSpacing: '0.22em',
@@ -424,7 +424,7 @@ export default function ContactSection() {
               </button>
 
               <p style={{
-                fontSize:      10,
+                fontSize:      15,
                 textTransform: 'uppercase',
                 letterSpacing: '0.14em',
                 color:         '#5B6472',

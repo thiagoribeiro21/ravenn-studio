@@ -165,67 +165,55 @@ section[id] { scroll-margin-top: 100px; }
   .rv-aurora-a, .rv-aurora-b, .rv-aurora-c { animation: none; }
 }
 
-/* Rotação contínua e lenta + respiração dos glifos SVG do Ato 2
-   (ScrubStatement) — dá o "vivo, respirando" sem ser um ícone girando
-   rápido tipo loading spinner.
+/* Glifos SVG do Ato 2 (ScrubStatement) — v12.
 
-   QUATRO animações, QUATRO regras em QUATRO elementos — não uma regra com
-   vários keyframes no mesmo nó. `transform` é uma propriedade só: se rotate
-   e scale rodassem como animations separadas no mesmo elemento, a segunda da
-   lista simplesmente substituiria o valor computado da primeira a cada
-   frame (CSS não soma transforms de animations concorrentes sem
-   `animation-composition: accumulate`, que não vale a pena aqui só pra
-   isso) — o giro sumiria, só a pulsação ficaria visível. Por isso cada
-   camada vive no seu próprio nó (ver a árvore comentada em Glyph.jsx),
-   compostas naturalmente pela árvore do DOM.
+   DUAS animações, não as quatro da v11: um traço de luz que dá uma volta no
+   anel externo e uma respiração muito sutil no glifo inteiro. A v11 girava
+   cometa, satélite e forma ao mesmo tempo dentro de uma pílula com borda; a
+   esta escala (~20px) nenhum dos movimentos era legível isoladamente e o
+   conjunto lia como tremor. Um movimento que dá pra acompanhar vale mais que
+   quatro que se cancelam.
 
-   UMA keyframe de rotação serve as três camadas que giram: o que as
-   diferencia é duração e sentido, não a curva. Duplicar `to { rotate(360deg) }`
-   em três keyframes idênticas só criaria três lugares pra dessincronizar
-   depois.
+   As duas vivem em NÓS DIFERENTES por necessidade, não por estilo: se as duas
+   mexessem em `transform` no mesmo elemento, a segunda da lista substituiria
+   o valor computado da primeira a cada frame (CSS não soma transforms de
+   animations concorrentes sem `animation-composition: accumulate`). Aqui isso
+   nem chega a ser risco — `rv-glyph-trace` anima `stroke-dashoffset` e
+   `rv-glyph-pulse` anima `transform`/`opacity` — mas a separação de nós fica
+   registrada porque é a regra que já valia nas versões anteriores.
 
-   Velocidades deliberadamente PRIMAS entre si (6.5s / 9s / 18s): com
-   múltiplos exatos as três camadas reencontrariam a mesma posição relativa
-   em ciclo curto e a composição leria como uma peça só girando. Sem razão
-   simples entre elas, o padrão praticamente não se repete — é o que faz o
-   glifo parecer mecanismo, não engrenagem única.
+   ── Sobre o custo de animar `stroke-dashoffset` ────────────────────────────
+   Não é uma propriedade de compositor: cada frame repinta o traço. Aceito
+   aqui e só aqui, porque a área repintada é o anel de um objeto de ~20px, e
+   são no máximo 4 na tela. É a troca certa pelo efeito — a alternativa
+   composta (o gradiente cônico mascarado da v11) exigia de volta a pílula com
+   borda que esta versão existe pra remover.
 
-   Todas em CSS puro, não Framer Motion: o Ato 2 já alimenta ~15
+   Ambas em CSS puro, não Framer Motion: o Ato 2 já alimenta ~15
    `useTransform` por frame de scroll a partir de uma única MotionValue de
-   progresso — mais um punhado de loops do Framer só pra giro decorativo e
-   constante (sem relação nenhuma com o scroll) seria custo de thread JS pago
-   à toa. Animação CSS roda no compositor, fora do loop do React. Todas as
-   quatro animam só `transform`/`opacity` — nada que force layout ou paint. */
-@keyframes rv-glyph-spin { to { transform: rotate(360deg); } }
+   progresso — mais loops do Framer só pra decoração constante (sem relação
+   nenhuma com o scroll) seria custo de thread JS pago à toa. */
+@keyframes rv-glyph-trace { to { stroke-dashoffset: -1; } }
 @keyframes rv-glyph-pulse {
-  0%, 100% { opacity: 0.78; transform: scale(0.94); }
-  50%      { opacity: 1;    transform: scale(1.06); }
+  0%, 100% { opacity: 0.82; transform: scale(0.97); }
+  50%      { opacity: 1;    transform: scale(1.03); }
 }
 /* `--rv-glyph-offset` é NEGATIVO (ver Glyph.jsx): entra adiantado no ciclo em
    vez de segurar o glifo parado esperando o delay passar. */
-.rv-glyph-spin {
-  animation: rv-glyph-spin 18s linear infinite;
-  animation-delay: var(--rv-glyph-offset, 0s);
-}
-.rv-glyph-sweep {
-  animation: rv-glyph-spin 6.5s linear infinite;
-  animation-delay: var(--rv-glyph-offset, 0s);
-}
-.rv-glyph-orbit {
-  animation: rv-glyph-spin 9s linear infinite reverse;
+.rv-glyph-trace {
+  animation: rv-glyph-trace 3.4s linear infinite;
   animation-delay: var(--rv-glyph-offset, 0s);
 }
 .rv-glyph-pulse {
-  animation: rv-glyph-pulse 3.6s ease-in-out infinite;
+  animation: rv-glyph-pulse 4.2s ease-in-out infinite;
   animation-delay: var(--rv-glyph-delay, 0s);
 }
 @media (prefers-reduced-motion: reduce) {
-  .rv-glyph-spin, .rv-glyph-sweep, .rv-glyph-orbit, .rv-glyph-pulse { animation: none; }
-  /* Sem movimento, o cometa cônico congela num arco claro de um lado só e o
-     satélite vira um ponto solto grudado no topo — os dois só fazem sentido
-     em movimento. Escondê-los devolve o glifo à line-art estática da v10,
-     que continua legível e é o que essa preferência de fato pede. */
-  .rv-glyph-sweep, .rv-glyph-orbit { display: none; }
+  .rv-glyph-trace, .rv-glyph-pulse { animation: none; }
+  /* Parado, o traço vira um arco claro solto num lado do anel — lê como
+     glifo quebrado, não como desenho. Escondê-lo deixa só o trilho apagado
+     mais o núcleo, que é uma line-art estática íntegra. */
+  .rv-glyph-trace { display: none; }
 }
 
 /* ── LP v3 — FAQ, glassmorphism reforçado (item 9) ───────────────────────── */

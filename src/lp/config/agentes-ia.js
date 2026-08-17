@@ -41,7 +41,19 @@ export default {
 
   hero: {
     eyebrow: 'Agentes de IA para WhatsApp com atendimento 24h',
-    headlineLines: ['Às 3 da manhã, alguém pediu orçamento.', '_Quem respondeu?_'],
+    // Quebra reposicionada (era ['Às 3 da manhã, alguém pediu orçamento.',
+    // '_Quem respondeu?_']) — a primeira linha sozinha tinha 39 caracteres,
+    // bem acima do que TYPE.h1 comporta numa linha só (~26-28, o mesmo teto
+    // que rege o headline das outras 5 LPs); "orçamento." ficava sozinho
+    // numa terceira linha visual no desktop inteiro (testado em
+    // 1280/1440/1536/1920). Reparte no meio da frase em vez de por
+    // sentença inteira — 28/27 caracteres, testado sem quebra em nenhuma
+    // das 4 resoluções. O acento roxo desliza de "Quem respondeu?" pra
+    // "orçamento. Quem respondeu?" (não dá pra manter o corte exato na
+    // sentença E caber a primeira linha ao mesmo tempo), mas o par
+    // pergunta+objeto acentuado junto ainda lê bem como o "gancho" da
+    // headline.
+    headlineLines: ['Às 3 da manhã, alguém pediu', '_orçamento. Quem respondeu?_'],
     subheadline:
       'Agentes de IA treinados no seu negócio respondem, qualificam e agendam pelo WhatsApp, 24 horas por dia, sem fila, sem lead esquecido.',
     deviceImages: {

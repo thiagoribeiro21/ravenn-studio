@@ -54,7 +54,7 @@ export default function ProcessSection() {
       >
         <span
           style={{
-            fontSize:      11,
+            fontSize:      15,
             fontWeight:    500,
             textTransform: 'uppercase',
             letterSpacing: '0.22em',
@@ -122,7 +122,7 @@ export default function ProcessSection() {
 
             <span
               style={{
-                fontSize:      11,
+                fontSize:      15,
                 fontWeight:    500,
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
