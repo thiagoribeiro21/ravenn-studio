@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useInView, useMotionValueEvent, useSpring, useTransform, useVelocity } from 'framer-motion';
 import PillarsMorphIcon from '../primitives/PillarsMorphIcon';
 import {
@@ -198,6 +198,31 @@ function PillarRow({ index, label, activeIndex }) {
   );
 }
 
+/* Placeholder do `Suspense` enquanto o chunk de Three.js baixa — v7. ERA o
+   próprio `PillarsMorphIcon` (o ícone completo em Canvas2D), pedido
+   explícito pra tirar: por mais rápido que o chunk chegue, mostrar o ícone
+   Canvas2D primeiro e trocar pro 3D alguns frames depois lê como "o ícone
+   errado apareceu e foi consertado", não como uma única peça carregando —
+   pior ainda porque essa troca podia se repetir (ver nota do `useEffect`
+   de `contextLost` mais abaixo: antes disso, sair de vista e voltar
+   REMONTAVA o Suspense, então o "flash errado" acontecia de novo a cada
+   volta). Este placeholder não é um ícone alternativo — é só um respiro
+   (glow) do MESMO raio do canvas, então não existe mais "forma errada" pra
+   trocar, só uma presença ganhando nitidez. Sem guarda de
+   `prefers-reduced-motion`: só é alcançável dentro de `tryThree`, que já
+   exige `!reduced`. */
+function CanvasLoadingPulse() {
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <span
+        aria-hidden
+        className="rv-canvas-pulse h-2/5 w-2/5 rounded-full"
+        style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.4), transparent 70%)' }}
+      />
+    </div>
+  );
+}
+
 /* v6 — Three.js voltou a valer pra MOBILE também (era só desktop pinado).
    Pedido explícito: o ícone real, não o fallback Canvas2D, também aí — o
    Canvas2D continua vivo só como o que sempre foi por design, uma REDE DE
@@ -222,11 +247,10 @@ function CanvasSlot({ canvasInView, wrapRef, velocityRef, reduced, activeIndex =
           <div className="h-full w-full" />
         ) : tryThree ? (
           /* Suspense cobre a janela entre "decidiu montar" e "o chunk de
-             Three.js terminou de chegar" — mostra o MESMO ícone em
-             Canvas2D nesse intervalo (não um spinner solto), então a troca
-             pro morphing 3D real, quando chega, lê como um upgrade suave
-             em vez de um elemento novo aparecendo do nada. */
-          <Suspense fallback={<PillarsMorphIcon activeIndex={activeIndex} reduceMotion={false} velocityRef={velocityRef} className="h-full w-full" />}>
+             Three.js terminou de chegar" — só um glow neutro nesse
+             intervalo (`CanvasLoadingPulse`, ver nota acima), nunca o
+             ícone alternativo em Canvas2D. */
+          <Suspense fallback={<CanvasLoadingPulse />}>
             <PillarsCanvas activeIndex={activeIndex} mobile={mobile} onContextLost={onContextLost} />
           </Suspense>
         ) : (
@@ -385,6 +409,25 @@ export default function PillarsShaped({ data }) {
 
   const lineScale = useTransform(progress, [0, 1], [0, 1]);
   const canvasInView = useInView(canvasWrapRef, { margin: '240px 0px', once: false });
+
+  /* `contextLost` tinha memória permanente pro resto da sessão: uma vez
+     `true`, `useFallback` ficava travado em Canvas2D pra sempre — inclusive
+     depois de sair de vista e voltar, que é exatamente o bug relatado
+     ("volto na seção e tá com o ícone SVG"). A causa mais provável não é o
+     dispositivo não ter WebGL de verdade (isso `hasWebGL()` já cobre
+     separado, uma vez só) — é o navegador mobile liberando o contexto de
+     um `<canvas>` que ficou muito tempo fora da tela pra economizar
+     memória/GPU, o que dispara `webglcontextlost` mesmo em aparelhos que
+     suportam WebGL perfeitamente. Como o próprio React já REMONTA
+     `<PillarsCanvas>` do zero toda vez que `canvasInView` volta a `true`
+     (`CanvasSlot` troca a árvore inteira), um contexto novo de verdade já
+     ia ser criado de qualquer forma — só faltava não amarrar essa nova
+     tentativa a uma falha antiga. Resetar aqui, no momento em que a seção
+     SAI de vista (a árvore antiga já vai ser desmontada de qualquer jeito),
+     dá à próxima montagem uma chance limpa. */
+  useEffect(() => {
+    if (!canvasInView) setContextLost(false);
+  }, [canvasInView]);
 
   const [activeIndex, setActiveIndex] = useState(0);
   useMotionValueEvent(progress, 'change', (v) => {

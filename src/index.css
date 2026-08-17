@@ -230,6 +230,17 @@ section[id] { scroll-margin-top: 100px; }
   .rv-navcta-pulse { animation: none; }
 }
 
+/* Glow de loading do ícone Three.js de PillarsShaped.jsx (`CanvasLoadingPulse`)
+   — respiro neutro enquanto o chunk de Three.js baixa, substitui o ícone
+   Canvas2D que aparecia ali antes (ver nota no próprio componente). Sem
+   guarda de `prefers-reduced-motion`: o componente só é alcançável quando
+   motion já está ligado (`tryThree` exige `!reduced`). */
+@keyframes rv-canvas-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.94); }
+  50%      { opacity: 0.85; transform: scale(1.04); }
+}
+.rv-canvas-pulse { animation: rv-canvas-pulse 1.5s ease-in-out infinite; filter: blur(18px); }
+
 /* ── LP v3 — FAQ, glassmorphism reforçado (item 9) ───────────────────────── */
 .rv-faq-item {
   background: rgba(13, 10, 24, .55);

@@ -20,6 +20,8 @@ export default defineConfig({
         sitesImersivos: r('./sites-imersivos.html'),
         gestaoGoogleAds: r('./gestao-google-ads.html'),
         lojasVirtuais: r('./lojas-virtuais.html'),
+        politicaPrivacidade: r('./politica-de-privacidade.html'),
+        termosDeUso: r('./termos-de-uso.html'),
       },
       output: {
         manualChunks(id) {

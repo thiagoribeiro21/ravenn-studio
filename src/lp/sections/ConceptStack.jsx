@@ -392,18 +392,62 @@ function ShowcaseFrame({ item, reduce, frameRef, inView, aspect }) {
   );
 }
 
-/* ── Seletor de conceito — segmented control ──────────────────────────────
-   A pílula ativa é UM elemento que desliza entre as abas (`layoutId`), não
-   três fundos aparecendo/sumindo — é o que dá a física de segmented control
-   nativo em vez de "troquei a cor de fundo". Com `reduce`, o `layoutId` sai
-   de cena (a pílula só troca de lugar, sem interpolar posição). */
+/* ── Seletor de conceito — v10, chips com scroll ──────────────────────────
+   ERA um segmented control de largura fixa (`flex-1` dividindo o espaço em
+   3 partes iguais + `truncate`) — pedido explícito pra tirar: em qualquer
+   nicho com nome longo ("Qualificação de Leads", "Diagnóstico Gratuito"),
+   dividir a pílula em 3 partes iguais numa tela de 375px não deixa espaço
+   nem pra 2/3 do texto, e `truncate` virava reticências no meio da palavra
+   ("Qualificação de L..."). Não existe combinação de fonte/padding que
+   resolva isso SEM mudar a régua: 3 caixas de largura igual e texto de
+   comprimento desigual são incompatíveis por natureza.
+
+   A troca: cada aba vira um CHIP de largura própria (`whitespace-nowrap`,
+   sem `flex-1`, sem `truncate` — o texto NUNCA corta, dita sua largura) e o
+   conjunto rola horizontalmente no mobile em vez de espremer. Não é só a
+   correção do bug — é o padrão que resolve "óbvio que dá pra trocar"
+   pedido junto: chips com a borda cortada na metade na borda da tela
+   (`snap-x` sem centralizar o último) e o fade nas bordas são a mesma
+   linguagem visual de categoria de app/loja que qualquer usuário de
+   celular já reconhece como "arraste pra ver mais", sem precisar de seta
+   ou texto de instrução. `scroll-snap` prende cada chip tocado numa
+   posição de leitura limpa em vez de deixar o dedo largar o scroll no meio
+   de dois. No desktop (`md:`) não há o que rolar (os nomes cabem numa
+   linha só com folga), então vira uma linha centralizada normal — mesmos
+   chips, só o container que muda de "trilho" pra "linha". */
 function ConceptTabs({ items, active, progress, onSelect, reduce }) {
+  const scrollerRef = useRef(null);
+
+  /* O autoplay troca `active` sozinho a cada ~7s sem nenhum gesto do
+     usuário — sem isto, num celular onde só 1-2 chips cabem na tela, a
+     seção podia avançar pra um conceito cujo chip ficou fora da área
+     visível, e a pessoa perderia a referência de "qual tab está ativa
+     agora". `scrollIntoView` mantém o chip ativo sempre alcançável, sem
+     forçar centralização agressiva (`block:'nearest'` não mexe se já
+     estiver visível — só corrige quando o autoplay empurrou pra fora). */
+  useEffect(() => {
+    const track = scrollerRef.current;
+    const activeEl = track?.children[active];
+    if (!activeEl) return;
+    activeEl.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest', inline: 'center' });
+  }, [active, reduce]);
+
   return (
-    <div className="mt-10 flex justify-center md:mt-12">
+    <div className="relative mt-10 md:mt-12">
+      {/* Fades nas bordas — sinalizam "tem mais chip pra esse lado" na
+          linguagem visual padrão de trilho rolável, só no mobile (no
+          desktop não há overflow pra indicar). `md:hidden` em vez de
+          detectar overflow via JS: mais barato, e a única situação onde
+          NADA rolaria (2-3 chips curtos cabendo sozinhos numa tela larga)
+          já não acontece no breakpoint em que isto aparece. */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-rv-void to-transparent md:hidden" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-rv-void to-transparent md:hidden" />
+
       <div
+        ref={scrollerRef}
         role="tablist"
         aria-label="Selecionar conceito"
-        className="flex w-full max-w-xl gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1.5 backdrop-blur-xl"
+        className="scrollbar-hide -mx-[6vw] flex snap-x snap-mandatory gap-2.5 overflow-x-auto scroll-smooth px-[6vw] py-1 md:mx-0 md:justify-center md:overflow-visible md:px-0"
       >
         {items.map((item, i) => {
           const isActive = i === active;
@@ -416,27 +460,19 @@ function ConceptTabs({ items, active, progress, onSelect, reduce }) {
               role="tab"
               aria-selected={isActive}
               onClick={() => onSelect(i)}
-              /* `min-w-0`: filho `flex-1` sem isso ignora `truncate` no
-                 texto (o default de flex item é `min-width: auto`, que
-                 recusa encolher abaixo do conteúdo intrínseco — o "Diagnóstico
-                 Gratuito" vazava pra fora da pílula em telas estreitas em vez
-                 de truncar com reticências, mesmo com `truncate` no span). */
-              className="group relative min-w-0 flex-1 rounded-full px-2 py-2.5 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rv-purple/60 md:px-4"
+              className={`group relative shrink-0 snap-center overflow-hidden whitespace-nowrap rounded-full border px-5 py-3 text-center transition-[background-color,border-color,transform] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rv-purple/60 active:scale-[0.97] md:px-5 md:py-2.5 ${
+                isActive
+                  ? 'border-rv-purple-400/40 bg-white/[0.08]'
+                  : 'border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.04]'
+              }`}
+              style={
+                isActive
+                  ? { boxShadow: '0 0 0 1px rgba(167,139,250,0.12), 0 10px 30px -12px rgba(124,58,237,0.55)' }
+                  : undefined
+              }
             >
-              {isActive && !reduce && (
-                <motion.span
-                  layoutId="concept-tab-pill"
-                  aria-hidden
-                  className="absolute inset-0 rounded-full border border-white/10 bg-white/[0.07]"
-                  transition={{ type: 'spring', stiffness: 380, damping: 34 }}
-                />
-              )}
-              {isActive && reduce && (
-                <span aria-hidden className="absolute inset-0 rounded-full border border-white/10 bg-white/[0.07]" />
-              )}
-
               <span
-                className={`relative z-10 block truncate font-satoshi text-[15px] font-medium transition-colors duration-300 md:text-[16px] ${
+                className={`relative z-10 font-satoshi text-[14.5px] font-medium transition-colors duration-300 md:text-[15px] ${
                   isActive ? 'text-rv-titanium' : 'text-rv-faint group-hover:text-rv-slate'
                 }`}
               >
@@ -445,11 +481,14 @@ function ConceptTabs({ items, active, progress, onSelect, reduce }) {
 
               {/* Preenchimento do autoplay — o MESMO `progress` do motor (não
                   um clone do tempo), então pausar no hover congela onde está
-                  em vez de reiniciar. */}
+                  em vez de reiniciar. Vive DENTRO do chip agora (era uma
+                  régua fina no rodapé da pílula-container inteira) — cada
+                  chip tem sua própria barra, consistente com "cada aba é
+                  sua própria unidade" que o resto do redesign estabelece. */}
               {isActive && !reduce && (
                 <motion.span
                   aria-hidden
-                  className="absolute inset-x-3 bottom-1 h-px origin-left rounded-full bg-rv-purple-400"
+                  className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-rv-purple-400"
                   style={{ scaleX: progress }}
                 />
               )}

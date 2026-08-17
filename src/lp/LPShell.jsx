@@ -206,11 +206,55 @@ export default function LPShell({ config }) {
               </div>
             ))}
           </div>
-          <div className={`mt-12 flex flex-col items-start justify-between gap-4 border-t border-white/[0.06] py-8 md:flex-row md:items-center ${GX}`}>
+          {/* `md:pr-28` extra: o WhatsAppButton flutuante desta LP (fixed,
+              right:24, width:56, z-index:9999) ocupa os últimos ~80px da
+              borda direita o tempo todo — sem essa folga, o grupo mais à
+              direita da linha (`justify-between` empurra os links jurídicos
+              pra ponta) renderiza parte de "Termos de Uso" atrás do botão
+              (medido: ~3px do texto sob o botão em 1280px de largura, e
+              o alvo de clique do botão — quadrado, `<a>` inteiro, não só o
+              círculo visível — cobre mais que isso). `md:` só, porque no
+              mobile a linha empilha em coluna e não chega perto do canto. */}
+          <div className={`mt-12 flex flex-col items-start justify-between gap-6 border-t border-white/[0.06] py-8 md:flex-row md:items-center md:pr-28 ${GX}`}>
             <img src={config.meta.logo} alt="Ravenn Studio" width={800} height={274} loading="lazy" decoding="async" className="h-8 w-auto md:h-9" />
-            <p className={`font-satoshi text-rv-slate ${TYPE.cardDesc}`}>
-              {config.footer.line} · {new Date().getFullYear()}
-            </p>
+
+            {/* Copyright + links jurídicos agrupados — mesmo padrão do
+                sub-footer da home (Footer.jsx), reaproveitado aqui porque
+                as LPs de tráfego pago não tinham NENHUM link legal antes
+                (o footer só existia como fechamento visual/marca). */}
+            <div className="flex flex-col items-start gap-3 md:items-end">
+              <p className={`font-satoshi text-rv-slate ${TYPE.cardDesc}`}>
+                {config.footer.line} · {new Date().getFullYear()}
+              </p>
+              <div className="flex gap-5">
+                <a
+                  href="/politica-de-privacidade.html"
+                  /* `text-rv-slate` (era `text-rv-faint`, ~3.8:1 de
+                     contraste contra `rv-void` — abaixo do mínimo de
+                     leitura confortável). `rv-slate` é a MESMA cor que o
+                     `<p>` de copyright logo acima já usa (`TYPE.cardDesc`)
+                     — os dois elementos da mesma linha agora leem no mesmo
+                     nível de contraste, em vez do link ficar mais apagado
+                     que o texto ao lado dele. */
+                  className="font-satoshi text-[14px] text-rv-slate transition-colors duration-300 hover:text-rv-titanium"
+                >
+                  Política de Privacidade
+                </a>
+                <a
+                  href="/termos-de-uso.html"
+                  /* `text-rv-slate` (era `text-rv-faint`, ~3.8:1 de
+                     contraste contra `rv-void` — abaixo do mínimo de
+                     leitura confortável). `rv-slate` é a MESMA cor que o
+                     `<p>` de copyright logo acima já usa (`TYPE.cardDesc`)
+                     — os dois elementos da mesma linha agora leem no mesmo
+                     nível de contraste, em vez do link ficar mais apagado
+                     que o texto ao lado dele. */
+                  className="font-satoshi text-[14px] text-rv-slate transition-colors duration-300 hover:text-rv-titanium"
+                >
+                  Termos de Uso
+                </a>
+              </div>
+            </div>
           </div>
         </footer>
       </div>

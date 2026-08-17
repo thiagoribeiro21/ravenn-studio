@@ -236,22 +236,42 @@ export default function Footer() {
         position: relative + z-index: 10 → flutua sobre o RAVENN (z-0).
         marginTop: -4vw → puxa o sub-footer para dentro da área do texto
         gigante, criando o efeito de moldura de fechamento da página.
-      */}
+
+        `md:pr-28` extra (além do `px` normal): o WhatsAppButton flutuante
+        (`fixed`, `right:24`, `width:56`, z-index:9999 — fora deste footer,
+        vive solto no viewport) ocupa os últimos ~80px da borda direita da
+        tela o tempo todo. Sem essa folga extra, "Termos de Uso" (o item
+        mais à direita da linha, por causa do `justify-between` abaixo)
+        rendeia bem dentro dessa faixa — medido em 1280px de largura, ~16px
+        do próprio texto ficavam atrás do botão. `md:` só, porque no mobile
+        a linha empilha em coluna (`flex-col`) e não chega perto do canto. */}
       <div
-        className="relative flex flex-col items-center gap-3 px-[clamp(32px,5vw,96px)] pb-8 text-center"
+        className="relative flex flex-col items-center gap-3 px-[clamp(32px,5vw,96px)] pb-8 text-center md:pr-28"
         style={{ zIndex: 10, marginTop: '-4vw' }}
       >
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 w-full text-[15px] text-white/40 font-mono">
           <span>© 2026 RAVENN STUDIO. Todos os direitos reservados.</span>
           <div className="flex gap-6">
-            {['Política de Privacidade', 'Termos de Uso'].map((l) => (
+            {[
+              { label: 'Política de Privacidade', href: '/politica-de-privacidade.html' },
+              { label: 'Termos de Uso', href: '/termos-de-uso.html' },
+            ].map(({ label, href }) => (
               <a
-                key={l}
-                href="#"
-                className="hover:text-white/70 transition-colors duration-200"
-                style={{ textDecoration: 'none', color: 'inherit' }}
+                key={label}
+                href={href}
+                /* Cor própria (não mais `color:inherit` do `text-white/40`
+                   do container — ~3.6:1 de contraste contra o fundo quase
+                   preto, abaixo do mínimo de leitura confortável). Mesma
+                   convenção que as outras 3 colunas de link deste footer já
+                   usam (`text-white/50 hover:text-white`, ver NAV_LINKS/
+                   CORE_SERVICES/CONTACT_LINKS acima) — só ficou pra trás
+                   aqui porque este bloco herdava do `<span>` de copyright
+                   ao lado, que é decorativo e não precisa do mesmo padrão
+                   de legibilidade de um link clicável. */
+                className="text-white/60 transition-colors duration-200 hover:text-white"
+                style={{ textDecoration: 'none' }}
               >
-                {l}
+                {label}
               </a>
             ))}
           </div>

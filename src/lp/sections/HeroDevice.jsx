@@ -86,7 +86,7 @@ function DeviceShot({ images }) {
         fetchpriority="high"
         width={1426}
         height={1201}
-        className="mx-auto h-auto w-full max-h-[42dvh] max-w-[470px] object-contain md:max-h-[58dvh] md:max-w-[1080px]"
+        className="mx-auto h-auto w-full max-h-[42dvh] max-w-[470px] object-contain md:max-h-[68dvh] md:max-w-[1300px]"
         style={{ filter: 'drop-shadow(0 60px 120px rgba(0,0,0,0.7))' }}
       />
     </picture>
