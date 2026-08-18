@@ -1,41 +1,41 @@
-import { useRef, useEffect } from 'react';
-import { scrollStore } from './scrollStore';
-
-import { MenuProvider } from './context/MenuContext';
-import IntroReveal         from './components/IntroReveal';
-import MenuPanel           from './components/MenuPanel';
-import SiteShell           from './components/SiteShell';
-
-import CustomCanvasBackground from './components/CustomCanvasBackground';
-import ScrollSequenceCanvas   from './components/ScrollSequenceCanvas';
-import WhatsAppButton         from './components/WhatsAppButton';
-import Navbar                 from './components/Navbar';
-import Footer                 from './components/Footer';
-
-import HeroSection         from './components/HeroSection';
-import MetricsBar          from './components/MetricsBar';
-import AudienceSection     from './components/AudienceSection';
-import PortfolioSection    from './components/PortfolioSection';
+import { useEffect, useRef } from 'react';
+import AudienceSection from './components/AudienceSection';
 import CapabilitiesSection from './components/CapabilitiesSection';
-import ProcessSection      from './components/ProcessSection';
-import ManifestoSection    from './components/ManifestoSection';
-import FAQSection          from './components/FAQSection';
-import CTASection          from './components/CTASection';
-import ContactSection      from './components/ContactSection';
+import ContactSection from './components/ContactSection';
+import CTASection from './components/CTASection';
+import CustomCanvasBackground from './components/CustomCanvasBackground';
+import FAQSection from './components/FAQSection';
+import Footer from './components/Footer';
+import HeroSection from './components/HeroSection';
+import IntroReveal from './components/IntroReveal';
+import ManifestoSection from './components/ManifestoSection';
+import MenuPanel from './components/MenuPanel';
+import MetricsBar from './components/MetricsBar';
+import Navbar from './components/Navbar';
+import PortfolioSection from './components/PortfolioSection';
+import ProcessSection from './components/ProcessSection';
+import ScrollSequenceCanvas from './components/ScrollSequenceCanvas';
+import SiteShell from './components/SiteShell';
+import WhatsAppButton from './components/WhatsAppButton';
+import { MenuProvider } from './context/MenuContext';
+import { scrollStore } from './scrollStore';
 
 export default function App() {
   const animEndRef = useRef(null);
 
   useEffect(() => {
     const onMouse = (e) => {
-      scrollStore.mouseX =  (e.clientX / window.innerWidth)  * 2 - 1;
+      scrollStore.mouseX = (e.clientX / window.innerWidth) * 2 - 1;
       scrollStore.mouseY = -((e.clientY / window.innerHeight) * 2 - 1);
     };
-    const onLeave = () => { scrollStore.mouseX = 0; scrollStore.mouseY = 0; };
-    window.addEventListener('mousemove',  onMouse, { passive: true });
+    const onLeave = () => {
+      scrollStore.mouseX = 0;
+      scrollStore.mouseY = 0;
+    };
+    window.addEventListener('mousemove', onMouse, { passive: true });
     window.addEventListener('mouseleave', onLeave);
     return () => {
-      window.removeEventListener('mousemove',  onMouse);
+      window.removeEventListener('mousemove', onMouse);
       window.removeEventListener('mouseleave', onLeave);
     };
   }, []);
@@ -88,11 +88,12 @@ export default function App() {
             <div
               aria-hidden
               style={{
-                position:      'absolute',
-                inset:         0,
-                zIndex:        -1,
+                position: 'absolute',
+                inset: 0,
+                zIndex: -1,
                 pointerEvents: 'none',
-                background:    'linear-gradient(to bottom, transparent 0%, rgba(3,0,10,0.40) 40%, rgba(3,0,10,0.85) 100%)',
+                background:
+                  'linear-gradient(to bottom, transparent 0%, rgba(3,0,10,0.40) 40%, rgba(3,0,10,0.85) 100%)',
               }}
             />
             <HeroSection />
