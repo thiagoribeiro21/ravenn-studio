@@ -7,9 +7,9 @@
   --bw: 1px;
 
   /* Glow / aura (the signature hover effect) */
-  --glow-sm:  0 0 0 1px rgba(124, 58, 237, 0.25);
-  --glow-md:  0 0 24px -4px rgba(124, 58, 237, 0.45);
-  --glow-lg:  0 0 60px -8px rgba(124, 58, 237, 0.55);
+  --glow-sm: 0 0 0 1px rgba(124, 58, 237, 0.25);
+  --glow-md: 0 0 24px -4px rgba(124, 58, 237, 0.45);
+  --glow-lg: 0 0 60px -8px rgba(124, 58, 237, 0.55);
   --glow-aura: 0 0 120px -20px rgba(76, 29, 149, 0.6);
 
   /* Focus ring */
