@@ -5,27 +5,30 @@
 // background atrás desta seção via camada de composição — não empurra o layout.
 // Container: max-w-7xl mx-auto px-6, sem alturas estáticas.
 
-import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 const ITEMS = [
   {
-    num:         '01',
-    title:       'Empresas invisíveis nas\nbuscas da sua cidade',
-    tag:         'CAPTAÇÃO LOCAL',
-    description: 'Criação de sites de alta conversão e gestão de tráfego para negócios locais que precisam ser a primeira opção quando o cliente pesquisa no Google. Desenvolvimento de sites em Niterói integrado a Google Ads para atrair compradores qualificados todos os dias.',
+    num: '01',
+    title: 'Empresas invisíveis nas\nbuscas da sua cidade',
+    tag: 'CAPTAÇÃO LOCAL',
+    description:
+      'Criação de sites de alta conversão e gestão de tráfego para negócios locais que precisam ser a primeira opção quando o cliente pesquisa no Google. Desenvolvimento de sites em Niterói integrado a Google Ads para atrair compradores qualificados todos os dias.',
   },
   {
-    num:         '02',
-    title:       'Negócios premium com presença digital amadora',
-    tag:         'POSICIONAMENTO DE AUTORIDADE',
-    description: 'Quando o site parece panfleto digital morto, o preço cobrado perde credibilidade antes da reunião começar. Construímos a presença digital que justifica cada centavo da sua proposta e fecha contratos de alto valor com autoridade visual.',
+    num: '02',
+    title: 'Negócios premium com presença digital amadora',
+    tag: 'POSICIONAMENTO DE AUTORIDADE',
+    description:
+      'Quando o site parece panfleto digital morto, o preço cobrado perde credibilidade antes da reunião começar. Construímos a presença digital que justifica cada centavo da sua proposta e fecha contratos de alto valor com autoridade visual.',
   },
   {
-    num:         '03',
-    title:       'Empresários que perdem vendas fora do horário',
-    tag:         'AUTOMAÇÃO INTELIGENTE',
-    description: 'Agentes de IA para WhatsApp que atendem, qualificam e agendam reuniões de forma autônoma. Automação de atendimento para clínicas e serviços que elimina o gargalo operacional e garante resposta imediata de madrugada ou final de semana.',
+    num: '03',
+    title: 'Empresários que perdem vendas fora do horário',
+    tag: 'AUTOMAÇÃO INTELIGENTE',
+    description:
+      'Agentes de IA para WhatsApp que atendem, qualificam e agendam reuniões de forma autônoma. Automação de atendimento para clínicas e serviços que elimina o gargalo operacional e garante resposta imediata de madrugada ou final de semana.',
   },
 ];
 
@@ -96,9 +99,9 @@ export default function AudienceSection() {
       ref={sectionRef}
       id="audience"
       style={{
-        position:      'relative',
-        borderTop:     '1px solid rgba(255,255,255,0.05)',
-        paddingTop:    'clamp(72px, 9vh, 112px)',
+        position: 'relative',
+        borderTop: '1px solid rgba(255,255,255,0.05)',
+        paddingTop: 'clamp(72px, 9vh, 112px)',
         paddingBottom: 'clamp(80px, 10vh, 128px)',
       }}
     >
@@ -106,11 +109,12 @@ export default function AudienceSection() {
       <div
         aria-hidden
         style={{
-          position:      'absolute',
-          inset:         0,
+          position: 'absolute',
+          inset: 0,
           pointerEvents: 'none',
-          background:    'radial-gradient(ellipse 55% 70% at 92% 45%, rgba(76,29,149,0.10) 0%, transparent 65%)',
-          zIndex:        0,
+          background:
+            'radial-gradient(ellipse 55% 70% at 92% 45%, rgba(76,29,149,0.10) 0%, transparent 65%)',
+          zIndex: 0,
         }}
       />
 
@@ -119,18 +123,17 @@ export default function AudienceSection() {
         className="relative z-10"
         style={{ paddingLeft: 'clamp(32px, 5vw, 96px)', paddingRight: 'clamp(32px, 5vw, 96px)' }}
       >
-
         {/* Eyebrow com parallax */}
         <motion.span
           style={{
-            y:             eyebrowY,
-            display:       'block',
-            fontSize:      15,
-            fontWeight:    500,
+            y: eyebrowY,
+            display: 'block',
+            fontSize: 15,
+            fontWeight: 500,
             textTransform: 'uppercase',
             letterSpacing: '0.22em',
-            color:         '#5B6472',
-            marginBottom:  20,
+            color: '#5B6472',
+            marginBottom: 20,
           }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -143,20 +146,21 @@ export default function AudienceSection() {
         {/* Heading com parallax */}
         <motion.h2
           style={{
-            y:             headingY,
-            fontSize:      'clamp(28px, 3.8vw, 56px)',
-            fontWeight:    300,
+            y: headingY,
+            fontSize: 'clamp(28px, 3.8vw, 56px)',
+            fontWeight: 300,
             letterSpacing: '-0.025em',
-            lineHeight:    1.05,
-            color:         '#F8F9FA',
-            marginBottom:  'clamp(48px, 7vh, 80px)',
+            lineHeight: 1.05,
+            color: '#F8F9FA',
+            marginBottom: 'clamp(48px, 7vh, 80px)',
           }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: false, amount: 0.15 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
-          Sua empresa se encaixa aqui.<br />
+          Sua empresa se encaixa aqui.
+          <br />
           <span style={{ color: '#A78BFA' }}>Vamos resolver.</span>
         </motion.h2>
 
@@ -179,24 +183,29 @@ export default function AudienceSection() {
           <a
             href="#contact"
             onMouseEnter={(e) => {
-              e.currentTarget.querySelector('.cta-lbl').style.color     = '#A78BFA';
+              e.currentTarget.querySelector('.cta-lbl').style.color = '#A78BFA';
               e.currentTarget.querySelector('.cta-arr').style.transform = 'translateX(5px)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.querySelector('.cta-lbl').style.color     = 'rgba(255,255,255,0.40)';
+              e.currentTarget.querySelector('.cta-lbl').style.color = 'rgba(255,255,255,0.40)';
               e.currentTarget.querySelector('.cta-arr').style.transform = 'translateX(0)';
             }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 10,
+              textDecoration: 'none',
+            }}
           >
             <span
               className="cta-lbl"
               style={{
-                fontSize:      15,
-                fontWeight:    500,
+                fontSize: 15,
+                fontWeight: 500,
                 textTransform: 'uppercase',
                 letterSpacing: '0.18em',
-                color:         'rgba(255,255,255,0.40)',
-                transition:    'color 200ms ease',
+                color: 'rgba(255,255,255,0.40)',
+                transition: 'color 200ms ease',
               }}
             >
               Solicitar Diagnóstico Gratuito
@@ -204,9 +213,9 @@ export default function AudienceSection() {
             <span
               className="cta-arr"
               style={{
-                color:      '#7C3AED',
-                fontSize:   15,
-                display:    'inline-block',
+                color: '#7C3AED',
+                fontSize: 15,
+                display: 'inline-block',
                 transition: 'transform 200ms ease',
               }}
             >
@@ -214,7 +223,6 @@ export default function AudienceSection() {
             </span>
           </a>
         </motion.div>
-
       </div>
     </section>
   );

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { onIntroDone } from '../introStore';
 
 const container = {
@@ -9,9 +9,8 @@ const container = {
 
 const item = {
   hidden: { opacity: 0, y: 32 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
 };
-
 
 export default function HeroSection() {
   // Espera o corte da cortina do IntroReveal antes de começar a própria entrada —
@@ -29,13 +28,12 @@ export default function HeroSection() {
       <div
         aria-hidden
         style={{
-          position:      'absolute',
-          inset:         0,
-          background:    'linear-gradient(to right, rgba(3,0,10,0.32) 0%, transparent 60%)',
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(to right, rgba(3,0,10,0.32) 0%, transparent 60%)',
           pointerEvents: 'none',
         }}
       />
-
 
       <motion.div
         variants={container}
@@ -45,27 +43,33 @@ export default function HeroSection() {
         style={{ zIndex: 1 }}
       >
         {/* Eyebrow */}
-        <motion.div variants={item} className="flex items-center" style={{ marginBottom: 'clamp(12px, 3vh, 28px)' }}>
+        <motion.div
+          variants={item}
+          className="flex items-center"
+          style={{ marginBottom: 'clamp(12px, 3vh, 28px)' }}
+        >
           <span
             style={{
-              fontSize:      15,
-              fontWeight:    500,
+              fontSize: 15,
+              fontWeight: 500,
               textTransform: 'uppercase',
               letterSpacing: '0.22em',
-              color:         '#5B6472',
-              display:       'flex',
-              alignItems:    'center',
-              gap:           12,
+              color: '#5B6472',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
             }}
           >
-            <span style={{
-              display:      'inline-block',
-              width:        6,
-              height:       6,
-              borderRadius: '50%',
-              background:   '#7C3AED',
-              flexShrink:   0,
-            }} />
+            <span
+              style={{
+                display: 'inline-block',
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: '#7C3AED',
+                flexShrink: 0,
+              }}
+            />
             Agência de Web Design em Niterói
           </span>
         </motion.div>
@@ -81,14 +85,15 @@ export default function HeroSection() {
               // pra caber o resto do hero (descrição/botões ficavam cortados
               // pelo overflow:hidden da seção). Misturando vh, a fonte agora
               // encolhe quando a ALTURA é o fator limitante, não só a largura.
-              fontSize:      'clamp(38px, min(7.2vw, 10vh), 92px)',
-              fontWeight:    300,
-              lineHeight:    1.02,
+              fontSize: 'clamp(38px, min(7.2vw, 10vh), 92px)',
+              fontWeight: 300,
+              lineHeight: 1.02,
               letterSpacing: '-0.03em',
-              color:         '#F8F9FA',
+              color: '#F8F9FA',
             }}
           >
-            Negócios locais que vendem<br />
+            Negócios locais que vendem
+            <br />
             <span style={{ color: '#A78BFA' }}>mesmo quando você{' '}dorme.</span>
           </motion.h1>
         </div>
@@ -97,41 +102,44 @@ export default function HeroSection() {
         <motion.p
           variants={item}
           style={{
-            marginTop:  'clamp(12px, 3.5vh, 32px)',
-            fontSize:   'clamp(16px, min(1.4vw, 2.4vh), 19px)',
+            marginTop: 'clamp(12px, 3.5vh, 32px)',
+            fontSize: 'clamp(16px, min(1.4vw, 2.4vh), 19px)',
             fontWeight: 400,
             lineHeight: 1.65,
-            color:      '#94A3B8',
-            maxWidth:   520,
+            color: '#94A3B8',
+            maxWidth: 520,
           }}
         >
-          Unimos criação de sites de alta conversão com soluções de inteligência
-          artificial para empresas que querem escalar lucros sem escalar equipe.
-          Referência em desenvolvimento de sites e automação de atendimento em Niterói
-          desde o primeiro projeto.
+          Unimos criação de sites de alta conversão com soluções de inteligência artificial para
+          empresas que querem escalar lucros sem escalar equipe. Referência em desenvolvimento de
+          sites e automação de atendimento em Niterói desde o primeiro projeto.
         </motion.p>
 
         {/* CTAs */}
-        <motion.div variants={item} className="flex flex-wrap gap-4" style={{ marginTop: 'clamp(16px, 5vh, 44px)' }}>
+        <motion.div
+          variants={item}
+          className="flex flex-wrap gap-4"
+          style={{ marginTop: 'clamp(16px, 5vh, 44px)' }}
+        >
           <a
             href="#contact"
             className="inline-flex items-center whitespace-nowrap gap-2 h-12 md:h-14 px-4 md:px-9 text-[15px] md:text-[16px] tracking-[0.03em] md:tracking-[0.08em] rounded"
             style={{
-              fontWeight:     500,
-              textTransform:  'uppercase',
-              background:     '#7C3AED',
-              color:          '#fff',
-              border:         '1px solid #7C3AED',
+              fontWeight: 500,
+              textTransform: 'uppercase',
+              background: '#7C3AED',
+              color: '#fff',
+              border: '1px solid #7C3AED',
               textDecoration: 'none',
-              transition:     'background 280ms ease, box-shadow 280ms ease',
+              transition: 'background 280ms ease, box-shadow 280ms ease',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = '#8B5CF6';
-              e.currentTarget.style.boxShadow  = '0 0 32px -4px rgba(124,58,237,0.55)';
+              e.currentTarget.style.boxShadow = '0 0 32px -4px rgba(124,58,237,0.55)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = '#7C3AED';
-              e.currentTarget.style.boxShadow  = 'none';
+              e.currentTarget.style.boxShadow = 'none';
             }}
           >
             Solicitar Diagnóstico Gratuito
@@ -142,34 +150,33 @@ export default function HeroSection() {
             rel="noopener noreferrer"
             className="hidden md:inline-flex"
             style={{
-              alignItems:     'center',
-              gap:            10,
-              height:         56,
-              padding:        '0 36px',
-              fontSize:       15,
-              fontWeight:     500,
-              textTransform:  'uppercase',
-              letterSpacing:  '0.12em',
-              background:     'transparent',
-              color:          '#F8F9FA',
-              borderRadius:   4,
-              border:         '1px solid #2A2560',
+              alignItems: 'center',
+              gap: 10,
+              height: 56,
+              padding: '0 36px',
+              fontSize: 15,
+              fontWeight: 500,
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              background: 'transparent',
+              color: '#F8F9FA',
+              borderRadius: 4,
+              border: '1px solid #2A2560',
               textDecoration: 'none',
-              transition:     'border-color 280ms ease, box-shadow 280ms ease',
+              transition: 'border-color 280ms ease, box-shadow 280ms ease',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = '#7C3AED';
-              e.currentTarget.style.boxShadow   = '0 0 0 1px rgba(124,58,237,0.25)';
+              e.currentTarget.style.boxShadow = '0 0 0 1px rgba(124,58,237,0.25)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = '#2A2560';
-              e.currentTarget.style.boxShadow   = 'none';
+              e.currentTarget.style.boxShadow = 'none';
             }}
           >
             Falar pelo WhatsApp
           </a>
         </motion.div>
-
       </motion.div>
 
       {/* Scroll cue */}
@@ -180,13 +187,25 @@ export default function HeroSection() {
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         style={{ pointerEvents: 'none' }}
       >
-        <span style={{ fontSize: 15, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.28em', color: '#5B6472' }}>
+        <span
+          style={{
+            fontSize: 15,
+            fontWeight: 500,
+            textTransform: 'uppercase',
+            letterSpacing: '0.28em',
+            color: '#5B6472',
+          }}
+        >
           Scroll
         </span>
         <motion.div
           animate={{ opacity: [0.3, 0.7, 0.3] }}
           transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
-          style={{ width: 1, height: 48, background: 'linear-gradient(to bottom, #5B6472, transparent)' }}
+          style={{
+            width: 1,
+            height: 48,
+            background: 'linear-gradient(to bottom, #5B6472, transparent)',
+          }}
         />
       </motion.div>
     </section>

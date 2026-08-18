@@ -1,12 +1,12 @@
-import { useRef, useEffect, useState, useCallback } from "react";
-import { motion } from "framer-motion";
-import { useMenu } from "../context/MenuContext";
+import { motion } from 'framer-motion';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useMenu } from '../context/MenuContext';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
-const VIDEO_SRC = "/raven-loop-fly.webm"; // usado só no overlay leve do mobile
+const VIDEO_SRC = '/raven-loop-fly.webm'; // usado só no overlay leve do mobile
 const TOTAL_FRAMES = 121;
 
-const pad = (n) => String(n).padStart(3, "0");
+const pad = (n) => String(n).padStart(3, '0');
 const getUrl = (n) => `/raven-novos-frames/frame_${pad(n)}.webp`;
 
 // Fade de opacidade do próprio corvo (canvas) conforme o scroll avança —
@@ -28,8 +28,8 @@ const smoothstep = (t) => t * t * t * (t * (t * 6 - 15) + 10);
 // "quase preto" residual da compressão do codec, e a máscara radial (ver
 // MASK_STYLE) esconde a borda quadrada do bounding box com um fade suave.
 const CANVAS_CLASSES =
-  "absolute top-0 w-full h-full object-cover mix-blend-screen contrast-125 brightness-110 " +
-  "lg:object-contain lg:left-[38vw] lg:w-[50vw]";
+  'absolute top-0 w-full h-full object-cover mix-blend-screen contrast-125 brightness-110 ' +
+  'lg:object-contain lg:left-[38vw] lg:w-[50vw]';
 
 // Escala base do canvas no desktop. Vive aqui (não numa classe Tailwind
 // scale-[...]) porque o framer-motion escreve `transform` direto no atributo
@@ -52,10 +52,8 @@ const BASE_SCALE = 1.85;
 //      scale fixo: a razão se mantém válida mesmo se o scale mudar (validado
 //      pixel a pixel via screenshot, não só por cálculo).
 const MASK_STYLE = {
-  WebkitMaskImage:
-    "radial-gradient(ellipse 25vw 21vh at center, black 45%, transparent 88%)",
-  maskImage:
-    "radial-gradient(ellipse 25vw 21vh at center, black 45%, transparent 88%)",
+  WebkitMaskImage: 'radial-gradient(ellipse 25vw 21vh at center, black 45%, transparent 88%)',
+  maskImage: 'radial-gradient(ellipse 25vw 21vh at center, black 45%, transparent 88%)',
 };
 
 // ─── Componente ───────────────────────────────────────────────────────────────
@@ -81,9 +79,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
   const { scrollContainerRef } = useMenu();
 
   // Canvas só no desktop real (≥ 1024px)
-  const isSmallRef = useRef(
-    typeof window !== "undefined" && window.innerWidth < 1024,
-  );
+  const isSmallRef = useRef(typeof window !== 'undefined' && window.innerWidth < 1024);
   const isSmall = isSmallRef.current;
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -108,7 +104,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
       sizedRef.current = true;
     }
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   }, []);
@@ -123,7 +119,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
       const imgs = new Array(TOTAL_FRAMES);
       for (let i = 0; i < TOTAL_FRAMES; i++) {
         const img = new Image();
-        img.decoding = "async";
+        img.decoding = 'async';
         if (i === 0) {
           img.onload = () => {
             drawFrame(0);
@@ -158,7 +154,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
       setIsScrolled((prev) => (prev === nowScrolled ? prev : nowScrolled));
 
       if (!nowScrolled) {
-        if (canvasRef.current) canvasRef.current.style.opacity = "";
+        if (canvasRef.current) canvasRef.current.style.opacity = '';
         return;
       }
 
@@ -187,9 +183,9 @@ export default function ScrollSequenceCanvas({ endRef }) {
       rafRef.current = requestAnimationFrame(() => drawFrame(frameIndex));
     };
 
-    container.addEventListener("scroll", handleScroll, { passive: true });
+    container.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      container.removeEventListener("scroll", handleScroll);
+      container.removeEventListener('scroll', handleScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [drawFrame, isSmall, endRef, scrollContainerRef]);
@@ -200,7 +196,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
   // Desktop: só o canvas, sempre visível — loop ping-pong parado, scroll
   // durante a rolagem. Fade-in único quando o frame 1 termina de carregar.
   //
-  const canvasOpacity = ready ? "opacity-[1]" : "opacity-0";
+  const canvasOpacity = ready ? 'opacity-[1]' : 'opacity-0';
 
   // Mobile: imagem estática + vídeo em loop por cima (150KB).
   if (isSmall) {
@@ -208,13 +204,13 @@ export default function ScrollSequenceCanvas({ endRef }) {
       <div
         aria-hidden
         style={{
-          position: "fixed",
+          position: 'fixed',
           top: 0,
           left: 0,
-          width: "100%",
-          height: "100vh",
-          overflow: "hidden",
-          pointerEvents: "none",
+          width: '100%',
+          height: '100vh',
+          overflow: 'hidden',
+          pointerEvents: 'none',
           zIndex: 0,
         }}
       >
@@ -222,12 +218,12 @@ export default function ScrollSequenceCanvas({ endRef }) {
           src="/bg-teste-ravenn.webp"
           alt=""
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 0,
             left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
             opacity: 0.55,
           }}
         />
@@ -239,14 +235,14 @@ export default function ScrollSequenceCanvas({ endRef }) {
           playsInline
           preload="none"
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 0,
             left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
             opacity: 0.08,
-            mixBlendMode: "screen",
+            mixBlendMode: 'screen',
           }}
         >
           <track kind="captions" />
@@ -259,13 +255,13 @@ export default function ScrollSequenceCanvas({ endRef }) {
     <div
       aria-hidden
       style={{
-        position: "fixed",
+        position: 'fixed',
         top: 0,
         left: 0,
-        width: "100%",
-        height: "100vh",
-        overflow: "hidden",
-        pointerEvents: "none",
+        width: '100%',
+        height: '100vh',
+        overflow: 'hidden',
+        pointerEvents: 'none',
         zIndex: 0,
       }}
     >
@@ -274,27 +270,24 @@ export default function ScrollSequenceCanvas({ endRef }) {
         src="/hero-raven-bg/hero-desktop.webp"
         alt=""
         style={{
-          position: "absolute",
+          position: 'absolute',
           inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
           opacity: 0.42,
         }}
       />
 
-      <div
-        ref={innerRef}
-        style={{ position: "absolute", inset: 0, willChange: "transform" }}
-      >
+      <div ref={innerRef} style={{ position: 'absolute', inset: 0, willChange: 'transform' }}>
         {/* Frame único parado — float/glow sutil enquanto não rola, scroll assume o controle depois */}
         <motion.canvas
           ref={canvasRef}
           className={`${CANVAS_CLASSES} ${canvasOpacity}`}
           style={{
-            display: "block",
+            display: 'block',
             ...MASK_STYLE,
-            transition: "opacity 700ms cubic-bezier(0.22, 1, 0.36, 1)",
+            transition: 'opacity 700ms cubic-bezier(0.22, 1, 0.36, 1)',
           }}
           animate={
             !isScrolled && ready
@@ -306,8 +299,8 @@ export default function ScrollSequenceCanvas({ endRef }) {
           }
           transition={
             !isScrolled && ready
-              ? { duration: 7, repeat: Infinity, ease: "easeInOut" }
-              : { duration: 0.4, ease: "easeOut" }
+              ? { duration: 7, repeat: Infinity, ease: 'easeInOut' }
+              : { duration: 0.4, ease: 'easeOut' }
           }
         />
       </div>

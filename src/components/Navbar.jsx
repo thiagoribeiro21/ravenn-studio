@@ -1,53 +1,61 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useMenu } from '../context/MenuContext';
+import { isHomePage } from '../utils/isHomePage';
 
 function MenuIcon({ isOpen, large }) {
-  const w      = large ? 28 : 22;
-  const h      = large ? 20 : 16;
-  const line   = large ? 2   : 1.5;
-  const short  = large ? 18  : 15;
+  const w = large ? 28 : 22;
+  const h = large ? 20 : 16;
+  const line = large ? 2 : 1.5;
+  const short = large ? 18 : 15;
   const offset = large ? 4.5 : 3.5;
 
   return (
     <span
       aria-hidden
       style={{
-        display:        'flex',
-        flexDirection:  'column',
+        display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
-        alignItems:     'flex-end',
-        width:          w,
-        height:         h,
-        position:       'relative',
-        flexShrink:     0,
-        transition:     'width 400ms cubic-bezier(0.16,1,0.3,1), height 400ms cubic-bezier(0.16,1,0.3,1)',
+        alignItems: 'flex-end',
+        width: w,
+        height: h,
+        position: 'relative',
+        flexShrink: 0,
+        transition:
+          'width 400ms cubic-bezier(0.16,1,0.3,1), height 400ms cubic-bezier(0.16,1,0.3,1)',
       }}
     >
-      <span style={{
-        display:         'block',
-        height:          line,
-        background:      '#F8F9FA',
-        borderRadius:    1,
-        width:           w,
-        transformOrigin: 'center',
-        transition:      'transform 320ms cubic-bezier(0.16,1,0.3,1), width 400ms cubic-bezier(0.16,1,0.3,1)',
-        transform:       isOpen ? `translateY(${offset}px) rotate(45deg)` : 'translateY(0)',
-        position:        'absolute',
-        top:             '30%',
-      }} />
-      <span style={{
-        display:      'block',
-        height:       line,
-        width:        short,
-        background:   '#F8F9FA',
-        borderRadius: 1,
-        position:     'absolute',
-        top:          '68%',
-        right:        0,
-        transition:   'opacity 200ms ease, transform 320ms cubic-bezier(0.16,1,0.3,1), width 400ms cubic-bezier(0.16,1,0.3,1)',
-        opacity:      isOpen ? 0 : 1,
-        transform:    isOpen ? `translateY(-${offset}px) rotate(-45deg)` : 'translateY(0)',
-      }} />
+      <span
+        style={{
+          display: 'block',
+          height: line,
+          background: '#F8F9FA',
+          borderRadius: 1,
+          width: w,
+          transformOrigin: 'center',
+          transition:
+            'transform 320ms cubic-bezier(0.16,1,0.3,1), width 400ms cubic-bezier(0.16,1,0.3,1)',
+          transform: isOpen ? `translateY(${offset}px) rotate(45deg)` : 'translateY(0)',
+          position: 'absolute',
+          top: '30%',
+        }}
+      />
+      <span
+        style={{
+          display: 'block',
+          height: line,
+          width: short,
+          background: '#F8F9FA',
+          borderRadius: 1,
+          position: 'absolute',
+          top: '68%',
+          right: 0,
+          transition:
+            'opacity 200ms ease, transform 320ms cubic-bezier(0.16,1,0.3,1), width 400ms cubic-bezier(0.16,1,0.3,1)',
+          opacity: isOpen ? 0 : 1,
+          transform: isOpen ? `translateY(-${offset}px) rotate(-45deg)` : 'translateY(0)',
+        }}
+      />
     </span>
   );
 }
@@ -58,13 +66,10 @@ function MenuIcon({ isOpen, large }) {
    Sem essa checagem, o logo/CTA (que apontavam pra `#hero`/`#contact` cru)
    rolariam até o topo/nada DAQUELA subpágina em vez de ir pra home de
    verdade — `#contact` nem existe fora da home (só `ContactSection.jsx`
-   tem esse id). `isHomePage()` decide em tempo de render: na home, nada
-   muda (mesmo comportamento de sempre); fora dela, os dois viram link real
-   pra `/` (ou `/#contact`), que o navegador já sabe resolver sozinho. */
-function isHomePage() {
-  return typeof window !== 'undefined' && (window.location.pathname === '/' || window.location.pathname === '/index.html');
-}
-
+   tem esse id). `isHomePage()` (`src/utils/isHomePage.js`, compartilhado
+   com `Footer.jsx` — mesmo problema, mesma correção) decide em tempo de
+   render: na home, nada muda; fora dela, os dois viram link real pra `/`
+   (ou `/#contact`), que o navegador já sabe resolver sozinho. */
 export default function Navbar() {
   const { isOpen, toggleMenu, scrolled } = useMenu();
   const isHome = isHomePage();
@@ -84,14 +89,14 @@ export default function Navbar() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       style={{
-        position:   'sticky',
-        top:        0,
-        zIndex:     50,
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
         background: 'transparent',
-        border:     'none',
-        boxShadow:  'none',
+        border: 'none',
+        boxShadow: 'none',
         // 24px de espaço acima da pílula; um respiro menor quando expandido, pra não colar no topo
-        padding:    pill ? '24px 0 0' : '14px 0 0',
+        padding: pill ? '24px 0 0' : '14px 0 0',
         transition: 'padding 420ms cubic-bezier(0.16,1,0.3,1)',
       }}
     >
@@ -106,33 +111,32 @@ export default function Navbar() {
       <div
         className="relative flex items-center justify-between"
         style={{
-          width:                pill ? '92%'   : '100%',
-          maxWidth:             pill ? '64rem' : 'none',
-          margin:               '0 auto',
-          padding:              pill ? '12px'  : '20px clamp(24px,5vw,72px)',
-          borderRadius:         pill ? 9999    : 0,
-          background:           pill ? 'rgba(5,3,10,0.60)' : 'transparent',
-          backdropFilter:       pill ? 'blur(24px) saturate(1.4)' : 'none',
+          width: pill ? '92%' : '100%',
+          maxWidth: pill ? '64rem' : 'none',
+          margin: '0 auto',
+          padding: pill ? '12px' : '20px clamp(24px,5vw,72px)',
+          borderRadius: pill ? 9999 : 0,
+          background: pill ? 'rgba(5,3,10,0.60)' : 'transparent',
+          backdropFilter: pill ? 'blur(24px) saturate(1.4)' : 'none',
           WebkitBackdropFilter: pill ? 'blur(24px) saturate(1.4)' : 'none',
-          boxShadow:            pill
-            ? '0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05)'
-            : 'none',
-          borderColor:          pill ? 'rgba(255,255,255,0.05)' : 'transparent',
-          border:               '1px solid transparent',
+          boxShadow: pill ? '0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05)' : 'none',
+          borderColor: pill ? 'rgba(255,255,255,0.05)' : 'transparent',
+          border: '1px solid transparent',
           // Quando o menu abre: revert instantâneo (sem transição).
           // Quando fecha: anima suavemente de volta para a pílula.
-          transition: isOpen ? 'none' : [
-            'width 420ms cubic-bezier(0.16,1,0.3,1)',
-            'max-width 420ms cubic-bezier(0.16,1,0.3,1)',
-            'padding 420ms cubic-bezier(0.16,1,0.3,1)',
-            'border-radius 420ms cubic-bezier(0.16,1,0.3,1)',
-            'background 420ms cubic-bezier(0.16,1,0.3,1)',
-            'box-shadow 420ms cubic-bezier(0.16,1,0.3,1)',
-            'border-color 420ms cubic-bezier(0.16,1,0.3,1)',
-          ].join(', '),
+          transition: isOpen
+            ? 'none'
+            : [
+                'width 420ms cubic-bezier(0.16,1,0.3,1)',
+                'max-width 420ms cubic-bezier(0.16,1,0.3,1)',
+                'padding 420ms cubic-bezier(0.16,1,0.3,1)',
+                'border-radius 420ms cubic-bezier(0.16,1,0.3,1)',
+                'background 420ms cubic-bezier(0.16,1,0.3,1)',
+                'box-shadow 420ms cubic-bezier(0.16,1,0.3,1)',
+                'border-color 420ms cubic-bezier(0.16,1,0.3,1)',
+              ].join(', '),
         }}
       >
-
         {/* ── Logo: mobile=esquerda (flux normal), desktop=centro absoluto ── */}
         <a
           href={isHome ? '#hero' : '/'}
@@ -145,10 +149,10 @@ export default function Navbar() {
             width={200}
             height={50}
             style={{
-              height:     pill ? 38 : 'clamp(58px,5.2vw,80px)',
-              width:      'auto',
-              objectFit:  'contain',
-              display:    'block',
+              height: pill ? 38 : 'clamp(58px,5.2vw,80px)',
+              width: 'auto',
+              objectFit: 'contain',
+              display: 'block',
               transition: 'height 400ms cubic-bezier(0.16,1,0.3,1)',
             }}
             draggable={false}
@@ -157,22 +161,24 @@ export default function Navbar() {
 
         {/* ── Menu button: mobile=direita (ml-auto), desktop=esquerda ── */}
         <button
+          type="button"
           aria-label={isOpen ? 'Fechar menu' : 'Abrir menu'}
           aria-expanded={isOpen}
           onClick={toggleMenu}
           className={`ml-auto md:order-first ${pill ? 'md:ml-4' : 'md:ml-0'}`}
           style={{
-            display:    'flex',
+            display: 'flex',
             alignItems: 'center',
-            gap:        pill ? 10 : 13,
+            gap: pill ? 10 : 13,
             background: 'none',
-            border:     'none',
-            padding:    pill ? '6px 14px' : '8px 20px',
-            cursor:     'pointer',
-            color:      '#F8F9FA',
+            border: 'none',
+            padding: pill ? '6px 14px' : '8px 20px',
+            cursor: 'pointer',
+            color: '#F8F9FA',
             flexShrink: 0,
             whiteSpace: 'nowrap',
-            transition: 'gap 420ms cubic-bezier(0.16,1,0.3,1), padding 420ms cubic-bezier(0.16,1,0.3,1)',
+            transition:
+              'gap 420ms cubic-bezier(0.16,1,0.3,1), padding 420ms cubic-bezier(0.16,1,0.3,1)',
           }}
         >
           <MenuIcon isOpen={isOpen} large={!pill} />
@@ -182,15 +188,15 @@ export default function Navbar() {
               initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 5 }}
-              transition={{ duration: 0.20, ease: 'easeOut' }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
               style={{
-                fontSize:      15,
-                fontWeight:    500,
+                fontSize: 15,
+                fontWeight: 500,
                 textTransform: 'uppercase',
                 letterSpacing: '0.26em',
-                color:         'rgba(255,255,255,0.55)',
-                lineHeight:    1,
-                userSelect:    'none',
+                color: 'rgba(255,255,255,0.55)',
+                lineHeight: 1,
+                userSelect: 'none',
               }}
             >
               {isOpen ? 'FECHAR' : 'MENU'}
@@ -208,36 +214,34 @@ export default function Navbar() {
           <a
             href={isHome ? '#contact' : '/#contact'}
             style={{
-              display:        'inline-flex',
-              alignItems:     'center',
-              height:         pill ? 34 : 44,
-              padding:        pill
-                ? '0 clamp(12px,1.5vw,20px)'
-                : '0 clamp(18px,2vw,32px)',
-              fontSize:       15,
-              fontWeight:     500,
-              textTransform:  'uppercase',
-              letterSpacing:  '0.18em',
-              background:     '#7C3AED',
-              color:          '#fff',
-              borderRadius:   9999,        // rounded-full
+              display: 'inline-flex',
+              alignItems: 'center',
+              height: pill ? 34 : 44,
+              padding: pill ? '0 clamp(12px,1.5vw,20px)' : '0 clamp(18px,2vw,32px)',
+              fontSize: 15,
+              fontWeight: 500,
+              textTransform: 'uppercase',
+              letterSpacing: '0.18em',
+              background: '#7C3AED',
+              color: '#fff',
+              borderRadius: 9999, // rounded-full
               textDecoration: 'none',
-              whiteSpace:     'nowrap',
-              transition:     'background 250ms ease, box-shadow 250ms ease, height 420ms cubic-bezier(0.16,1,0.3,1), padding 420ms cubic-bezier(0.16,1,0.3,1)',
+              whiteSpace: 'nowrap',
+              transition:
+                'background 250ms ease, box-shadow 250ms ease, height 420ms cubic-bezier(0.16,1,0.3,1), padding 420ms cubic-bezier(0.16,1,0.3,1)',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = '#8B5CF6';
-              e.currentTarget.style.boxShadow  = '0 0 28px -4px rgba(124,58,237,0.65)';
+              e.currentTarget.style.boxShadow = '0 0 28px -4px rgba(124,58,237,0.65)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = '#7C3AED';
-              e.currentTarget.style.boxShadow  = 'none';
+              e.currentTarget.style.boxShadow = 'none';
             }}
           >
             Agendar Diagnóstico
           </a>
         </div>
-
       </div>
     </motion.header>
   );

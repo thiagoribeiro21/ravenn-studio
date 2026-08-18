@@ -1,12 +1,12 @@
-import { useRef, useMemo, useEffect } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useMenu } from '../context/MenuContext';
 
-const START_OPACITY  = 0.15;
+const START_OPACITY = 0.15;
 const STAGGER_SPREAD = 0.7; // 0-1: quanto do progresso é usado pra escalonar palavra a palavra (esquerda -> direita)
 
 export default function TextReveal({ text, style, className }) {
   const containerRef = useRef(null);
-  const spansRef      = useRef([]);
+  const spansRef = useRef([]);
   const { scrollContainerRef } = useMenu();
 
   const words = useMemo(() => text.split(' '), [text]);
@@ -24,8 +24,8 @@ export default function TextReveal({ text, style, className }) {
     if (!p || !container) return;
 
     const n = words.length;
-    const revealDuration = n > 1 ? (1 - STAGGER_SPREAD) + STAGGER_SPREAD / n : 1;
-    const stepPerWord    = n > 1 ? (1 - revealDuration) / (n - 1) : 0;
+    const revealDuration = n > 1 ? 1 - STAGGER_SPREAD + STAGGER_SPREAD / n : 1;
+    const stepPerWord = n > 1 ? (1 - revealDuration) / (n - 1) : 0;
 
     let rafId = null;
     let armed = false;
@@ -41,13 +41,13 @@ export default function TextReveal({ text, style, className }) {
 
     function computeProgress() {
       const containerRect = container.getBoundingClientRect();
-      const pRect          = p.getBoundingClientRect();
+      const pRect = p.getBoundingClientRect();
 
       const start = containerRect.height * 0.85; // topo do texto a 85% do container -> progress 0
-      const end   = containerRect.height * 0.5;  // texto centralizado no container -> progress 1
+      const end = containerRect.height * 0.5; // texto centralizado no container -> progress 1
 
       const relativeTop = pRect.top - containerRect.top;
-      let progress = (start - relativeTop) / (start - end);
+      const progress = (start - relativeTop) / (start - end);
       return Math.min(1, Math.max(0, progress));
     }
 
@@ -86,6 +86,7 @@ export default function TextReveal({ text, style, className }) {
     <p ref={containerRef} style={{ margin: 0, ...style }} className={className}>
       {words.map((word, i) => (
         <span
+          // biome-ignore lint/suspicious/noArrayIndexKey: `words` é derivado do texto estático da prop, ordem fixa por render
           key={i}
           ref={(el) => (spansRef.current[i] = el)}
           style={{ display: 'inline-block', marginRight: '0.28em', opacity: START_OPACITY }}
