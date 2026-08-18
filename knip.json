@@ -1,0 +1,20 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/lp-agentes-ia.jsx",
+    "src/lp-gestao-google-ads.jsx",
+    "src/lp-landing-pages.jsx",
+    "src/lp-lojas-virtuais.jsx",
+    "src/lp-main.jsx",
+    "src/lp-sites-imersivos.jsx",
+    "src/solucao-agentes-ia.jsx",
+    "src/solucao-gestao-google-ads.jsx",
+    "src/solucao-landing-pages.jsx",
+    "src/solucao-lojas-virtuais.jsx",
+    "src/solucao-sites-imersivos.jsx",
+    "src/solucao-sites-institucionais.jsx",
+    "src/legal-privacidade.jsx",
+    "src/legal-termos.jsx"
+  ],
+  "project": ["src/**/*.{js,jsx}"]
+}
