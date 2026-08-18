@@ -1,7 +1,7 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
+import { useEffect, useId, useMemo, useState } from 'react';
+import { EASE_LUXE, GX, prefersReducedMotion, SECTION_PAD, TYPE } from '../config/_base';
 import Aurora from '../primitives/Aurora';
-import { EASE_LUXE, GX, TYPE, SECTION_PAD, prefersReducedMotion } from '../config/_base';
 
 /* ══════════════════════════════════════════════════════════════════════════
    Ato "O que você recebe" — v10. Redesign completo.
@@ -42,7 +42,7 @@ import { EASE_LUXE, GX, TYPE, SECTION_PAD, prefersReducedMotion } from '../confi
    ══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Sistema visual compartilhado pelos 4 ícones ─────────────────────────── */
-const TRACK = 'rgba(255,255,255,0.09)';   // trilho "apagado" — o mesmo em todos
+const TRACK = 'rgba(255,255,255,0.09)'; // trilho "apagado" — o mesmo em todos
 const DRAW_EASE = EASE_LUXE;
 
 /* Par de gradiente por ícone. É direção de arte, não conteúdo — mora aqui,
@@ -105,15 +105,25 @@ function Glow({ color, blur = 8, children }) {
    de fundo. É o que faz os quatro lerem como um conjunto. */
 function IconStage({ children, uid, className = '' }) {
   return (
-    <svg viewBox="0 0 200 200" className={`h-full w-full ${className}`} aria-hidden focusable="false">
+    <svg
+      viewBox="0 0 200 200"
+      className={`h-full w-full ${className}`}
+      aria-hidden
+      focusable="false"
+    >
       {children}
-      <circle cx="100" cy="100" r="92" fill={`url(#${uid}-halo)`} style={{ mixBlendMode: 'screen' }} />
+      <circle
+        cx="100"
+        cy="100"
+        r="92"
+        fill={`url(#${uid}-halo)`}
+        style={{ mixBlendMode: 'screen' }}
+      />
     </svg>
   );
 }
 
 /* ══ 01 — Performance: medidor que preenche ═══════════════════════════════ */
-const GAUGE_R = 62;
 const GAUGE_PATH = 'M 56.16 143.84 A 62 62 0 1 1 143.84 143.84'; // 270°, começa em 135° e varre horário
 
 function GaugeTick({ tick, progress, from }) {
@@ -171,7 +181,9 @@ function PerformanceIcon({ play, reduce, uid, from, gaugeLabel = 'PAGESPEED' }) 
         controls = animate(progress, 0.98, { duration: 1.6, ease: DRAW_EASE });
         await controls;
         if (cancelled) return;
-        await new Promise((r) => { pause = setTimeout(r, 2000); });
+        await new Promise((r) => {
+          pause = setTimeout(r, 2000);
+        });
       }
     };
     cycle();
@@ -188,6 +200,7 @@ function PerformanceIcon({ play, reduce, uid, from, gaugeLabel = 'PAGESPEED' }) 
       <SvgDefs uid={uid} from={from} to={ACCENTS.pagespeed[1]} />
 
       {ticks.map((tick, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: `ticks` é gerado estaticamente via useMemo, ordem fixa
         <GaugeTick key={i} tick={tick} progress={progress} from={from} />
       ))}
 
@@ -249,6 +262,7 @@ function ArchitectureIcon({ play, reduce, uid, from }) {
 
       {BLOCKS.map((b, i) => (
         <motion.rect
+          // biome-ignore lint/suspicious/noArrayIndexKey: `BLOCKS` é constante estática do módulo, ordem fixa
           key={i}
           x={b.x}
           y={b.y}
@@ -274,7 +288,11 @@ function ArchitectureIcon({ play, reduce, uid, from }) {
         fill={`url(#${uid}-stroke)`}
         style={{ willChange: 'opacity' }}
         animate={reduce ? { opacity: 0.9 } : { opacity: [0.35, 0.35, 1, 0.5, 0.35] }}
-        transition={reduce ? undefined : { ...loop, times: [0, FLOW_LAND - 0.03, FLOW_LAND + 0.04, FLOW_LAND + 0.2, 1] }}
+        transition={
+          reduce
+            ? undefined
+            : { ...loop, times: [0, FLOW_LAND - 0.03, FLOW_LAND + 0.04, FLOW_LAND + 0.2, 1] }
+        }
       />
 
       {/* anel de "clique" que expande no mesmo instante */}
@@ -335,6 +353,7 @@ function AuthorityIcon({ play, reduce, uid, from }) {
 
       {GEM_FACETS.map((d, i) => (
         <motion.path
+          // biome-ignore lint/suspicious/noArrayIndexKey: `GEM_FACETS` é constante estática do módulo, ordem fixa
           key={i}
           d={d}
           stroke={TRACK}
@@ -388,13 +407,24 @@ function AuthorityIcon({ play, reduce, uid, from }) {
           colapsariam no canto (0,0) do viewBox. Mesmo cuidado da varredura
           de luz acima. */}
       {SPARKS.map((s, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: `SPARKS` é constante estática do módulo, ordem fixa
         <g key={i} transform={`translate(${s.x} ${s.y})`}>
           <motion.path
             d={SPARK}
             fill={from}
             style={{ willChange: 'transform, opacity' }}
             animate={reduce ? { opacity: 0.8 } : { scale: [0, 1, 0], opacity: [0, 1, 0] }}
-            transition={reduce ? undefined : { duration: 2.2, repeat: Infinity, repeatDelay: 1.6, delay: s.d, ease: 'easeInOut' }}
+            transition={
+              reduce
+                ? undefined
+                : {
+                    duration: 2.2,
+                    repeat: Infinity,
+                    repeatDelay: 1.6,
+                    delay: s.d,
+                    ease: 'easeInOut',
+                  }
+            }
           />
         </g>
       ))}
@@ -489,7 +519,15 @@ function AlwaysOnIcon({ play, reduce, uid, from }) {
     <IconStage uid={uid}>
       <SvgDefs uid={uid} from={from} to={ACCENTS.whatsapp[1]} />
 
-      <circle cx="100" cy="100" r="78" fill="none" stroke={TRACK} strokeWidth="1.4" strokeDasharray="2 7" />
+      <circle
+        cx="100"
+        cy="100"
+        r="78"
+        fill="none"
+        stroke={TRACK}
+        strokeWidth="1.4"
+        strokeDasharray="2 7"
+      />
 
       {/* órbita — `originX/originY` como STRING é o único caminho que o
           Framer não sobrescreve (ver nota no topo do arquivo); com o default
@@ -528,7 +566,11 @@ function AlwaysOnIcon({ play, reduce, uid, from }) {
           fill={from}
           style={{ willChange: 'transform, opacity' }}
           animate={reduce ? { opacity: 0.9 } : { cy: [95, 88, 95], opacity: [0.35, 1, 0.35] }}
-          transition={reduce ? undefined : { duration: 1.25, repeat: Infinity, delay: 1 + i * 0.16, ease: 'easeInOut' }}
+          transition={
+            reduce
+              ? undefined
+              : { duration: 1.25, repeat: Infinity, delay: 1 + i * 0.16, ease: 'easeInOut' }
+          }
         />
       ))}
     </IconStage>
@@ -567,7 +609,9 @@ function BentoCell({ cell, index, delay }) {
       onViewportEnter={() => setPlay(true)}
       transition={{ duration: 0.85, delay, ease: EASE_LUXE }}
       className="group relative isolate flex flex-col overflow-hidden rounded-[28px] border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl transition-colors duration-700 hover:bg-white/[0.035]"
-      style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 40px 80px -40px rgba(0,0,0,0.8)' }}
+      style={{
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 40px 80px -40px rgba(0,0,0,0.8)',
+      }}
     >
       {/* Borda em gradiente que acende no hover. Técnica de máscara dupla:
           a camada é pintada só na faixa de 1px entre a borda externa e a
@@ -636,7 +680,8 @@ function BentoBackdrop() {
       <div
         className="absolute -right-[10vw] -top-[10vw] h-[40vw] w-[40vw] opacity-30"
         style={{
-          backgroundImage: 'repeating-linear-gradient(115deg, rgba(124,58,237,0.3) 0px, rgba(124,58,237,0.3) 1px, transparent 1px, transparent 16px)',
+          backgroundImage:
+            'repeating-linear-gradient(115deg, rgba(124,58,237,0.3) 0px, rgba(124,58,237,0.3) 1px, transparent 1px, transparent 16px)',
           filter: 'blur(14px)',
           maskImage: 'radial-gradient(closest-side, black, transparent 70%)',
           WebkitMaskImage: 'radial-gradient(closest-side, black, transparent 70%)',
@@ -648,7 +693,10 @@ function BentoBackdrop() {
 
 export default function BentoValue({ data }) {
   return (
-    <section id="bento" className={`relative overflow-hidden border-t border-white/[0.06] ${SECTION_PAD} ${GX}`}>
+    <section
+      id="bento"
+      className={`relative overflow-hidden border-t border-white/[0.06] ${SECTION_PAD} ${GX}`}
+    >
       <BentoBackdrop />
 
       <motion.div
@@ -658,13 +706,36 @@ export default function BentoValue({ data }) {
         transition={{ duration: 0.8, ease: EASE_LUXE }}
         className="relative z-10 mb-14 max-w-2xl"
       >
-        <p className={`flex items-center gap-3 font-satoshi font-medium uppercase tracking-widest2 text-rv-slate ${TYPE.eyebrow}`}>
+        <p
+          className={`flex items-center gap-3 font-satoshi font-medium uppercase tracking-widest2 text-rv-slate ${TYPE.eyebrow}`}
+        >
           <span aria-hidden className="h-px w-8 bg-rv-purple/60" />
-          O que você recebe
+          {data.eyebrow || 'O que você recebe'}
         </p>
-        <h2 className={`mt-6 font-grotesk font-light leading-[1.1] tracking-[-0.015em] text-rv-titanium ${TYPE.h2}`}>
-          Não é só um site bonito.
+        {/* `data.heading`/`data.bluf` opcionais — todas as outras 5 LPs
+            continuam com o H2 fixo de sempre (fallback abaixo) e sem BLUF.
+            landing-pages.js é a única que preenche os dois hoje: pedido de
+            AEO/GEO específico dessa página, não uma mudança de padrão pra
+            LP nenhuma outra. */}
+        <h2
+          className={`mt-6 font-grotesk font-light leading-[1.1] tracking-[-0.015em] text-rv-titanium ${TYPE.h2}`}
+        >
+          {data.heading || 'Não é só um site bonito.'}
         </h2>
+        {data.bluf && (
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.7, delay: 0.1, ease: EASE_LUXE }}
+            /* `rv-bluf`: hook de CSS selector pra `speakable` (JSON-LD da
+               página) — não estiliza nada, só marca o parágrafo como o
+               resumo direto que responde a intenção logo abaixo do H2. */
+            className={`rv-bluf mt-4 max-w-xl font-satoshi text-rv-slate ${TYPE.body}`}
+          >
+            {data.bluf}
+          </motion.p>
+        )}
       </motion.div>
 
       <div className="relative z-10 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">

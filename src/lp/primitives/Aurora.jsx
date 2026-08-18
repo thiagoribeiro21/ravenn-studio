@@ -33,7 +33,10 @@ const RECIPES = {
 export default function Aurora({ variant = 'hero', className = '' }) {
   const layers = RECIPES[variant] || RECIPES.hero;
   return (
-    <div aria-hidden className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}>
+    <div
+      aria-hidden
+      className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
+    >
       <div className="rv-aurora-a absolute inset-0" style={{ background: layers[0] }} />
       <div className="rv-aurora-b absolute inset-0" style={{ background: layers[1] }} />
       <div className="rv-aurora-c absolute inset-0" style={{ background: layers[2] }} />

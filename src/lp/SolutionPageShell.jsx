@@ -1,29 +1,28 @@
-import { useEffect, useRef } from 'react';
-import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-import { MenuProvider, useMenu } from '../context/MenuContext';
-import Navbar from '../components/Navbar';
-import MenuPanel from '../components/MenuPanel';
+import Lenis from 'lenis';
+import { useEffect, useRef } from 'react';
 import Footer from '../components/Footer';
+import MenuPanel from '../components/MenuPanel';
+import Navbar from '../components/Navbar';
 import WhatsAppButton from '../components/WhatsAppButton';
-
+import { MenuProvider, useMenu } from '../context/MenuContext';
+import { NOISE_URI } from './config/_base';
 import Preloader from './Preloader';
-import HeroDevice from './sections/HeroDevice';
-import ScrubStatement from './sections/ScrubStatement';
-import SilentInbox from './sections/SilentInbox';
+import BentoValue from './sections/BentoValue';
+import CampaignAnatomy from './sections/CampaignAnatomy';
+import ConceptStack from './sections/ConceptStack';
 import ConsequenceCarousel from './sections/ConsequenceCarousel';
 import CurtainReveal from './sections/CurtainReveal';
-import BentoValue from './sections/BentoValue';
-import ConceptStack from './sections/ConceptStack';
-import CampaignAnatomy from './sections/CampaignAnatomy';
-import TechniqueStack from './sections/TechniqueStack';
-import PillarsShaped from './sections/PillarsShaped';
-import TargetAudienceCarousel from './sections/TargetAudienceCarousel';
 import FaqPanel from './sections/FaqPanel';
 import FinaleCta from './sections/FinaleCta';
-import { NOISE_URI } from './config/_base';
+import HeroDevice from './sections/HeroDevice';
+import PillarsShaped from './sections/PillarsShaped';
+import RelatedServices from './sections/RelatedServices';
+import ScrubStatement from './sections/ScrubStatement';
+import SilentInbox from './sections/SilentInbox';
+import TargetAudienceCarousel from './sections/TargetAudienceCarousel';
+import TechniqueStack from './sections/TechniqueStack';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -115,7 +114,9 @@ function SolutionPageInner({ config }) {
       wrapper.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
       lenis.destroy();
-      ScrollTrigger.getAll().forEach((st) => st.kill());
+      ScrollTrigger.getAll().forEach((st) => {
+        st.kill();
+      });
     };
   }, [scrollContainerRef, setScrolled]);
 
@@ -169,10 +170,18 @@ function SolutionPageInner({ config }) {
         {config.pillars && <PillarsShaped data={config.pillars} />}
         <TargetAudienceCarousel data={config.audience} />
         <CurtainReveal>
-          <ConsequenceCarousel id="processo" eyebrow={config.process.eyebrow} heading={config.process.heading} items={config.process.steps} bg={config.process.bg} cta={config.process.cta} />
+          <ConsequenceCarousel
+            id="processo"
+            eyebrow={config.process.eyebrow}
+            heading={config.process.heading}
+            items={config.process.steps}
+            bg={config.process.bg}
+            cta={config.process.cta}
+          />
         </CurtainReveal>
         <FaqPanel data={config.faq} />
         <FinaleCta data={config.finale} />
+        <RelatedServices />
       </div>
 
       <Footer />

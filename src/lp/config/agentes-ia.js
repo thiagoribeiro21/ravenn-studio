@@ -54,7 +54,9 @@ export default {
     },
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
-      href: buildWaLink('Olá! Vi a página de agentes de IA da Ravenn e quero o diagnóstico gratuito.'),
+      href: buildWaLink(
+        'Olá! Vi a página de agentes de IA da Ravenn e quero o diagnóstico gratuito.',
+      ),
     },
     ctaSecondary: {
       label: 'Falar agora no WhatsApp',
@@ -68,15 +70,28 @@ export default {
     scarcity: {
       line1: 'Diagnóstico gratuito',
       line2: 'Sem compromisso',
-      cta: { label: 'Falar no WhatsApp', href: buildWaLink('Olá! Vi a página de agentes de IA e quero falar com vocês.') },
+      cta: {
+        label: 'Falar no WhatsApp',
+        href: buildWaLink('Olá! Vi a página de agentes de IA e quero falar com vocês.'),
+      },
     },
   },
 
   scrub: {
     headlineTokens: [
-      'Todo', { glyph: 'concentric' }, 'lead', 'sem', { br: true },
-      'resposta', { glyph: 'ring' }, { br: true },
-      'vira', 'cliente', 'do', { glyph: 'cross' }, { persist: true, glyph: 'diamond', text: 'concorrente.' },
+      'Todo',
+      { glyph: 'concentric' },
+      'lead',
+      'sem',
+      { br: true },
+      'resposta',
+      { glyph: 'ring' },
+      { br: true },
+      'vira',
+      'cliente',
+      'do',
+      { glyph: 'cross' },
+      { persist: true, glyph: 'diamond', text: 'concorrente.' },
     ],
     paragraph:
       'Enquanto ninguém responde, o cliente já mandou a mesma pergunta pro concorrente ao lado. Não é falta de interesse: é falta de resposta a tempo. E isso se perde às 3 da manhã com a mesma frequência que às 15h de uma terça.',
@@ -106,7 +121,9 @@ export default {
 
     cta: {
       label: 'Quero meu agente respondendo 24h',
-      href: buildWaLink('Olá! Vi a página de agentes de IA e quero um agente respondendo meu WhatsApp 24h.'),
+      href: buildWaLink(
+        'Olá! Vi a página de agentes de IA e quero um agente respondendo meu WhatsApp 24h.',
+      ),
     },
   },
 
@@ -164,7 +181,9 @@ export default {
         pain: 'Nem todo contato no WhatsApp está pronto pra comprar, atender todo mundo do mesmo jeito desperdiça tempo do seu time.',
         solution:
           'O agente pergunta, filtra e só entrega ao seu time o lead que já demonstrou intenção real de compra.',
-        wa: buildWaLink('Olá! Vi o conceito de qualificação de leads na página de agentes de IA e quero esse padrão no meu atendimento.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito de qualificação de leads na página de agentes de IA e quero esse padrão no meu atendimento.',
+        ),
       },
       {
         nicho: 'Agendamento Automático · Serviços',
@@ -173,7 +192,9 @@ export default {
         pain: 'Marcar horário por mensagem manual trava a agenda inteira num vaivém de "pode às 14h? e às 15h?".',
         solution:
           'O agente consulta sua disponibilidade e fecha o agendamento sozinho, sem trocar uma única mensagem com você.',
-        wa: buildWaLink('Olá! Vi o conceito de agendamento automático na página de agentes de IA e quero esse padrão no meu atendimento.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito de agendamento automático na página de agentes de IA e quero esse padrão no meu atendimento.',
+        ),
       },
       {
         nicho: 'Suporte Pós-venda · Recorrência',
@@ -182,7 +203,9 @@ export default {
         pain: 'Cliente que já comprou também manda mensagem, e cada uma que demora vira risco de reputação.',
         solution:
           'O agente responde dúvidas recorrentes na hora e escala pro seu time só o que realmente precisa de humano.',
-        wa: buildWaLink('Olá! Vi o conceito de suporte pós-venda na página de agentes de IA e quero esse padrão no meu atendimento.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito de suporte pós-venda na página de agentes de IA e quero esse padrão no meu atendimento.',
+        ),
       },
     ],
   },
@@ -193,7 +216,12 @@ export default {
       { text: 'como alguém do seu time,', tone: 'dim' },
       { text: 'não como um robô genérico.', tone: 'dim' },
     ],
-    labels: ['Treinado no seu negócio', 'Qualificação automática', 'Integração com CRM', 'Disponível 24/7'],
+    labels: [
+      'Treinado no seu negócio',
+      'Qualificação automática',
+      'Integração com CRM',
+      'Disponível 24/7',
+    ],
   },
 
   audience: {
@@ -239,7 +267,10 @@ export default {
       mobile: '/funciona-bg-lp/bg-mobile.webp',
       desktop: '/funciona-bg-lp/bg-desktop.webp',
     },
-    cta: { label: 'Começar pelo briefing', href: buildWaLink('Olá! Quero começar meu agente de IA pelo briefing gratuito.') },
+    cta: {
+      label: 'Começar pelo briefing',
+      href: buildWaLink('Olá! Quero começar meu agente de IA pelo briefing gratuito.'),
+    },
   },
 
   faq: {
@@ -262,14 +293,20 @@ export default {
         a: 'Sim, a integração usa a WhatsApp Business API conectada ao seu número, sem precisar trocar de aparelho ou linha.',
       },
     ],
-    cta: { label: 'Perguntar no WhatsApp', href: buildWaLink('Olá! Tenho uma dúvida sobre agentes de IA que não vi no FAQ.') },
+    cta: {
+      label: 'Perguntar no WhatsApp',
+      href: buildWaLink('Olá! Tenho uma dúvida sobre agentes de IA que não vi no FAQ.'),
+    },
   },
 
   finale: {
     deviceImage: '/lp-institucional/cta-device.webp',
     headline: 'Descubra quantos leads seu atendimento está perdendo.',
     body: 'Em até 24 horas, analisamos seu fluxo de mensagens e mostramos exatamente onde um agente de IA recuperaria leads perdidos. Sem compromisso. Sem script de vendas.',
-    cta: { label: 'Solicitar diagnóstico no WhatsApp', href: buildWaLink('Olá. Quero o diagnóstico gratuito do meu atendimento.') },
+    cta: {
+      label: 'Solicitar diagnóstico no WhatsApp',
+      href: buildWaLink('Olá. Quero o diagnóstico gratuito do meu atendimento.'),
+    },
     badges: ['Sem compromisso', 'Resposta em até 24h', 'Sem script de vendas'],
   },
 

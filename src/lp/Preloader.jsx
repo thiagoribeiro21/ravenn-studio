@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { EASE_LUXE, TYPE, isSlowConnection, prefersReducedMotion } from './config/_base';
+import { useEffect, useRef, useState } from 'react';
+import { EASE_LUXE, isSlowConnection, prefersReducedMotion, TYPE } from './config/_base';
 
 const SESSION_KEY = 'rv-lp-institucional-v6-loaded';
 const DURATION_MS = 900;
@@ -18,9 +18,7 @@ export default function Preloader() {
   const [skip] = useState(() => {
     try {
       return (
-        sessionStorage.getItem(SESSION_KEY) === '1' ||
-        prefersReducedMotion() ||
-        isSlowConnection()
+        sessionStorage.getItem(SESSION_KEY) === '1' || prefersReducedMotion() || isSlowConnection()
       );
     } catch {
       return false;
@@ -40,7 +38,11 @@ export default function Preloader() {
       if (p < 1) raf = requestAnimationFrame(tick);
       else {
         setDone(true);
-        try { sessionStorage.setItem(SESSION_KEY, '1'); } catch { /* segue sem persistir */ }
+        try {
+          sessionStorage.setItem(SESSION_KEY, '1');
+        } catch {
+          /* segue sem persistir */
+        }
       }
     };
     raf = requestAnimationFrame(tick);
@@ -57,8 +59,13 @@ export default function Preloader() {
       onAnimationComplete={() => done && setGone(true)}
       className="fixed inset-0 z-[100] flex items-end justify-between bg-rv-void px-[6vw] pb-10 will-change-transform"
     >
-      <span className={`font-satoshi uppercase tracking-widest2 text-rv-faint ${TYPE.eyebrow}`}>Ravenn Studio</span>
-      <span ref={numRef} className="font-grotesk text-6xl font-light tracking-[-0.02em] text-rv-titanium md:text-7xl">
+      <span className={`font-satoshi uppercase tracking-widest2 text-rv-faint ${TYPE.eyebrow}`}>
+        Ravenn Studio
+      </span>
+      <span
+        ref={numRef}
+        className="font-grotesk text-6xl font-light tracking-[-0.02em] text-rv-titanium md:text-7xl"
+      >
         000
       </span>
     </motion.div>

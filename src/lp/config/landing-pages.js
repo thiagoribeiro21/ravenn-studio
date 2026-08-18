@@ -47,7 +47,9 @@ export default {
     },
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
-      href: buildWaLink('Olá! Vi a página de landing pages da Ravenn e quero o diagnóstico gratuito.'),
+      href: buildWaLink(
+        'Olá! Vi a página de landing pages da Ravenn e quero o diagnóstico gratuito.',
+      ),
     },
     ctaSecondary: {
       label: 'Falar agora no WhatsApp',
@@ -64,7 +66,10 @@ export default {
     scarcity: {
       line1: 'Diagnóstico gratuito',
       line2: 'Sem compromisso',
-      cta: { label: 'Falar no WhatsApp', href: buildWaLink('Olá! Vi a página de landing pages e quero falar com vocês.') },
+      cta: {
+        label: 'Falar no WhatsApp',
+        href: buildWaLink('Olá! Vi a página de landing pages e quero falar com vocês.'),
+      },
     },
   },
 
@@ -75,9 +80,20 @@ export default {
        passada, mantendo a mesma mecânica (duas frases curtas + palavra
        final que persiste voando pro canto). */
     headlineTokens: [
-      'Cada', 'campo', { glyph: 'concentric' }, 'a', 'mais', { br: true },
-      'no', 'formulário', { glyph: 'ring' }, { br: true },
-      'é', 'uma', { glyph: 'cross' }, { persist: true, glyph: 'diamond', text: 'desistência.' },
+      'Cada',
+      'campo',
+      { glyph: 'concentric' },
+      'a',
+      'mais',
+      { br: true },
+      'no',
+      'formulário',
+      { glyph: 'ring' },
+      { br: true },
+      'é',
+      'uma',
+      { glyph: 'cross' },
+      { persist: true, glyph: 'diamond', text: 'desistência.' },
     ],
     paragraph:
       'O visitante que clica no seu anúncio já decidiu em segundos se aquela página merece confiança. Um formulário genérico, uma oferta confusa ou um CTA fraco devolvem ele pro Google. O clique que você pagou vira dado perdido, não lead.',
@@ -110,14 +126,25 @@ export default {
 
     cta: {
       label: 'Quero minha landing page convertendo',
-      href: buildWaLink('Olá! Vi a página de landing pages e quero uma página que converta meu tráfego pago.'),
+      href: buildWaLink(
+        'Olá! Vi a página de landing pages e quero uma página que converta meu tráfego pago.',
+      ),
     },
   },
 
   /* Os 4 mockups do BentoValue são ícones fixos do componente (pagespeed /
      wireframe / authority / whatsapp), vocabulário visual compartilhado
-     entre todas as LPs clonadas daqui, só o texto muda por serviço. */
+     entre todas as LPs clonadas daqui, só o texto muda por serviço.
+
+     `heading`/`bluf` — específicos desta LP (AEO/GEO, ver BentoValue.jsx):
+     H2 em forma de pergunta (formato que mais bate com featured snippets/
+     citação de IA) + um parágrafo BLUF de 40-60 palavras logo abaixo,
+     respondendo direto — sem enrolação — antes de qualquer elemento
+     visual. As outras 5 LPs não preenchem esses campos, continuam com o
+     H2 fixo de sempre. */
   bento: {
+    heading: 'O que uma landing page de alta conversão precisa ter?',
+    bluf: 'Uma landing page de alta conversão precisa de quatro elementos: velocidade real (PageSpeed 90+), estrutura de copy com hierarquia de conversão (AIDA), design autoral sem templates genéricos, e rastreamento completo (GA4 + UTMs) desde o primeiro clique. Sem qualquer um desses quatro, o tráfego pago chega — mas não converte.',
     cells: [
       {
         key: 'performance',
@@ -160,8 +187,11 @@ export default {
   concepts: {
     eyebrow: 'Cada objetivo, sua arquitetura',
     heading: 'Landing page não é um formato. É uma decisão de conversão.',
+    /* BLUF (40-60 palavras) — nomeia as 3 arquiteturas de cara, sem
+       preâmbulo, respondendo "quais arquiteturas existem" antes do
+       visitante precisar rolar até os cards pra descobrir. */
     intro:
-      'Três arquiteturas autorais que aplicamos conforme o objetivo da campanha. Não são clientes: é o padrão exato de estrutura e copy que usamos quando o tráfego pago é seu.',
+      'Existem três arquiteturas de landing page, cada uma para um objetivo de campanha diferente: geração de leads (formulário enxuto), oferta direta (checkout na mesma dobra) e diagnóstico gratuito (para serviço de ticket alto). A escolha certa depende do objetivo da campanha, não de preferência estética — aplicamos a mesma estrutura usada nesta própria página.',
     // Os posters são prints de página inteira (~2.1:1), não gravações
     // 16:9, sem isso o palco (ConceptStack.jsx) usa o default 16:9 e
     // sobra tarja preta com `object-contain`. Proporção média dos 3
@@ -175,7 +205,9 @@ export default {
         pain: 'Um formulário longo demais mata a intenção de compra antes da primeira pergunta.',
         solution:
           'Captura enxuta, hierarquia de confiança e prova social no lugar certo, pensada pra quem decide em segundos, não em minutos.',
-        wa: buildWaLink('Olá! Vi o conceito de geração de leads na página de landing pages e quero esse padrão na minha campanha.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito de geração de leads na página de landing pages e quero esse padrão na minha campanha.',
+        ),
       },
       {
         nicho: 'Oferta Direta · Checkout',
@@ -184,7 +216,9 @@ export default {
         pain: 'Cada clique extra até o pagamento é uma chance a mais do visitante desistir.',
         solution:
           'Página de venda direta com oferta, prova e CTA na mesma dobra: do anúncio ao checkout, sem distração no meio do caminho.',
-        wa: buildWaLink('Olá! Vi o conceito de oferta direta na página de landing pages e quero esse padrão na minha campanha.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito de oferta direta na página de landing pages e quero esse padrão na minha campanha.',
+        ),
       },
       {
         nicho: 'Diagnóstico Gratuito · Serviço',
@@ -193,7 +227,9 @@ export default {
         pain: 'Serviço de ticket alto não se vende num formulário genérico de "fale conosco".',
         solution:
           'A mesma arquitetura desta própria página: uma promessa clara, prova de padrão e um único caminho de conversão, pro seu WhatsApp.',
-        wa: buildWaLink('Olá! Vi o conceito de diagnóstico gratuito na página de landing pages e quero esse padrão na minha campanha.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito de diagnóstico gratuito na página de landing pages e quero esse padrão na minha campanha.',
+        ),
       },
     ],
   },
@@ -251,7 +287,10 @@ export default {
       mobile: '/funciona-bg-lp/bg-mobile.webp',
       desktop: '/funciona-bg-lp/bg-desktop.webp',
     },
-    cta: { label: 'Começar pelo briefing', href: buildWaLink('Olá! Quero começar minha landing page pelo briefing gratuito.') },
+    cta: {
+      label: 'Começar pelo briefing',
+      href: buildWaLink('Olá! Quero começar minha landing page pelo briefing gratuito.'),
+    },
   },
 
   faq: {
@@ -275,7 +314,10 @@ export default {
         a: 'Sim, GA4 e UTMs configurados do zero antes do lançamento, pra você medir cada conversão desde o primeiro clique.',
       },
     ],
-    cta: { label: 'Perguntar no WhatsApp', href: buildWaLink('Olá! Tenho uma dúvida sobre landing pages que não vi no FAQ.') },
+    cta: {
+      label: 'Perguntar no WhatsApp',
+      href: buildWaLink('Olá! Tenho uma dúvida sobre landing pages que não vi no FAQ.'),
+    },
   },
 
   finale: {
@@ -283,7 +325,10 @@ export default {
     deviceImage: '/lp-institucional/cta-device.webp',
     headline: 'Descubra quanto sua landing page está te custando.',
     body: 'Em até 24 horas, analisamos a estrutura, a copy e a capacidade de conversão da sua página atual. Sem compromisso. Sem script de vendas.',
-    cta: { label: 'Solicitar diagnóstico no WhatsApp', href: buildWaLink('Olá. Quero o diagnóstico gratuito da minha landing page.') },
+    cta: {
+      label: 'Solicitar diagnóstico no WhatsApp',
+      href: buildWaLink('Olá. Quero o diagnóstico gratuito da minha landing page.'),
+    },
     badges: ['Sem compromisso', 'Resposta em até 24h', 'Sem script de vendas'],
   },
 

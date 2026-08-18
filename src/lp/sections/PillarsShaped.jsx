@@ -1,18 +1,25 @@
+import {
+  motion,
+  useInView,
+  useMotionValueEvent,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from 'framer-motion';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { motion, useInView, useMotionValueEvent, useSpring, useTransform, useVelocity } from 'framer-motion';
-import PillarsMorphIcon from '../primitives/PillarsMorphIcon';
 import {
   EASE_LUXE,
   GX,
-  SCRUB_SPRING,
-  TYPE,
   hasWebGL,
   isSlowConnection,
   prefersReducedMotion,
+  SCRUB_SPRING,
   slot,
+  TYPE,
   useIsDesktop,
   useTrackProgress,
 } from '../config/_base';
+import PillarsMorphIcon from '../primitives/PillarsMorphIcon';
 
 /* Ícone — v5, voltou a ser Three.js (era Canvas2D puro na v4). Pedido
    explícito: os MESMOS ícones/morphing da home, mantendo PageSpeed alto —
@@ -95,7 +102,10 @@ const PILLAR_SIZE = 'clamp(1.875rem, 1rem + 3.4vw, 4.5rem)';
 function HeadlineWord({ progress, reveal, restColor, children }) {
   const opacity = useTransform(progress, reveal, [0.14, 1]);
   return (
-    <motion.span className="mr-[0.26em] inline-block" style={{ opacity, color: restColor, willChange: 'opacity' }}>
+    <motion.span
+      className="mr-[0.26em] inline-block"
+      style={{ opacity, color: restColor, willChange: 'opacity' }}
+    >
       {children}
     </motion.span>
   );
@@ -107,7 +117,9 @@ function ScrubHeadline({ progress, lines }) {
   const tokens = useMemo(() => {
     const out = [];
     lines.forEach((line, li) => {
-      line.text.split(' ').forEach((text) => out.push({ text, tone: line.tone }));
+      line.text.split(' ').forEach((text) => {
+        out.push({ text, tone: line.tone });
+      });
       if (li < lines.length - 1) out.push({ br: true });
     });
     return out;
@@ -119,11 +131,13 @@ function ScrubHeadline({ progress, lines }) {
   return (
     <h2 className={`font-grotesk font-light leading-[1.18] tracking-[-0.015em] ${TYPE.h2}`}>
       {tokens.map((token, i) => {
+        // biome-ignore lint/suspicious/noArrayIndexKey: `tokens` deriva de `lines` estático via useMemo, ordem fixa
         if (token.br) return <br key={i} />;
         wordIndex += 1;
         const reveal = slot(HEADLINE_RANGE, wordIndex, animatable.length, 0.6);
         const restColor = token.tone === 'bright' ? COLOR.titanium : COLOR.slate;
         return (
+          // biome-ignore lint/suspicious/noArrayIndexKey: `tokens` deriva de `lines` estático via useMemo, ordem fixa
           <HeadlineWord key={i} progress={progress} reveal={reveal} restColor={restColor}>
             {token.text}
           </HeadlineWord>
@@ -150,6 +164,7 @@ function StaticHeadline({ lines, playEntrance }) {
       className={`font-grotesk font-light leading-[1.18] tracking-[-0.015em] ${TYPE.h2}`}
     >
       {lines.map((line, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: `lines` vem da config estática da LP, ordem fixa
         <span key={i} className={line.tone === 'bright' ? 'text-rv-titanium' : 'text-rv-slate'}>
           {line.text}{' '}
         </span>
@@ -233,7 +248,16 @@ function CanvasLoadingPulse() {
    desligado, nem sequer vai morfar). `PillarsCanvas` recebe `mobile` pra
    se ajustar sozinho (menos partículas, DPR mais baixo — ver o próprio
    arquivo) em vez de duas variantes de componente. */
-function CanvasSlot({ canvasInView, wrapRef, velocityRef, reduced, activeIndex = 0, mobile = false, useFallback = false, onContextLost }) {
+function CanvasSlot({
+  canvasInView,
+  wrapRef,
+  velocityRef,
+  reduced,
+  activeIndex = 0,
+  mobile = false,
+  useFallback = false,
+  onContextLost,
+}) {
   const tryThree = !reduced && !useFallback;
 
   return (
@@ -251,10 +275,19 @@ function CanvasSlot({ canvasInView, wrapRef, velocityRef, reduced, activeIndex =
              intervalo (`CanvasLoadingPulse`, ver nota acima), nunca o
              ícone alternativo em Canvas2D. */
           <Suspense fallback={<CanvasLoadingPulse />}>
-            <PillarsCanvas activeIndex={activeIndex} mobile={mobile} onContextLost={onContextLost} />
+            <PillarsCanvas
+              activeIndex={activeIndex}
+              mobile={mobile}
+              onContextLost={onContextLost}
+            />
           </Suspense>
         ) : (
-          <PillarsMorphIcon activeIndex={activeIndex} reduceMotion={reduced} velocityRef={velocityRef} className="h-full w-full" />
+          <PillarsMorphIcon
+            activeIndex={activeIndex}
+            reduceMotion={reduced}
+            velocityRef={velocityRef}
+            className="h-full w-full"
+          />
         )}
       </div>
     </div>
@@ -267,11 +300,22 @@ function CanvasSlot({ canvasInView, wrapRef, velocityRef, reduced, activeIndex =
    assume o normal a partir daí) — é a folga de segurança pro
    WhatsAppButton fixo (56px + 24px de margem = ~80px de rodapé ocupado;
    128px de padding cobre isso com folga real, não uma estimativa). */
-function StaticPillars({ data, canvasInView, canvasWrapRef, velocityRef, reduced, useFallback, onContextLost }) {
+function StaticPillars({
+  data,
+  canvasInView,
+  canvasWrapRef,
+  velocityRef,
+  reduced,
+  useFallback,
+  onContextLost,
+}) {
   const playEntrance = !reduced;
 
   return (
-    <section id="padrao" className={`relative border-t border-white/[0.06] bg-rv-void pb-32 pt-16 md:pb-[120px] md:pt-[120px] ${GX}`}>
+    <section
+      id="padrao"
+      className={`relative border-t border-white/[0.06] bg-rv-void pb-32 pt-16 md:pb-[120px] md:pt-[120px] ${GX}`}
+    >
       <div className="grid gap-12 md:grid-cols-12 md:gap-16">
         <div className="md:col-span-6">
           <StaticHeadline lines={data.declarationLines} playEntrance={playEntrance} />
@@ -288,7 +332,10 @@ function StaticPillars({ data, canvasInView, canvasWrapRef, velocityRef, reduced
 
         <div className="relative pl-6 md:col-span-6 md:pl-10">
           <div className="absolute bottom-0 left-0 top-0 w-px bg-white/[0.08]">
-            <div className="h-full w-px bg-rv-purple-400" style={{ boxShadow: '0 0 12px rgba(167,139,250,0.65)' }} />
+            <div
+              className="h-full w-px bg-rv-purple-400"
+              style={{ boxShadow: '0 0 12px rgba(167,139,250,0.65)' }}
+            />
           </div>
           <div className="flex flex-col gap-7 md:gap-9">
             {data.labels.map((label, i) => (
@@ -317,7 +364,18 @@ function StaticPillars({ data, canvasInView, canvasWrapRef, velocityRef, reduced
 }
 
 /* Layout PINADO — só monta em desktop (`isDesktop`) com motion ligado. */
-function PinnedTimeline({ data, trackRef, progress, lineScale, activeIndex, canvasInView, canvasWrapRef, velocityRef, useFallback, onContextLost }) {
+function PinnedTimeline({
+  data,
+  trackRef,
+  progress,
+  lineScale,
+  activeIndex,
+  canvasInView,
+  canvasWrapRef,
+  velocityRef,
+  useFallback,
+  onContextLost,
+}) {
   return (
     <section id="padrao" ref={trackRef} className="relative h-[400dvh] bg-rv-void">
       {/* Palco: uma viewport de altura, colado no topo enquanto o trilho de
@@ -370,7 +428,6 @@ function PinnedTimeline({ data, trackRef, progress, lineScale, activeIndex, canv
     </section>
   );
 }
-
 
 export default function PillarsShaped({ data }) {
   const trackRef = useRef(null);

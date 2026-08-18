@@ -1,14 +1,14 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
-import Glyph from '../primitives/Glyph';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   EASE_LUXE_FN as EASE_LUXE,
   GX,
-  SCRUB_SPRING,
   prefersReducedMotion,
+  SCRUB_SPRING,
   slot,
   useTrackProgress,
 } from '../config/_base';
+import Glyph from '../primitives/Glyph';
 
 /* ══════════════════════════════════════════════════════════════════════════
    Ato 2 — v8. Reescrito de GSAP ScrollTrigger para Framer Motion (v7),
@@ -163,7 +163,10 @@ function KineticWord({ progress, reveal, dissolve, accent = false, className = '
     dissolve ? [0, 1, 1, 0] : [0, 1],
   );
 
-  const color = useTransform(progress, reveal, [COLOR.faint, accent ? COLOR.purple : COLOR.titanium]);
+  const color = useTransform(progress, reveal, [
+    COLOR.faint,
+    accent ? COLOR.purple : COLOR.titanium,
+  ]);
 
   const y = useTransform(progress, dissolve || [0, 1], dissolve ? [0, -90] : [0, 0], {
     ease: dissolve ? EASE_LUXE : undefined,
@@ -186,7 +189,11 @@ function KineticWord({ progress, reveal, dissolve, accent = false, className = '
    `pulseDelay` só desincroniza a respiração (`rv-glyph-pulse`, ver Glyph.jsx)
    — variação barata pra não ler como um único elemento clonado 3x. */
 function KineticGlyph({ progress, reveal, dissolve, name, pulseDelay = 0 }) {
-  const opacity = useTransform(progress, [reveal[0], reveal[1], dissolve[0], dissolve[1]], [0, 1, 1, 0]);
+  const opacity = useTransform(
+    progress,
+    [reveal[0], reveal[1], dissolve[0], dissolve[1]],
+    [0, 1, 1, 0],
+  );
   const y = useTransform(progress, dissolve, [0, -90], { ease: EASE_LUXE });
   const blur = useTransform(progress, dissolve, [0, MAX_BLUR]);
   const filter = useTransform(blur, (v) => (v < 0.06 ? 'none' : `blur(${v.toFixed(2)}px)`));
@@ -222,6 +229,7 @@ function ScrubParagraph({ progress, text, range }) {
         const clean = accent ? raw.slice(1, -1) : raw;
         const reveal = slot(range, i, words.length, 0.35);
         return (
+          // biome-ignore lint/suspicious/noArrayIndexKey: `words` vem da config estática da LP, ordem fixa
           <ParagraphWord key={i} progress={progress} reveal={reveal} accent={accent}>
             {clean}
           </ParagraphWord>
@@ -233,7 +241,10 @@ function ScrubParagraph({ progress, text, range }) {
 
 function ParagraphWord({ progress, reveal, accent, children }) {
   const opacity = useTransform(progress, reveal, [0, 1]);
-  const color = useTransform(progress, reveal, [COLOR.faint, accent ? COLOR.purple : COLOR.titanium]);
+  const color = useTransform(progress, reveal, [
+    COLOR.faint,
+    accent ? COLOR.purple : COLOR.titanium,
+  ]);
   const y = useTransform(progress, reveal, [16, 0], { ease: EASE_LUXE });
   const blur = useTransform(progress, reveal, [4, 0]);
   const filter = useTransform(blur, (v) => (v < 0.06 ? 'none' : `blur(${v.toFixed(2)}px)`));
@@ -438,7 +449,9 @@ export default function ScrubStatement({ data }) {
     [flip?.y ?? 0, (flip?.y ?? 0) * 0.5 - ARC_LIFT, 0],
     { ease: EASE_LUXE },
   );
-  const flightScale = useTransform(progress, STAGE.flight, [flip?.scale ?? 1, 1], { ease: EASE_LUXE });
+  const flightScale = useTransform(progress, STAGE.flight, [flip?.scale ?? 1, 1], {
+    ease: EASE_LUXE,
+  });
 
   /* Rotação só existe DURANTE o voo — 3 pontos (0 → -4 → 0), não 2 (-4 → 0).
      Bug real da v9 anterior: `useTransform` com um range de 2 pontos clampa
@@ -451,17 +464,28 @@ export default function ScrubStatement({ data }) {
      pré-voo agora é 0° — idêntico ao resto do título — e a rotação só entra
      como um floreio DURANTE a viagem, desarmando de novo no pouso. Pivota
      no mesmo `transformOrigin: right center` do resto da âncora. */
-  const flightRotate = useTransform(progress, [STAGE.flight[0], flightMid, STAGE.flight[1]], [0, -4, 0], {
-    ease: EASE_LUXE,
-  });
+  const flightRotate = useTransform(
+    progress,
+    [STAGE.flight[0], flightMid, STAGE.flight[1]],
+    [0, -4, 0],
+    {
+      ease: EASE_LUXE,
+    },
+  );
 
   /* Blur de "chicote" — sobe no meio do voo (mais rápido = mais borrado) e
      zera nas duas pontas, igual ao dissolve das outras palavras, mas usado
      aqui pra dar peso ao movimento em vez de fazer a palavra sumir. Mesmo
      truque de "vira `none` quando desprezível" das outras animações — não
      paga o custo de uma camada de filtro fora da janela em que ela importa. */
-  const flightBlurRaw = useTransform(progress, [STAGE.flight[0], flightMid, STAGE.flight[1]], [0, 5.5, 0]);
-  const flightFilter = useTransform(flightBlurRaw, (v) => (v < 0.06 ? 'none' : `blur(${v.toFixed(2)}px)`));
+  const flightBlurRaw = useTransform(
+    progress,
+    [STAGE.flight[0], flightMid, STAGE.flight[1]],
+    [0, 5.5, 0],
+  );
+  const flightFilter = useTransform(flightBlurRaw, (v) =>
+    v < 0.06 ? 'none' : `blur(${v.toFixed(2)}px)`,
+  );
 
   /* Flash de pouso — halo de texto que acende bem no fim do voo e apaga em
      seguida, pra puxar o olho no exato instante em que a palavra assenta
@@ -469,12 +493,18 @@ export default function ScrubStatement({ data }) {
      ao MESMO `progress` de tudo o mais, então também congela se o scroll
      parar no meio dele. */
   const landingAt = STAGE.flight[1] - 0.025;
-  const landingGlowRaw = useTransform(progress, [landingAt - 0.05, landingAt, landingAt + 0.1], [0, 1, 0]);
+  const landingGlowRaw = useTransform(
+    progress,
+    [landingAt - 0.05, landingAt, landingAt + 0.1],
+    [0, 1, 0],
+  );
   const landingGlow = useTransform(landingGlowRaw, (v) =>
     v < 0.03 ? 'none' : `0 0 ${(20 * v).toFixed(1)}px rgba(167,139,250,${(0.85 * v).toFixed(2)})`,
   );
 
-  const anchorReveal = persistToken ? slot(STAGE.reveal, indexOf(persistToken), animatable.length) : STAGE.reveal;
+  const anchorReveal = persistToken
+    ? slot(STAGE.reveal, indexOf(persistToken), animatable.length)
+    : STAGE.reveal;
   // `flip ? 1 : 0` como alvo final — enquanto a medida não chegou, o range
   // inteiro vai de 0 a 0 (invisível em qualquer progresso), em vez de 0→1.
   // Assim que `flip` resolve, o próximo render já recria esta MotionValue
@@ -509,13 +539,17 @@ export default function ScrubStatement({ data }) {
               `inset-0` + `items-center`, padding-top só consome espaço do
               lado de cima da conta de centralização (ver nota da constante,
               no topo do arquivo). */}
-          <div className="absolute inset-0 flex items-center justify-center" style={{ paddingTop: NAV_CLEARANCE }}>
+          <div
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ paddingTop: NAV_CLEARANCE }}
+          >
             <h2
               id="scrub-statement-title"
               className="mx-auto max-w-5xl text-center font-grotesk font-light leading-[1.18] tracking-[-0.025em]"
               style={{ fontSize: HEADLINE_SIZE }}
             >
               {tokens.map((token, i) => {
+                // biome-ignore lint/suspicious/noArrayIndexKey: `tokens` deriva de config estática da LP, ordem fixa
                 if (token.br) return <br key={i} />;
 
                 const idx = indexOf(token);
@@ -536,6 +570,7 @@ export default function ScrubStatement({ data }) {
                      leva `aria-hidden`. */
                   return (
                     <span
+                      // biome-ignore lint/suspicious/noArrayIndexKey: `tokens` deriva de config estática da LP, ordem fixa
                       key={i}
                       ref={ghostRef}
                       className="pointer-events-none mx-[0.18em] inline-flex select-none items-center gap-[0.3em] align-middle opacity-0"
@@ -552,6 +587,7 @@ export default function ScrubStatement({ data }) {
                 if (token.glyph) {
                   return (
                     <KineticGlyph
+                      // biome-ignore lint/suspicious/noArrayIndexKey: `tokens` deriva de config estática da LP, ordem fixa
                       key={i}
                       progress={progress}
                       reveal={reveal}
@@ -564,6 +600,7 @@ export default function ScrubStatement({ data }) {
 
                 return (
                   <KineticWord
+                    // biome-ignore lint/suspicious/noArrayIndexKey: `tokens` deriva de config estática da LP, ordem fixa
                     key={i}
                     progress={progress}
                     reveal={reveal}

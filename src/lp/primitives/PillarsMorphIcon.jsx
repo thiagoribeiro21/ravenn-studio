@@ -39,7 +39,6 @@ import { useEffect, useMemo, useRef } from 'react';
    respiro, então nenhuma forma nunca toca a borda do quadro.
    ══════════════════════════════════════════════════════════════════════════ */
 
-const N = 140; // total de partículas — igual em TODAS as formas (índice a índice)
 const VIOLET = '124,58,237';
 const VIOLET_LIGHT = '167,139,250';
 
@@ -73,10 +72,7 @@ function buildShapes() {
     ...circlePoints(0, 0, 1.6, 20),
   ];
 
-  const ring = [
-    ...circlePoints(0, 0, 8.2, 100),
-    ...circlePoints(0, 0, 2.2, 40),
-  ];
+  const ring = [...circlePoints(0, 0, 8.2, 100), ...circlePoints(0, 0, 2.2, 40)];
 
   const cross = [
     ...linePoints(0, -9.8, 0, 9.8, 60),
@@ -113,6 +109,7 @@ function useMorphLoop(canvasRef, shapes, activeIndex, reduce, velocityRef) {
     activeRef.current = activeIndex;
   }, [activeIndex]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `canvasRef`/`velocityRef` são refs estáveis, lidas via closure dentro do loop de rAF — não precisam disparar reinício do efeito
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return undefined;
@@ -202,7 +199,12 @@ function useMorphLoop(canvasRef, shapes, activeIndex, reduce, velocityRef) {
   }, [shapes, reduce]);
 }
 
-export default function PillarsMorphIcon({ activeIndex = 0, reduceMotion = false, velocityRef, className = '' }) {
+export default function PillarsMorphIcon({
+  activeIndex = 0,
+  reduceMotion = false,
+  velocityRef,
+  className = '',
+}) {
   const canvasRef = useRef(null);
   const shapes = useMemo(buildShapes, []);
   useMorphLoop(canvasRef, shapes, activeIndex, reduceMotion, velocityRef);
@@ -216,7 +218,10 @@ export default function PillarsMorphIcon({ activeIndex = 0, reduceMotion = false
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
-        style={{ background: `radial-gradient(circle, rgba(${VIOLET},0.22), transparent 70%)`, filter: 'blur(18px)' }}
+        style={{
+          background: `radial-gradient(circle, rgba(${VIOLET},0.22), transparent 70%)`,
+          filter: 'blur(18px)',
+        }}
       />
       <canvas ref={canvasRef} className="relative h-full w-full" aria-hidden />
     </div>

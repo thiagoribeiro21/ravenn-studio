@@ -38,7 +38,9 @@ export default {
     },
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
-      href: buildWaLink('Olá! Vi a página de sites imersivos da Ravenn e quero o diagnóstico gratuito.'),
+      href: buildWaLink(
+        'Olá! Vi a página de sites imersivos da Ravenn e quero o diagnóstico gratuito.',
+      ),
     },
     ctaSecondary: {
       label: 'Falar agora no WhatsApp',
@@ -52,15 +54,29 @@ export default {
     scarcity: {
       line1: 'Diagnóstico gratuito',
       line2: 'Sem compromisso',
-      cta: { label: 'Falar no WhatsApp', href: buildWaLink('Olá! Vi a página de sites imersivos e quero falar com vocês.') },
+      cta: {
+        label: 'Falar no WhatsApp',
+        href: buildWaLink('Olá! Vi a página de sites imersivos e quero falar com vocês.'),
+      },
     },
   },
 
   scrub: {
     headlineTokens: [
-      'Um', 'site', { glyph: 'concentric' }, 'comum', 'é', { br: true },
-      'esquecido', { glyph: 'ring' }, 'antes', { br: true },
-      'do', 'primeiro', { glyph: 'cross' }, { persist: true, glyph: 'diamond', text: 'scroll.' },
+      'Um',
+      'site',
+      { glyph: 'concentric' },
+      'comum',
+      'é',
+      { br: true },
+      'esquecido',
+      { glyph: 'ring' },
+      'antes',
+      { br: true },
+      'do',
+      'primeiro',
+      { glyph: 'cross' },
+      { persist: true, glyph: 'diamond', text: 'scroll.' },
     ],
     paragraph:
       'O visitante decide em segundos se aquele site merece o resto da atenção dele. Uma primeira tela estática, sem movimento, sem surpresa, não dá motivo nenhum pra continuar, e a marca perde a única chance que teria de ficar na memória.',
@@ -90,7 +106,9 @@ export default {
 
     cta: {
       label: 'Quero uma experiência assim pra minha marca',
-      href: buildWaLink('Olá! Vi a página de sites imersivos e quero uma experiência assim pra minha marca.'),
+      href: buildWaLink(
+        'Olá! Vi a página de sites imersivos e quero uma experiência assim pra minha marca.',
+      ),
     },
   },
 
@@ -181,7 +199,9 @@ export default {
       ],
       cta: {
         label: 'Quero essa tecnologia no meu site',
-        href: buildWaLink('Olá! Vi as técnicas usadas na página de sites imersivos e quero esse padrão no meu site.'),
+        href: buildWaLink(
+          'Olá! Vi as técnicas usadas na página de sites imersivos e quero esse padrão no meu site.',
+        ),
       },
     },
   },
@@ -192,7 +212,12 @@ export default {
       { text: 'É uma experiência', tone: 'dim' },
       { text: 'que sua marca precisa ter.', tone: 'dim' },
     ],
-    labels: ['WebGL & Three.js', 'Motion cinematográfico', '60fps garantido', 'Direção de arte exclusiva'],
+    labels: [
+      'WebGL & Three.js',
+      'Motion cinematográfico',
+      '60fps garantido',
+      'Direção de arte exclusiva',
+    ],
   },
 
   audience: {
@@ -238,7 +263,10 @@ export default {
       mobile: '/funciona-bg-lp/bg-mobile.webp',
       desktop: '/funciona-bg-lp/bg-desktop.webp',
     },
-    cta: { label: 'Começar pelo conceito', href: buildWaLink('Olá! Quero começar meu site imersivo pelo conceito.') },
+    cta: {
+      label: 'Começar pelo conceito',
+      href: buildWaLink('Olá! Quero começar meu site imersivo pelo conceito.'),
+    },
   },
 
   faq: {
@@ -261,14 +289,20 @@ export default {
         a: 'Projetos com WebGL levam de 5 a 8 semanas, dependendo da quantidade de cenas interativas. Você acompanha cada etapa, do conceito ao lançamento.',
       },
     ],
-    cta: { label: 'Perguntar no WhatsApp', href: buildWaLink('Olá! Tenho uma dúvida sobre sites imersivos que não vi no FAQ.') },
+    cta: {
+      label: 'Perguntar no WhatsApp',
+      href: buildWaLink('Olá! Tenho uma dúvida sobre sites imersivos que não vi no FAQ.'),
+    },
   },
 
   finale: {
     deviceImage: '/lp-institucional/cta-device.webp',
     headline: 'Descubra se sua marca merece mais que um site comum.',
     body: 'Em até 24 horas, avaliamos seu site atual e mostramos onde uma experiência imersiva elevaria a percepção da sua marca. Sem compromisso. Sem script de vendas.',
-    cta: { label: 'Solicitar diagnóstico no WhatsApp', href: buildWaLink('Olá. Quero o diagnóstico gratuito do meu site.') },
+    cta: {
+      label: 'Solicitar diagnóstico no WhatsApp',
+      href: buildWaLink('Olá. Quero o diagnóstico gratuito do meu site.'),
+    },
     badges: ['Sem compromisso', 'Resposta em até 24h', 'Sem script de vendas'],
   },
 

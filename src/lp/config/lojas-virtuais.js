@@ -41,7 +41,9 @@ export default {
     },
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
-      href: buildWaLink('Olá! Vi a página de lojas virtuais da Ravenn e quero o diagnóstico gratuito.'),
+      href: buildWaLink(
+        'Olá! Vi a página de lojas virtuais da Ravenn e quero o diagnóstico gratuito.',
+      ),
     },
     ctaSecondary: {
       label: 'Falar agora no WhatsApp',
@@ -55,15 +57,28 @@ export default {
     scarcity: {
       line1: 'Diagnóstico gratuito',
       line2: 'Sem compromisso',
-      cta: { label: 'Falar no WhatsApp', href: buildWaLink('Olá! Vi a página de lojas virtuais e quero falar com vocês.') },
+      cta: {
+        label: 'Falar no WhatsApp',
+        href: buildWaLink('Olá! Vi a página de lojas virtuais e quero falar com vocês.'),
+      },
     },
   },
 
   scrub: {
     headlineTokens: [
-      'Cada', 'segundo', { glyph: 'concentric' }, 'de', { br: true },
-      'carregamento', { glyph: 'ring' }, 'é', 'um', { br: true },
-      'carrinho', { glyph: 'cross' }, { persist: true, glyph: 'diamond', text: 'abandonado.' },
+      'Cada',
+      'segundo',
+      { glyph: 'concentric' },
+      'de',
+      { br: true },
+      'carregamento',
+      { glyph: 'ring' },
+      'é',
+      'um',
+      { br: true },
+      'carrinho',
+      { glyph: 'cross' },
+      { persist: true, glyph: 'diamond', text: 'abandonado.' },
     ],
     paragraph:
       'O cliente já decidiu comprar: colocou o produto no carrinho. O que faz ele desistir agora não é falta de interesse, é fricção: uma página lenta, um checkout confuso, uma dúvida sem resposta. Cada segundo a mais de espera é uma chance a mais dele fechar a aba.',
@@ -93,7 +108,9 @@ export default {
 
     cta: {
       label: 'Quero minha loja recuperando carrinho',
-      href: buildWaLink('Olá! Vi a página de lojas virtuais e quero uma loja que recupere carrinho abandonado.'),
+      href: buildWaLink(
+        'Olá! Vi a página de lojas virtuais e quero uma loja que recupere carrinho abandonado.',
+      ),
     },
   },
 
@@ -151,7 +168,9 @@ export default {
         pain: 'Peça de alto padrão se vende pela percepção de exclusividade: um site com cara de loja genérica faz até um produto caro parecer commodity.',
         solution:
           'Vitrine editorial, fotografia em alta definição e checkout discreto: a experiência de compra à altura do preço da peça.',
-        wa: buildWaLink('Olá! Vi o conceito de acessórios de luxo na página de lojas virtuais e quero esse padrão na minha loja.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito de acessórios de luxo na página de lojas virtuais e quero esse padrão na minha loja.',
+        ),
       },
       {
         nicho: 'Pet Shop · Recompra',
@@ -159,7 +178,9 @@ export default {
         pain: 'Quem tem pet compra ração e produtos todo mês — se recomprar exige login, busca e catálogo cansativo, o cliente migra pro concorrente mais fácil.',
         solution:
           'Conta salva, recompra em um clique e categorias por tipo de pet: a loja facilita exatamente o que se repete todo mês.',
-        wa: buildWaLink('Olá! Vi o conceito de pet shop na página de lojas virtuais e quero esse padrão na minha loja.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito de pet shop na página de lojas virtuais e quero esse padrão na minha loja.',
+        ),
       },
       {
         nicho: 'Eletrônicos · Alto ticket',
@@ -167,7 +188,9 @@ export default {
         pain: 'Produto caro exige confiança: checkout confuso ou site lento faz o cliente desistir por medo, não por preço.',
         solution:
           'Ficha técnica clara, comparação de produtos e checkout transparente: a confiança certa pra fechar uma compra de ticket alto.',
-        wa: buildWaLink('Olá! Vi o conceito de eletrônicos na página de lojas virtuais e quero esse padrão na minha loja.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito de eletrônicos na página de lojas virtuais e quero esse padrão na minha loja.',
+        ),
       },
     ],
   },
@@ -178,7 +201,12 @@ export default {
       { text: 'que nunca fecha,', tone: 'dim' },
       { text: 'nunca tira férias.', tone: 'dim' },
     ],
-    labels: ['Checkout otimizado', 'Mobile-first de verdade', 'PageSpeed 90+', 'Pix e cartão integrados'],
+    labels: [
+      'Checkout otimizado',
+      'Mobile-first de verdade',
+      'PageSpeed 90+',
+      'Pix e cartão integrados',
+    ],
   },
 
   audience: {
@@ -224,7 +252,10 @@ export default {
       mobile: '/funciona-bg-lp/bg-mobile.webp',
       desktop: '/funciona-bg-lp/bg-desktop.webp',
     },
-    cta: { label: 'Começar pelo catálogo', href: buildWaLink('Olá! Quero começar minha loja virtual pelo catálogo.') },
+    cta: {
+      label: 'Começar pelo catálogo',
+      href: buildWaLink('Olá! Quero começar minha loja virtual pelo catálogo.'),
+    },
   },
 
   faq: {
@@ -247,14 +278,20 @@ export default {
         a: 'Sim, controle de estoque integrado, com aviso automático de produto em falta antes que o cliente tente comprar.',
       },
     ],
-    cta: { label: 'Perguntar no WhatsApp', href: buildWaLink('Olá! Tenho uma dúvida sobre lojas virtuais que não vi no FAQ.') },
+    cta: {
+      label: 'Perguntar no WhatsApp',
+      href: buildWaLink('Olá! Tenho uma dúvida sobre lojas virtuais que não vi no FAQ.'),
+    },
   },
 
   finale: {
     deviceImage: '/lp-institucional/cta-device.webp',
     headline: 'Descubra quanto sua loja está perdendo em carrinho abandonado.',
     body: 'Em até 24 horas, analisamos sua loja atual (ou seu processo de venda hoje) e mostramos onde você está perdendo faturamento. Sem compromisso. Sem script de vendas.',
-    cta: { label: 'Solicitar diagnóstico no WhatsApp', href: buildWaLink('Olá. Quero o diagnóstico gratuito da minha loja.') },
+    cta: {
+      label: 'Solicitar diagnóstico no WhatsApp',
+      href: buildWaLink('Olá. Quero o diagnóstico gratuito da minha loja.'),
+    },
     badges: ['Sem compromisso', 'Resposta em até 24h', 'Sem script de vendas'],
   },
 
