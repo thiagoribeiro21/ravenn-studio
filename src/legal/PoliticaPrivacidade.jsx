@@ -9,20 +9,20 @@ const sections = [
     body: (
       <>
         <P>
-          A Ravenn Studio ("Ravenn Studio", "nós") respeita a privacidade de quem visita nosso site e entra em
-          contato com a nossa equipe. Esta Política de Privacidade explica, de forma clara, quais dados
-          coletamos, por que coletamos, como usamos, com quem podemos compartilhar e quais direitos você tem
-          sobre eles, em conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 — LGPD)
-          e demais legislações aplicáveis.
+          A Ravenn Studio ("Ravenn Studio", "nós") respeita a privacidade de quem visita nosso site
+          e entra em contato com a nossa equipe. Esta Política de Privacidade explica, de forma
+          clara, quais dados coletamos, por que coletamos, como usamos, com quem podemos
+          compartilhar e quais direitos você tem sobre eles, em conformidade com a Lei Geral de
+          Proteção de Dados Pessoais (Lei nº 13.709/2018 — LGPD) e demais legislações aplicáveis.
         </P>
         <P>
-          Esta política vale para o site institucional (ravennstudio.com.br) e para todas as landing pages
-          publicadas em campanhas de anúncios (Google Ads, Meta Ads) que levam de volta a este domínio ou a
-          subdomínios controlados pela Ravenn Studio.
+          Esta política vale para o site institucional (ravennstudio.com.br) e para todas as landing
+          pages publicadas em campanhas de anúncios (Google Ads, Meta Ads) que levam de volta a este
+          domínio ou a subdomínios controlados pela Ravenn Studio.
         </P>
         <P>
-          Ao navegar em nosso site ou enviar seus dados por qualquer canal (formulário, WhatsApp, e-mail),
-          você declara estar ciente das práticas aqui descritas.
+          Ao navegar em nosso site ou enviar seus dados por qualquer canal (formulário, WhatsApp,
+          e-mail), você declara estar ciente das práticas aqui descritas.
         </P>
       </>
     ),
@@ -53,7 +53,9 @@ const sections = [
           ]}
         />
         <H3>Dados de cookies e tecnologias similares</H3>
-        <P>Ver a seção "Cookies e tecnologias de rastreamento" abaixo para o detalhamento completo.</P>
+        <P>
+          Ver a seção "Cookies e tecnologias de rastreamento" abaixo para o detalhamento completo.
+        </P>
       </>
     ),
   },
@@ -94,25 +96,31 @@ const sections = [
     heading: 'Base legal para o tratamento',
     body: (
       <>
-        <P>Tratamos seus dados pessoais com base nas seguintes hipóteses legais previstas no art. 7º da LGPD:</P>
+        <P>
+          Tratamos seus dados pessoais com base nas seguintes hipóteses legais previstas no art. 7º
+          da LGPD:
+        </P>
         <UL
           items={[
             <>
-              <strong className="text-rv-titanium">Consentimento</strong> — quando você preenche um formulário
-              ou inicia contato voluntariamente, fornecendo seus dados para um propósito específico;
+              <strong className="text-rv-titanium">Consentimento</strong> — quando você preenche um
+              formulário ou inicia contato voluntariamente, fornecendo seus dados para um propósito
+              específico;
             </>,
             <>
-              <strong className="text-rv-titanium">Execução de contrato</strong> — quando os dados são
-              necessários para elaborar uma proposta ou prestar um serviço já contratado;
+              <strong className="text-rv-titanium">Execução de contrato</strong> — quando os dados
+              são necessários para elaborar uma proposta ou prestar um serviço já contratado;
             </>,
             <>
-              <strong className="text-rv-titanium">Legítimo interesse</strong> — para análise de navegação,
-              melhoria do site e medição de campanhas de marketing, sempre de forma proporcional e sem prejuízo
-              aos seus direitos e liberdades fundamentais;
+              <strong className="text-rv-titanium">Legítimo interesse</strong> — para análise de
+              navegação, melhoria do site e medição de campanhas de marketing, sempre de forma
+              proporcional e sem prejuízo aos seus direitos e liberdades fundamentais;
             </>,
             <>
-              <strong className="text-rv-titanium">Cumprimento de obrigação legal ou regulatória</strong>,
-              quando aplicável.
+              <strong className="text-rv-titanium">
+                Cumprimento de obrigação legal ou regulatória
+              </strong>
+              , quando aplicável.
             </>,
           ]}
         />
@@ -125,33 +133,35 @@ const sections = [
     body: (
       <>
         <P>
-          Cookies são pequenos arquivos de texto armazenados no seu navegador que permitem ao site reconhecer
-          seu dispositivo e lembrar informações sobre sua visita. Utilizamos as seguintes categorias:
+          Cookies são pequenos arquivos de texto armazenados no seu navegador que permitem ao site
+          reconhecer seu dispositivo e lembrar informações sobre sua visita. Utilizamos as seguintes
+          categorias:
         </P>
         <UL
           items={[
             <>
-              <strong className="text-rv-titanium">Necessários</strong> — essenciais para o funcionamento
-              básico do site (ex.: preferências de exibição). Não podem ser desativados sem afetar o
-              funcionamento da página.
+              <strong className="text-rv-titanium">Necessários</strong> — essenciais para o
+              funcionamento básico do site (ex.: preferências de exibição). Não podem ser
+              desativados sem afetar o funcionamento da página.
             </>,
             <>
-              <strong className="text-rv-titanium">Analíticos / desempenho</strong> — como os do Google
-              Analytics, usados para entender como o site é utilizado (páginas visitadas, tempo de permanência,
-              origem do tráfego) e melhorá-lo com base nesses dados.
+              <strong className="text-rv-titanium">Analíticos / desempenho</strong> — como os do
+              Google Analytics, usados para entender como o site é utilizado (páginas visitadas,
+              tempo de permanência, origem do tráfego) e melhorá-lo com base nesses dados.
             </>,
             <>
-              <strong className="text-rv-titanium">Publicitários / remarketing</strong> — como os pixels do
-              Google Ads e do Meta Ads (Facebook/Instagram), usados para medir a performance de campanhas e
-              exibir anúncios relevantes para quem já visitou o site.
+              <strong className="text-rv-titanium">Publicitários / remarketing</strong> — como os
+              pixels do Google Ads e do Meta Ads (Facebook/Instagram), usados para medir a
+              performance de campanhas e exibir anúncios relevantes para quem já visitou o site.
             </>,
           ]}
         />
         <P>
-          Você pode gerenciar, bloquear ou excluir cookies diretamente nas configurações do seu navegador. A
-          desativação de cookies não essenciais não impede a navegação, mas pode limitar algumas
-          funcionalidades e a personalização da sua experiência. Cada navegador tem seu próprio processo —
-          consulte o menu de "Privacidade" ou "Configurações de site" do navegador que você utiliza.
+          Você pode gerenciar, bloquear ou excluir cookies diretamente nas configurações do seu
+          navegador. A desativação de cookies não essenciais não impede a navegação, mas pode
+          limitar algumas funcionalidades e a personalização da sua experiência. Cada navegador tem
+          seu próprio processo — consulte o menu de "Privacidade" ou "Configurações de site" do
+          navegador que você utiliza.
         </P>
       </>
     ),
@@ -162,9 +172,10 @@ const sections = [
     body: (
       <>
         <P>
-          A Ravenn Studio <strong className="text-rv-titanium">não vende</strong> seus dados pessoais a
-          terceiros. Compartilhamos dados apenas com prestadores de serviço que nos ajudam a operar o site e a
-          conduzir nossas atividades, sempre na medida necessária para a finalidade em questão:
+          A Ravenn Studio <strong className="text-rv-titanium">não vende</strong> seus dados
+          pessoais a terceiros. Compartilhamos dados apenas com prestadores de serviço que nos
+          ajudam a operar o site e a conduzir nossas atividades, sempre na medida necessária para a
+          finalidade em questão:
         </P>
         <UL
           items={[
@@ -184,10 +195,10 @@ const sections = [
     heading: 'Transferência internacional de dados',
     body: (
       <P>
-        Algumas das ferramentas que utilizamos (como Google e Meta) podem armazenar e processar dados em
-        servidores localizados fora do Brasil. Nesses casos, buscamos utilizar apenas fornecedores que adotam
-        padrões internacionais de proteção de dados e cláusulas contratuais compatíveis com a LGPD, conforme
-        previsto no art. 33 da lei.
+        Algumas das ferramentas que utilizamos (como Google e Meta) podem armazenar e processar
+        dados em servidores localizados fora do Brasil. Nesses casos, buscamos utilizar apenas
+        fornecedores que adotam padrões internacionais de proteção de dados e cláusulas contratuais
+        compatíveis com a LGPD, conforme previsto no art. 33 da lei.
       </P>
     ),
   },
@@ -196,11 +207,12 @@ const sections = [
     heading: 'Armazenamento e retenção',
     body: (
       <P>
-        Mantemos seus dados pessoais apenas pelo tempo necessário para cumprir as finalidades descritas nesta
-        política, para atender obrigações legais, contratuais ou regulatórias, ou até que você solicite sua
-        eliminação — o que ocorrer primeiro, ressalvadas as hipóteses de guarda obrigatória previstas em lei.
-        Dados de contato de propostas não convertidas em contrato são mantidos por um prazo razoável para
-        eventual retomada do contato, podendo ser excluídos a qualquer momento mediante solicitação.
+        Mantemos seus dados pessoais apenas pelo tempo necessário para cumprir as finalidades
+        descritas nesta política, para atender obrigações legais, contratuais ou regulatórias, ou
+        até que você solicite sua eliminação — o que ocorrer primeiro, ressalvadas as hipóteses de
+        guarda obrigatória previstas em lei. Dados de contato de propostas não convertidas em
+        contrato são mantidos por um prazo razoável para eventual retomada do contato, podendo ser
+        excluídos a qualquer momento mediante solicitação.
       </P>
     ),
   },
@@ -209,12 +221,12 @@ const sections = [
     heading: 'Segurança da informação',
     body: (
       <P>
-        Adotamos medidas técnicas e administrativas razoáveis para proteger seus dados pessoais contra acessos
-        não autorizados e situações de destruição, perda, alteração, comunicação ou qualquer forma de
-        tratamento inadequado ou ilícito, incluindo conexão segura (HTTPS), controle de acesso e uso de
-        fornecedores de infraestrutura reconhecidos no mercado. Nenhum sistema é 100% infalível, e nos
-        comprometemos a agir rapidamente para mitigar e comunicar eventuais incidentes de segurança relevantes,
-        conforme exigido pela LGPD.
+        Adotamos medidas técnicas e administrativas razoáveis para proteger seus dados pessoais
+        contra acessos não autorizados e situações de destruição, perda, alteração, comunicação ou
+        qualquer forma de tratamento inadequado ou ilícito, incluindo conexão segura (HTTPS),
+        controle de acesso e uso de fornecedores de infraestrutura reconhecidos no mercado. Nenhum
+        sistema é 100% infalível, e nos comprometemos a agir rapidamente para mitigar e comunicar
+        eventuais incidentes de segurança relevantes, conforme exigido pela LGPD.
       </P>
     ),
   },
@@ -252,9 +264,10 @@ const sections = [
     heading: 'Dados de crianças e adolescentes',
     body: (
       <P>
-        Nosso site é direcionado a públicos empresarial e adulto, e não coletamos intencionalmente dados de
-        menores de 18 anos. Caso identifiquemos que dados de uma criança ou adolescente foram coletados sem o
-        consentimento apropriado de um responsável legal, tomaremos as medidas necessárias para excluí-los.
+        Nosso site é direcionado a públicos empresarial e adulto, e não coletamos intencionalmente
+        dados de menores de 18 anos. Caso identifiquemos que dados de uma criança ou adolescente
+        foram coletados sem o consentimento apropriado de um responsável legal, tomaremos as medidas
+        necessárias para excluí-los.
       </P>
     ),
   },
@@ -263,8 +276,8 @@ const sections = [
     heading: 'Encarregado de proteção de dados (DPO)',
     body: (
       <P>
-        Para questões relacionadas ao tratamento de dados pessoais, exercício de direitos ou dúvidas sobre esta
-        política, entre em contato com nosso encarregado pelo e-mail{' '}
+        Para questões relacionadas ao tratamento de dados pessoais, exercício de direitos ou dúvidas
+        sobre esta política, entre em contato com nosso encarregado pelo e-mail{' '}
         <a href="mailto:contato@ravennstudio.com" className="text-rv-purple-400 hover:underline">
           contato@ravennstudio.com
         </a>
@@ -277,9 +290,9 @@ const sections = [
     heading: 'Alterações desta política',
     body: (
       <P>
-        Esta Política de Privacidade pode ser atualizada periodicamente para refletir mudanças em nossas
-        práticas ou por exigência legal ou regulatória. A data da última atualização está sempre indicada no
-        topo desta página. Recomendamos que você a revise com regularidade.
+        Esta Política de Privacidade pode ser atualizada periodicamente para refletir mudanças em
+        nossas práticas ou por exigência legal ou regulatória. A data da última atualização está
+        sempre indicada no topo desta página. Recomendamos que você a revise com regularidade.
       </P>
     ),
   },
@@ -289,9 +302,9 @@ const sections = [
     body: (
       <P>
         Esta política é regida pelas leis da República Federativa do Brasil, em especial pela Lei nº
-        13.709/2018 (LGPD). Fica eleito o foro da Comarca de Niterói, Rio de Janeiro, para dirimir eventuais
-        controvérsias, com renúncia a qualquer outro, por mais privilegiado que seja. Dúvidas sobre esta
-        política podem ser enviadas para{' '}
+        13.709/2018 (LGPD). Fica eleito o foro da Comarca de Niterói, Rio de Janeiro, para dirimir
+        eventuais controvérsias, com renúncia a qualquer outro, por mais privilegiado que seja.
+        Dúvidas sobre esta política podem ser enviadas para{' '}
         <a href="mailto:contato@ravennstudio.com" className="text-rv-purple-400 hover:underline">
           contato@ravennstudio.com
         </a>{' '}
