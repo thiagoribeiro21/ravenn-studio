@@ -104,10 +104,19 @@ export default function Footer() {
   // fluxo do documento). Não mexe em position/margin/altura de scroll:
   // zero risco de quebrar a página, o pior caso é o footer só aparecer
   // já visível (progress preso em 0 ou 1), nunca sumir ou desalinhar.
+  // `container` é um ref de outro componente (SiteShell, mais acima na
+  // árvore) — no commit do React, o layoutEffect deste componente roda
+  // ANTES do ref do ancestral ser anexado (ordem bottom-up), então
+  // `scrollContainerRef.current` ainda é `null` nesse momento. Sem
+  // `layoutEffect: false`, o Motion nunca reconecta o listener de scroll
+  // e o reveal fica travado em 100% pra sempre — só "funcionava" em dev
+  // porque o StrictMode roda os effects 2x, e na 2ª passada o ref já
+  // estava populado. Em prod (sem StrictMode) o footer nunca aparecia.
   const { scrollYProgress } = useScroll({
     container: scrollContainerRef,
     target: footerRef,
     offset: ['start end', 'start 0.55'],
+    layoutEffect: false,
   });
 
   const clipPath = useTransform(
