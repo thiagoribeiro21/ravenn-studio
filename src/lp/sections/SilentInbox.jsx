@@ -1,12 +1,12 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { cubicBezier, motion, useSpring, useTransform } from 'framer-motion';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   EASE_LUXE_FN as EASE_LUXE,
   GX,
-  SCRUB_SPRING,
-  TYPE,
   prefersReducedMotion,
+  SCRUB_SPRING,
   slot,
+  TYPE,
   useTrackProgress,
 } from '../config/_base';
 
@@ -132,10 +132,16 @@ function SideButtons() {
 function StatusBar() {
   return (
     <div className="flex shrink-0 items-center justify-between px-[1.05em] pb-[0.2em] pt-[0.75em]">
-      <span className="font-satoshi text-[0.58em] font-semibold tracking-tight text-white/95">21:47</span>
+      <span className="font-satoshi text-[0.58em] font-semibold tracking-tight text-white/95">
+        21:47
+      </span>
       <span aria-hidden className="flex items-center gap-[0.16em]">
         {[0.22, 0.32, 0.42, 0.52].map((h) => (
-          <span key={h} className="w-[0.1em] rounded-full bg-white/85" style={{ height: `${h}em` }} />
+          <span
+            key={h}
+            className="w-[0.1em] rounded-full bg-white/85"
+            style={{ height: `${h}em` }}
+          />
         ))}
         <span className="ml-[0.28em] flex h-[0.5em] w-[0.95em] items-center rounded-[0.14em] border border-white/55 p-[0.07em]">
           <span className="h-full w-[72%] rounded-[0.06em] bg-white/90" />
@@ -153,13 +159,29 @@ function AppHeader() {
   return (
     <div className="shrink-0 px-[0.85em] pb-[0.5em] pt-[0.3em]">
       <div className="flex items-center justify-between">
-        <span className="font-satoshi text-[0.82em] font-bold tracking-tight text-white">WhatsApp</span>
+        <span className="font-satoshi text-[0.82em] font-bold tracking-tight text-white">
+          WhatsApp
+        </span>
         <span aria-hidden className="flex items-center gap-[0.5em] text-white/60">
-          <svg width="0.62em" height="0.62em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6">
+          <svg
+            aria-hidden="true"
+            width="0.62em"
+            height="0.62em"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.6"
+          >
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
           </svg>
-          <svg width="0.62em" height="0.62em" viewBox="0 0 24 24" fill="currentColor">
+          <svg
+            aria-hidden="true"
+            width="0.62em"
+            height="0.62em"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
             <circle cx="12" cy="5" r="1.8" />
             <circle cx="12" cy="12" r="1.8" />
             <circle cx="12" cy="19" r="1.8" />
@@ -172,7 +194,15 @@ function AppHeader() {
         className="mt-[0.5em] flex items-center gap-[0.4em] rounded-full px-[0.6em] py-[0.34em]"
         style={{ background: 'rgba(255,255,255,0.06)' }}
       >
-        <svg width="0.5em" height="0.5em" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="2.6">
+        <svg
+          aria-hidden="true"
+          width="0.5em"
+          height="0.5em"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="rgba(255,255,255,0.35)"
+          strokeWidth="2.6"
+        >
           <circle cx="11" cy="11" r="7" />
           <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
         </svg>
@@ -216,14 +246,27 @@ function GhostLead({ progress, window: win, text }) {
         className="relative flex h-[1.6em] w-[1.6em] shrink-0 items-center justify-center rounded-full"
         style={{ background: 'rgba(255,255,255,0.08)' }}
       >
-        <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.42)" strokeWidth="2">
+        <svg
+          aria-hidden="true"
+          width="0.75em"
+          height="0.75em"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="rgba(255,255,255,0.42)"
+          strokeWidth="2"
+        >
           <circle cx="12" cy="8" r="3.6" />
           <path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6" strokeLinecap="round" />
         </svg>
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate font-satoshi text-[0.64em] font-medium text-white/50">{text}</span>
-        <span aria-hidden className="mt-[0.3em] block h-[0.16em] w-[62%] rounded-full bg-white/[0.1]" />
+        <span className="block truncate font-satoshi text-[0.64em] font-medium text-white/50">
+          {text}
+        </span>
+        <span
+          aria-hidden
+          className="mt-[0.3em] block h-[0.16em] w-[62%] rounded-full bg-white/[0.1]"
+        />
       </span>
     </motion.div>
   );
@@ -242,14 +285,24 @@ function EmptyState({ label, reduce }) {
         animate={reduce ? {} : { opacity: [0.4, 0.85, 0.4], scale: [1, 1.06, 1] }}
         transition={reduce ? {} : { duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <svg width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.32)" strokeWidth="1.7">
+        <svg
+          aria-hidden="true"
+          width="1.15em"
+          height="1.15em"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="rgba(255,255,255,0.32)"
+          strokeWidth="1.7"
+        >
           <path
             d="M21 11.5a8.4 8.4 0 01-9 8.4 9 9 0 01-4-.9L3 21l1.9-4.6A8.4 8.4 0 013 11.5a8.4 8.4 0 019-8.4 8.4 8.4 0 019 8.4z"
             strokeLinejoin="round"
           />
         </svg>
       </motion.span>
-      <span className="font-satoshi text-[0.64em] font-medium tracking-wide text-white/28">{label}</span>
+      <span className="font-satoshi text-[0.64em] font-medium tracking-wide text-white/28">
+        {label}
+      </span>
     </div>
   );
 }
@@ -294,8 +347,13 @@ function ChatRow({ progress, window: win, chat, tone, reduce }) {
               bloco de texto empilhado soma ~1.7em mesmo depois do aumento —
               continua com folga dentro dos 2.1em. Por isso o aumento é de
               graça em layout. */}
-          <span className="truncate font-satoshi text-[0.68em] font-semibold text-white/95">{chat.name}</span>
-          <motion.span className="shrink-0 font-satoshi text-[0.52em] font-medium" style={{ color: WA_GREEN, opacity: badge }}>
+          <span className="truncate font-satoshi text-[0.68em] font-semibold text-white/95">
+            {chat.name}
+          </span>
+          <motion.span
+            className="shrink-0 font-satoshi text-[0.52em] font-medium"
+            style={{ color: WA_GREEN, opacity: badge }}
+          >
             {chat.time}
           </motion.span>
         </span>
@@ -309,17 +367,28 @@ function ChatRow({ progress, window: win, chat, tone, reduce }) {
                   className="h-[0.2em] w-[0.2em] rounded-full"
                   style={{ background: 'rgba(255,255,255,0.55)' }}
                   animate={reduce ? {} : { opacity: [0.25, 1, 0.25], y: [0, -1.5, 0] }}
-                  transition={reduce ? {} : { duration: 1.15, repeat: Infinity, ease: 'easeInOut', delay: d * 0.16 }}
+                  transition={
+                    reduce
+                      ? {}
+                      : { duration: 1.15, repeat: Infinity, ease: 'easeInOut', delay: d * 0.16 }
+                  }
                 />
               ))}
             </span>
           ) : (
-            <span className="truncate font-satoshi text-[0.64em] text-white/50">{chat.preview}</span>
+            <span className="truncate font-satoshi text-[0.64em] text-white/50">
+              {chat.preview}
+            </span>
           )}
 
           <motion.span
             className="flex h-[0.95em] min-w-[0.95em] shrink-0 items-center justify-center rounded-full px-[0.2em] font-satoshi text-[0.5em] font-bold text-[#04140b]"
-            style={{ background: WA_GREEN, opacity: badge, scale: badge, boxShadow: '0 0 0.7em rgba(37,211,102,0.55)' }}
+            style={{
+              background: WA_GREEN,
+              opacity: badge,
+              scale: badge,
+              boxShadow: '0 0 0.7em rgba(37,211,102,0.55)',
+            }}
           >
             1
           </motion.span>
@@ -381,12 +450,20 @@ function Phone({ children, reduce }) {
   return (
     <div
       className="relative h-full w-full"
-      style={{ borderRadius: '13%/6.4%', padding: '0.9%', background: FRAME_RAIL, boxShadow: FRAME_SHADOW }}
+      style={{
+        borderRadius: '13%/6.4%',
+        padding: '0.9%',
+        background: FRAME_RAIL,
+        boxShadow: FRAME_SHADOW,
+      }}
     >
       <SideButtons />
 
       {/* bisel preto — a espessura entre o metal e o vidro */}
-      <div className="h-full w-full overflow-hidden p-[2.1%]" style={{ borderRadius: '12%/6%', background: '#040407' }}>
+      <div
+        className="h-full w-full overflow-hidden p-[2.1%]"
+        style={{ borderRadius: '12%/6%', background: '#040407' }}
+      >
         <div
           ref={screenRef}
           className="relative h-full w-full overflow-hidden"
@@ -396,10 +473,16 @@ function Phone({ children, reduce }) {
           <span
             aria-hidden
             className="pointer-events-none absolute inset-0"
-            style={{ background: 'radial-gradient(ellipse 120% 70% at 50% 0%, rgba(37,211,102,0.07), transparent 62%)' }}
+            style={{
+              background:
+                'radial-gradient(ellipse 120% 70% at 50% 0%, rgba(37,211,102,0.07), transparent 62%)',
+            }}
           />
 
-          <div className="relative flex h-full w-full flex-col" style={{ fontSize: base ? `${base}px` : undefined, opacity: base ? 1 : 0 }}>
+          <div
+            className="relative flex h-full w-full flex-col"
+            style={{ fontSize: base ? `${base}px` : undefined, opacity: base ? 1 : 0 }}
+          >
             {children}
           </div>
 
@@ -507,10 +590,18 @@ export default function SilentInbox({ data }) {
   const phoneY = useTransform(progress, STAGE.enter, [260, 0], { ease: CINEMATIC_EASE });
   const phoneX = useTransform(progress, STAGE.enter, [70, 0], { ease: CINEMATIC_EASE });
   const phoneScale = useTransform(progress, STAGE.enter, [0.6, 1], { ease: CINEMATIC_EASE });
-  const phoneRotateX = useTransform(progress, [STAGE.enter[0], settleEnd], [28, 3], { ease: CINEMATIC_EASE });
-  const phoneRotateZ = useTransform(progress, [STAGE.enter[0], settleEnd], [-7, 0], { ease: CINEMATIC_EASE });
+  const phoneRotateX = useTransform(progress, [STAGE.enter[0], settleEnd], [28, 3], {
+    ease: CINEMATIC_EASE,
+  });
+  const phoneRotateZ = useTransform(progress, [STAGE.enter[0], settleEnd], [-7, 0], {
+    ease: CINEMATIC_EASE,
+  });
   const phoneOpacity = useTransform(progress, [STAGE.enter[0], STAGE.enter[0] + 0.05], [0, 1]);
-  const phoneBlurRaw = useTransform(progress, [STAGE.enter[0], STAGE.enter[0] + enterSpan * 0.65], [28, 0]);
+  const phoneBlurRaw = useTransform(
+    progress,
+    [STAGE.enter[0], STAGE.enter[0] + enterSpan * 0.65],
+    [28, 0],
+  );
   const phoneFilter = useTransform(phoneBlurRaw, blurFilter);
 
   /* Giro em 4 tempos (nasce torto → pousa na vitrine → vira pro leitor na
@@ -546,7 +637,9 @@ export default function SilentInbox({ data }) {
   const gainGlow = useTransform(progress, [STAGE.turn[0], STAGE.gain[1]], [0, 0.6]);
 
   const headlineOpacity = useTransform(progress, [STAGE.enter[0], STAGE.enter[1] * 0.7], [0, 1]);
-  const headlineY = useTransform(progress, [STAGE.enter[0], STAGE.enter[1] * 0.7], [24, 0], { ease: EASE_LUXE });
+  const headlineY = useTransform(progress, [STAGE.enter[0], STAGE.enter[1] * 0.7], [24, 0], {
+    ease: EASE_LUXE,
+  });
 
   const stateLabelOpacity = useTransform(progress, [STAGE.enter[1], STAGE.enter[1] + 0.06], [0, 1]);
 
@@ -599,7 +692,10 @@ export default function SilentInbox({ data }) {
         <motion.div
           aria-hidden
           className="pointer-events-none absolute left-1/2 top-1/2 h-[110vh] w-[110vh] -translate-x-1/2 -translate-y-1/2"
-          style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.22), transparent 62%)', filter: 'blur(30px)' }}
+          style={{
+            background: 'radial-gradient(circle, rgba(124,58,237,0.22), transparent 62%)',
+            filter: 'blur(30px)',
+          }}
           animate={reduce ? {} : { scale: [1, 1.12, 1], opacity: [0.72, 1, 0.72] }}
           transition={reduce ? {} : { duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
@@ -713,6 +809,7 @@ export default function SilentInbox({ data }) {
               {data.headlineLines.map((line, i) => {
                 const accent = line.startsWith('_') && line.endsWith('_');
                 return (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: `data.headlineLines` vem da config estática da LP, ordem fixa
                   <span key={i} className={`block ${accent ? 'text-rv-purple-400' : ''}`}>
                     {accent ? line.slice(1, -1) : line}
                   </span>
@@ -766,7 +863,13 @@ export default function SilentInbox({ data }) {
               animate={
                 reduce
                   ? {}
-                  : { boxShadow: ['0 0 0 rgba(37,211,102,0)', '0 0 42px rgba(37,211,102,0.5)', '0 0 0 rgba(37,211,102,0)'] }
+                  : {
+                      boxShadow: [
+                        '0 0 0 rgba(37,211,102,0)',
+                        '0 0 42px rgba(37,211,102,0.5)',
+                        '0 0 0 rgba(37,211,102,0)',
+                      ],
+                    }
               }
               transition={reduce ? {} : { duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
             >
@@ -774,11 +877,21 @@ export default function SilentInbox({ data }) {
                 aria-hidden
                 className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
               />
-              <svg aria-hidden width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="relative z-10 shrink-0">
+              <svg
+                aria-hidden
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="relative z-10 shrink-0"
+              >
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
               </svg>
               <span className="relative z-10 whitespace-nowrap">{data.cta.label}</span>
-              <span aria-hidden className="relative z-10 hidden transition-transform duration-300 group-hover:translate-x-1 sm:inline">
+              <span
+                aria-hidden
+                className="relative z-10 hidden transition-transform duration-300 group-hover:translate-x-1 sm:inline"
+              >
                 →
               </span>
             </motion.a>
@@ -829,18 +942,32 @@ export default function SilentInbox({ data }) {
                 dele por natureza: só o check, o sinal específico de
                 conversão, não a cor do chip inteiro. Ainda em `text-[15px]`
                 — nenhuma redução de tamanho, só de cor/textura. */}
-            <motion.div aria-hidden className="grid shrink-0" style={{ opacity: stateLabelOpacity }}>
+            <motion.div
+              aria-hidden
+              className="grid shrink-0"
+              style={{ opacity: stateLabelOpacity }}
+            >
               <motion.div
                 className="col-start-1 row-start-1 flex items-center gap-1.5 whitespace-nowrap rounded-full py-1 pl-1 pr-2.5 backdrop-blur-md md:gap-2 md:py-2 md:pl-2 md:pr-4"
                 style={{
                   opacity: lossOpacity,
                   y: lossLabelY,
-                  background: 'linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.025))',
-                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), inset 0 0 0 1px rgba(255,255,255,0.1), 0 6px 18px -8px rgba(0,0,0,0.5)',
+                  background:
+                    'linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.025))',
+                  boxShadow:
+                    'inset 0 1px 0 rgba(255,255,255,0.08), inset 0 0 0 1px rgba(255,255,255,0.1), 0 6px 18px -8px rgba(0,0,0,0.5)',
                 }}
               >
                 <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white/10 md:h-[22px] md:w-[22px]">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="3" strokeLinecap="round" className="h-2 w-2 md:h-[10px] md:w-[10px]">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.6)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    className="h-2 w-2 md:h-[10px] md:w-[10px]"
+                  >
                     <path d="M6 6l12 12M18 6L6 18" />
                   </svg>
                 </span>
@@ -869,14 +996,28 @@ export default function SilentInbox({ data }) {
                     aria-hidden
                     className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
                     animate={{ x: ['-100%', '100%'] }}
-                    transition={{ duration: 1.3, repeat: Infinity, repeatDelay: 3.4, ease: 'easeInOut' }}
+                    transition={{
+                      duration: 1.3,
+                      repeat: Infinity,
+                      repeatDelay: 3.4,
+                      ease: 'easeInOut',
+                    }}
                   />
                 )}
                 <span
                   className="relative flex h-4 w-4 shrink-0 items-center justify-center rounded-full md:h-[22px] md:w-[22px]"
                   style={{ background: WA_GREEN, boxShadow: '0 0 8px rgba(37,211,102,0.75)' }}
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#04140b" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" className="h-2 w-2 md:h-[11px] md:w-[11px]">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#04140b"
+                    strokeWidth="3.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-2 w-2 md:h-[11px] md:w-[11px]"
+                  >
                     <path d="M5 13l4 4L19 7" />
                   </svg>
                 </span>
@@ -938,7 +1079,10 @@ export default function SilentInbox({ data }) {
                     </motion.div>
 
                     {/* ── Metade GANHO ─────────────────────────────── */}
-                    <motion.div className="absolute inset-x-0 top-0 pt-[0.3em]" style={{ opacity: gainOpacity }}>
+                    <motion.div
+                      className="absolute inset-x-0 top-0 pt-[0.3em]"
+                      style={{ opacity: gainOpacity }}
+                    >
                       {chats.map((chat, i) => (
                         <ChatRow
                           key={chat.name}

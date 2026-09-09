@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
+import { useMemo } from 'react';
 import * as THREE from 'three';
 import { ParticleMorpher, sampleShape } from './ThreeServicesCanvas';
 

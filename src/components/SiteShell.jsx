@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useCallback, useEffect, useState } from 'react';
 import { useMenu } from '../context/MenuContext';
 import { scrollStore } from '../scrollStore';
 
@@ -33,15 +33,15 @@ function useOpenVariants() {
     if (typeof window === 'undefined') return { x: 0, xOpen: -300 };
     const md = window.matchMedia('(min-width: 768px)').matches;
     return {
-      x:     0,
-      xOpen: md ? -(window.innerWidth * 0.30) : -(window.innerWidth * 0.80),
+      x: 0,
+      xOpen: md ? -(window.innerWidth * 0.3) : -(window.innerWidth * 0.8),
     };
   }, []);
 
   const [val, setVal] = useState(calc);
 
   useEffect(() => {
-    const mq  = window.matchMedia('(min-width: 768px)');
+    const mq = window.matchMedia('(min-width: 768px)');
     const upd = () => setVal(calc());
     mq.addEventListener('change', upd);
     window.addEventListener('resize', upd);
@@ -52,8 +52,8 @@ function useOpenVariants() {
   }, [calc]);
 
   return {
-    closed: { scale: 1,    x: val.x,    borderRadius: 0,  transition: SPRING },
-    open:   { scale: 0.95, x: val.xOpen, borderRadius: 24, transition: SPRING },
+    closed: { scale: 1, x: val.x, borderRadius: 0, transition: SPRING },
+    open: { scale: 0.95, x: val.xOpen, borderRadius: 24, transition: SPRING },
   };
 }
 
@@ -69,14 +69,14 @@ function useOpenVariants() {
 */
 export default function SiteShell({ children, bgLayer }) {
   const { isOpen, scrollContainerRef, setScrolled } = useMenu();
-  const variants  = useOpenVariants();
+  const variants = useOpenVariants();
   // ── Scroll state tracking ──────────────────────────────────────────────────
   useEffect(() => {
     const el = scrollContainerRef.current;
     if (!el) return;
     const onScroll = () => {
-      scrollStore.y        = el.scrollTop;
-      const maxY           = el.scrollHeight - el.clientHeight;
+      scrollStore.y = el.scrollTop;
+      const maxY = el.scrollHeight - el.clientHeight;
       scrollStore.progress = maxY > 0 ? el.scrollTop / maxY : 0;
       setScrolled(el.scrollTop > 24);
     };
@@ -89,9 +89,9 @@ export default function SiteShell({ children, bgLayer }) {
     const el = scrollContainerRef.current;
     if (!el) return;
 
-    let targetY  = 0;
+    let targetY = 0;
     let currentY = 0;
-    let rafId    = null;
+    let rafId = null;
     let isRunning = false;
 
     const lerp = (a, b, t) => a + (b - a) * t;
@@ -116,7 +116,7 @@ export default function SiteShell({ children, bgLayer }) {
       // prevents stale targetY from teleporting the page on the next wheel event
       if (!isRunning) {
         currentY = el.scrollTop;
-        targetY  = el.scrollTop;
+        targetY = el.scrollTop;
       }
       targetY = Math.max(0, Math.min(max, targetY + e.deltaY));
       if (!isRunning) {
@@ -137,14 +137,14 @@ export default function SiteShell({ children, bgLayer }) {
       animate={isOpen ? 'open' : 'closed'}
       variants={variants}
       style={{
-        position:        'fixed',
-        inset:           0,
-        zIndex:          10,
-        willChange:      'transform',
+        position: 'fixed',
+        inset: 0,
+        zIndex: 10,
+        willChange: 'transform',
         transformOrigin: 'right center',
-        overflow:        'hidden',
-        background:      '#03000A',
-        boxShadow:       '0 0 80px rgba(0,0,0,0.60), 0 32px 64px rgba(0,0,0,0.50)',
+        overflow: 'hidden',
+        background: '#03000A',
+        boxShadow: '0 0 80px rgba(0,0,0,0.60), 0 32px 64px rgba(0,0,0,0.50)',
       }}
     >
       {/* Canvas layers — renderizam sobre o #03000A base, sob o scroll container */}
@@ -155,11 +155,11 @@ export default function SiteShell({ children, bgLayer }) {
         ref={scrollContainerRef}
         data-scroll-content
         style={{
-          position:   'relative',
-          zIndex:     10,
-          height:     '100dvh',
-          overflowY:  'auto',
-          overflowX:  'hidden',
+          position: 'relative',
+          zIndex: 10,
+          height: '100dvh',
+          overflowY: 'auto',
+          overflowX: 'hidden',
           background: 'transparent',
         }}
       >

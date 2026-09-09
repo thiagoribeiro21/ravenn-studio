@@ -4,55 +4,88 @@
 
 /* ── Design tokens do menu Push 3D ─────────────────────────────────────── */
 :root {
-  --menu-push-x: -80vw;   /* mobile: SiteShell recua 80 vw; painel ocupa 80% da tela */
-  --menu-scale:  0.95;
+  --menu-push-x: -80vw; /* mobile: SiteShell recua 80 vw; painel ocupa 80% da tela */
+  --menu-scale: 0.95;
 }
 @media (min-width: 768px) {
   :root {
-    --menu-push-x: -30vw;  /* desktop: SiteShell recua 30 vw; painel ocupa 30% à direita */
-    --menu-scale:  0.95;
+    --menu-push-x: -30vw; /* desktop: SiteShell recua 30 vw; painel ocupa 30% à direita */
+    --menu-scale: 0.95;
   }
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 /*
   body/html com overflow:hidden — o scroll acontece no div[data-scroll-content]
   dentro do SiteShell. Qualquer componente com parallax/scroll deve consumir
   scrollContainerRef do useMenu() ao invés de window.scrollY.
 */
-html, body {
-  overflow:         hidden;
-  height:           100dvh;
-  background-color: #03000A;
-  color:            #94A3B8;
-  font-family:      'ClashGrotesk-Variable', 'Clash Grotesk', ui-sans-serif, system-ui, sans-serif;
-  font-weight:      200;
-  -webkit-font-smoothing:  antialiased;
+html,
+body {
+  overflow: hidden;
+  height: 100dvh;
+  background-color: #03000a;
+  color: #94a3b8;
+  font-family: "ClashGrotesk-Variable", "Clash Grotesk", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 200;
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering:   optimizeLegibility;
+  text-rendering: optimizeLegibility;
 }
 
-body { background: #03000A; }
+body {
+  background: #03000a;
+}
 
-::selection { background: rgba(124, 58, 237, 0.35); color: #F8F9FA; }
+::selection {
+  background: rgba(124, 58, 237, 0.35);
+  color: #f8f9fa;
+}
 
-:focus-visible { outline: none; box-shadow: 0 0 0 1px #03000A, 0 0 0 3px rgba(124,58,237,0.55); }
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 1px #03000a,
+    0 0 0 3px rgba(124, 58, 237, 0.55);
+}
 
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #03000A; }
-::-webkit-scrollbar-thumb { background: #1E1B4B; border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: #2A2560; }
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #03000a;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e1b4b;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2a2560;
+}
 
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 
 /*
   min-height:100dvh via classe própria — a sintaxe de valor arbitrário do
   Tailwind (min-h-[100dvh]) não gera CSS nesta versão (não reconhece a
   unidade dvh), então declaramos direto pra garantir o efeito.
 */
-.min-h-dvh-fix { min-height: 100dvh; }
+.min-h-dvh-fix {
+  min-height: 100dvh;
+}
 
 /*
   Compensa a navbar sticky (header, position:sticky, top:0) na navegação por
@@ -62,34 +95,60 @@ body { background: #03000A; }
   a altura máxima da navbar (~86px medidos no estado "cheio", antes de virar
   pílula no scroll).
 */
-section[id] { scroll-margin-top: 100px; }
+section[id] {
+  scroll-margin-top: 100px;
+}
 
 /* ── Modal de serviços — imagem de referência (CapabilitiesSection) ──────── */
 @keyframes ravenn-kenburns {
-  0%   { transform: scale(1.06) translate(0, 0); }
-  100% { transform: scale(1.16) translate(-1.5%, -1.5%); }
+  0% {
+    transform: scale(1.06) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.16) translate(-1.5%, -1.5%);
+  }
 }
-.animate-ravenn-kenburns { animation: ravenn-kenburns 16s ease-in-out infinite alternate; }
+.animate-ravenn-kenburns {
+  animation: ravenn-kenburns 16s ease-in-out infinite alternate;
+}
 
 @keyframes ravenn-pulse-glow {
-  0%, 100% { opacity: 0.35; }
-  50%      { opacity: 0.65; }
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.65;
+  }
 }
-.animate-ravenn-pulse-glow { animation: ravenn-pulse-glow 5s ease-in-out infinite; }
+.animate-ravenn-pulse-glow {
+  animation: ravenn-pulse-glow 5s ease-in-out infinite;
+}
 
 /* ── LP Sites Institucionais — utilitários cinematográficos ─────────────── */
 /* Marquee infinito em CSS puro (composited, zero JS por frame). O conteúdo
    é duplicado no JSX; -50% completa um ciclo exato. */
-@keyframes lp-marquee { to { transform: translateX(-50%); } }
-.lp-marquee { animation: lp-marquee 30s linear infinite; will-change: transform; }
-.lp-marquee-slow { animation-duration: 55s; }
+@keyframes lp-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.lp-marquee {
+  animation: lp-marquee 30s linear infinite;
+  will-change: transform;
+}
+.lp-marquee-slow {
+  animation-duration: 55s;
+}
 @media (prefers-reduced-motion: reduce) {
-  .lp-marquee { animation: none; }
+  .lp-marquee {
+    animation: none;
+  }
 }
 
 /* Tipografia vazada (watermarks gigantes) — só contorno, sem preenchimento. */
 .lp-outline-text {
-  -webkit-text-stroke: 1px rgba(248, 249, 250, 0.10);
+  -webkit-text-stroke: 1px rgba(248, 249, 250, 0.1);
   color: transparent;
 }
 
@@ -101,43 +160,68 @@ section[id] { scroll-margin-top: 100px; }
 
 /* ── LP Sites Institucionais v6 — bento (GradientBorder + BeamSweep) ────── */
 @property --rv-angle {
-  syntax: '<angle>';
+  syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
 }
-@keyframes rv-spin { to { --rv-angle: 360deg; } }
+@keyframes rv-spin {
+  to {
+    --rv-angle: 360deg;
+  }
+}
 
 /* Borda cônica animada percorrendo o perímetro do card — o elemento que a
    usa precisa de position:relative + border-radius próprios (herdados via
    `inherit` aqui) e overflow:hidden no pai pra cortar o excesso do ::before. */
-.rv-bento-border { position: relative; border-radius: inherit; }
+.rv-bento-border {
+  position: relative;
+  border-radius: inherit;
+}
 .rv-bento-border::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: conic-gradient(from var(--rv-angle),
-    transparent 0deg, #7C3AED 60deg, #A78BFA 90deg, transparent 150deg, transparent 360deg);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  background: conic-gradient(
+    from var(--rv-angle),
+    transparent 0deg,
+    #7c3aed 60deg,
+    #a78bfa 90deg,
+    transparent 150deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: rv-spin 4s linear infinite;
   pointer-events: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .rv-bento-border::before { animation: none; --rv-angle: 45deg; }
+  .rv-bento-border::before {
+    animation: none;
+    --rv-angle: 45deg;
+  }
 }
 /* variante lenta — CTA final (item 10 do brief v3): "estática ou girando
    muito lento, nada de piscar". */
-.rv-bento-border.rv-border-slow::before { animation-duration: 40s; }
+.rv-bento-border.rv-border-slow::before {
+  animation-duration: 40s;
+}
 
 /* Camada de gradiente borrado sobre o fundo do bento — dá movimento vivo
    sem competir com o mockup HTML em primeiro plano. Delay escalonado por
    célula é passado via style inline (--rv-beam-delay). */
 @keyframes rv-beam-drift {
-  0%, 100% { transform: translate(-4%, -3%) scale(1.08); }
-  50%      { transform: translate(4%, 3%) scale(1.16); }
+  0%,
+  100% {
+    transform: translate(-4%, -3%) scale(1.08);
+  }
+  50% {
+    transform: translate(4%, 3%) scale(1.16);
+  }
 }
 .rv-beam {
   position: absolute;
@@ -149,20 +233,56 @@ section[id] { scroll-margin-top: 100px; }
   pointer-events: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .rv-beam { animation: none; }
+  .rv-beam {
+    animation: none;
+  }
 }
 
 /* ── LP v3 — Aurora (gradiente-assinatura, Regra transversal 2) ─────────── */
 /* Períodos primos entre si (18s/26s/31s) pra nunca sincronizar — tem que
    parecer respiração, não animação. Amplitude pequena (translate 2-4%). */
-@keyframes rv-aurora-a { 0%, 100% { transform: translate(0%, 0%) scale(1); } 50% { transform: translate(3%, -2%) scale(1.04); } }
-@keyframes rv-aurora-b { 0%, 100% { transform: translate(0%, 0%) scale(1); } 50% { transform: translate(-4%, 3%) scale(1.05); } }
-@keyframes rv-aurora-c { 0%, 100% { transform: translate(0%, 0%) scale(1); } 50% { transform: translate(2%, 4%) scale(1.03); } }
-.rv-aurora-a { animation: rv-aurora-a 18s ease-in-out infinite; }
-.rv-aurora-b { animation: rv-aurora-b 26s ease-in-out infinite; }
-.rv-aurora-c { animation: rv-aurora-c 31s ease-in-out infinite; }
+@keyframes rv-aurora-a {
+  0%,
+  100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+  50% {
+    transform: translate(3%, -2%) scale(1.04);
+  }
+}
+@keyframes rv-aurora-b {
+  0%,
+  100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+  50% {
+    transform: translate(-4%, 3%) scale(1.05);
+  }
+}
+@keyframes rv-aurora-c {
+  0%,
+  100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+  50% {
+    transform: translate(2%, 4%) scale(1.03);
+  }
+}
+.rv-aurora-a {
+  animation: rv-aurora-a 18s ease-in-out infinite;
+}
+.rv-aurora-b {
+  animation: rv-aurora-b 26s ease-in-out infinite;
+}
+.rv-aurora-c {
+  animation: rv-aurora-c 31s ease-in-out infinite;
+}
 @media (prefers-reduced-motion: reduce) {
-  .rv-aurora-a, .rv-aurora-b, .rv-aurora-c { animation: none; }
+  .rv-aurora-a,
+  .rv-aurora-b,
+  .rv-aurora-c {
+    animation: none;
+  }
 }
 
 /* Glifos SVG do Ato 2 (ScrubStatement) — v12.
@@ -193,10 +313,21 @@ section[id] { scroll-margin-top: 100px; }
    `useTransform` por frame de scroll a partir de uma única MotionValue de
    progresso — mais loops do Framer só pra decoração constante (sem relação
    nenhuma com o scroll) seria custo de thread JS pago à toa. */
-@keyframes rv-glyph-trace { to { stroke-dashoffset: -1; } }
+@keyframes rv-glyph-trace {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
 @keyframes rv-glyph-pulse {
-  0%, 100% { opacity: 0.82; transform: scale(0.97); }
-  50%      { opacity: 1;    transform: scale(1.03); }
+  0%,
+  100% {
+    opacity: 0.82;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
 }
 /* `--rv-glyph-offset` é NEGATIVO (ver Glyph.jsx): entra adiantado no ciclo em
    vez de segurar o glifo parado esperando o delay passar. */
@@ -209,11 +340,16 @@ section[id] { scroll-margin-top: 100px; }
   animation-delay: var(--rv-glyph-delay, 0s);
 }
 @media (prefers-reduced-motion: reduce) {
-  .rv-glyph-trace, .rv-glyph-pulse { animation: none; }
+  .rv-glyph-trace,
+  .rv-glyph-pulse {
+    animation: none;
+  }
   /* Parado, o traço vira um arco claro solto num lado do anel — lê como
      glifo quebrado, não como desenho. Escondê-lo deixa só o trilho apagado
      mais o núcleo, que é uma line-art estática íntegra. */
-  .rv-glyph-trace { display: none; }
+  .rv-glyph-trace {
+    display: none;
+  }
 }
 
 /* Pulso do CTA de WhatsApp no header das LPs (LPShell.jsx) — mesmo espírito
@@ -222,12 +358,21 @@ section[id] { scroll-margin-top: 100px; }
    resto dos loops decorativos independentes de scroll deste arquivo — o
    header não tem framer-motion, é DOM/GSAP/Lenis puro. */
 @keyframes rv-navcta-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(124,58,237,0); }
-  50%      { box-shadow: 0 0 22px 2px rgba(124,58,237,0.55); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(124, 58, 237, 0);
+  }
+  50% {
+    box-shadow: 0 0 22px 2px rgba(124, 58, 237, 0.55);
+  }
 }
-.rv-navcta-pulse { animation: rv-navcta-pulse 3.6s ease-in-out infinite; }
+.rv-navcta-pulse {
+  animation: rv-navcta-pulse 3.6s ease-in-out infinite;
+}
 @media (prefers-reduced-motion: reduce) {
-  .rv-navcta-pulse { animation: none; }
+  .rv-navcta-pulse {
+    animation: none;
+  }
 }
 
 /* Glow de loading do ícone Three.js de PillarsShaped.jsx (`CanvasLoadingPulse`)
@@ -236,21 +381,36 @@ section[id] { scroll-margin-top: 100px; }
    guarda de `prefers-reduced-motion`: o componente só é alcançável quando
    motion já está ligado (`tryThree` exige `!reduced`). */
 @keyframes rv-canvas-pulse {
-  0%, 100% { opacity: 0.4; transform: scale(0.94); }
-  50%      { opacity: 0.85; transform: scale(1.04); }
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.04);
+  }
 }
-.rv-canvas-pulse { animation: rv-canvas-pulse 1.5s ease-in-out infinite; filter: blur(18px); }
+.rv-canvas-pulse {
+  animation: rv-canvas-pulse 1.5s ease-in-out infinite;
+  filter: blur(18px);
+}
 
 /* ── LP v3 — FAQ, glassmorphism reforçado (item 9) ───────────────────────── */
 .rv-faq-item {
-  background: rgba(13, 10, 24, .55);
+  background: rgba(13, 10, 24, 0.55);
   backdrop-filter: blur(28px) saturate(1.5);
   -webkit-backdrop-filter: blur(28px) saturate(1.5);
-  border: 1px solid rgba(255,255,255,.07);
-  transition: background 400ms, border-color 400ms, box-shadow 400ms;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition:
+    background 400ms,
+    border-color 400ms,
+    box-shadow 400ms;
 }
 .rv-faq-item[data-open="true"] {
-  background: rgba(13, 10, 24, .72);
-  border-color: rgba(167,139,250,.28);
-  box-shadow: 0 0 0 1px rgba(124,58,237,.12), 0 24px 60px -20px rgba(0,0,0,.9);
+  background: rgba(13, 10, 24, 0.72);
+  border-color: rgba(167, 139, 250, 0.28);
+  box-shadow:
+    0 0 0 1px rgba(124, 58, 237, 0.12),
+    0 24px 60px -20px rgba(0, 0, 0, 0.9);
 }

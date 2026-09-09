@@ -38,3 +38,6 @@ coverage/
 .cache/
 .eslintcache
 *.tsbuildinfo
+
+# Graphify — derived knowledge graph, regenerate with `graphify update .`
+graphify-out/

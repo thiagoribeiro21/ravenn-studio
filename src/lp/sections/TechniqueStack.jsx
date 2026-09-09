@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
+import { EASE_LUXE, GX, prefersReducedMotion, SECTION_PAD, TYPE } from '../config/_base';
 import Glyph from '../primitives/Glyph';
-import { EASE_LUXE, GX, SECTION_PAD, TYPE, prefersReducedMotion } from '../config/_base';
 
 /* ══════════════════════════════════════════════════════════════════════════
    TechniqueStack — substitui ConceptStack só na LP de Sites Imersivos
@@ -53,7 +53,9 @@ function TechniqueCard({ item, index, reduce }) {
       <div
         aria-hidden
         className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ background: 'radial-gradient(circle at 30% 15%, rgba(124,58,237,0.14), transparent 62%)' }}
+        style={{
+          background: 'radial-gradient(circle at 30% 15%, rgba(124,58,237,0.14), transparent 62%)',
+        }}
       />
 
       <Glyph name={GLYPHS[index % GLYPHS.length]} size="2.5rem" glow spin={!reduce} nudge={false} />
@@ -61,7 +63,9 @@ function TechniqueCard({ item, index, reduce }) {
       <h3 className="relative z-10 mt-5 font-grotesk text-xl font-medium leading-snug tracking-[-0.01em] text-rv-titanium md:text-[22px]">
         {item.title}
       </h3>
-      <p className={`relative z-10 mt-2.5 font-satoshi text-rv-slate ${TYPE.cardDesc}`}>{item.body}</p>
+      <p className={`relative z-10 mt-2.5 font-satoshi text-rv-slate ${TYPE.cardDesc}`}>
+        {item.body}
+      </p>
     </motion.div>
   );
 }
@@ -78,6 +82,7 @@ function Closing({ closing }) {
     >
       <p className={`font-grotesk font-light leading-[1.2] tracking-[-0.015em] ${TYPE.h2}`}>
         {closing.lines.map((line, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: `closing.lines` vem da config estática da LP, ordem fixa
           <span key={i} className={line.tone === 'bright' ? 'text-rv-titanium' : 'text-rv-slate'}>
             {line.text}{' '}
           </span>
@@ -96,7 +101,10 @@ function Closing({ closing }) {
             className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
           />
           <span className="relative z-10">{closing.cta.label}</span>
-          <span aria-hidden className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">
+          <span
+            aria-hidden
+            className="relative z-10 transition-transform duration-300 group-hover:translate-x-1"
+          >
             →
           </span>
         </a>
@@ -109,7 +117,10 @@ export default function TechniqueStack({ data }) {
   const reduce = prefersReducedMotion();
 
   return (
-    <section id="conceitos" className={`relative overflow-hidden border-t border-white/[0.06] bg-rv-void ${SECTION_PAD} ${GX}`}>
+    <section
+      id="conceitos"
+      className={`relative overflow-hidden border-t border-white/[0.06] bg-rv-void ${SECTION_PAD} ${GX}`}
+    >
       <div className="relative z-10 mx-auto w-full max-w-[1200px]">
         <header className="mx-auto max-w-2xl text-center">
           <motion.p

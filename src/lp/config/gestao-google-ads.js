@@ -38,7 +38,9 @@ export default {
     },
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
-      href: buildWaLink('Olá! Vi a página de gestão de Google Ads da Ravenn e quero o diagnóstico gratuito.'),
+      href: buildWaLink(
+        'Olá! Vi a página de gestão de Google Ads da Ravenn e quero o diagnóstico gratuito.',
+      ),
     },
     ctaSecondary: {
       label: 'Falar agora no WhatsApp',
@@ -52,15 +54,30 @@ export default {
     scarcity: {
       line1: 'Diagnóstico gratuito',
       line2: 'Sem compromisso',
-      cta: { label: 'Falar no WhatsApp', href: buildWaLink('Olá! Vi a página de gestão de Google Ads e quero falar com vocês.') },
+      cta: {
+        label: 'Falar no WhatsApp',
+        href: buildWaLink('Olá! Vi a página de gestão de Google Ads e quero falar com vocês.'),
+      },
     },
   },
 
   scrub: {
     headlineTokens: [
-      'Clique', 'caro', { glyph: 'concentric' }, 'não', 'é', { br: true },
-      'problema', 'de', { glyph: 'ring' }, 'orçamento.', { br: true },
-      'É', 'de', { glyph: 'cross' }, { persist: true, glyph: 'diamond', text: 'segmentação.' },
+      'Clique',
+      'caro',
+      { glyph: 'concentric' },
+      'não',
+      'é',
+      { br: true },
+      'problema',
+      'de',
+      { glyph: 'ring' },
+      'orçamento.',
+      { br: true },
+      'É',
+      'de',
+      { glyph: 'cross' },
+      { persist: true, glyph: 'diamond', text: 'segmentação.' },
     ],
     paragraph:
       'Aumentar orçamento numa campanha mal segmentada só compra mais do mesmo problema, mais rápido. O custo por aquisição não cai com mais dinheiro: cai com a palavra-chave certa, o público certo e o lance ajustado toda semana, não uma vez e esquecido.',
@@ -73,7 +90,11 @@ export default {
     lossLabel: 'Conta sem gestão',
     lossCaption:
       'Campanha configurada uma vez e esquecida. Palavra-chave genérica, lance parado, sem teste de criativo: o orçamento roda, mas ninguém sabe se está trazendo venda.',
-    ghosts: ['Custo por clique subindo', 'Sem rastreamento de conversão', 'Orçamento gasto sem retorno claro'],
+    ghosts: [
+      'Custo por clique subindo',
+      'Sem rastreamento de conversão',
+      'Orçamento gasto sem retorno claro',
+    ],
     emptyState: 'Nenhuma mensagem nova',
 
     gainLabel: 'Padrão Ravenn',
@@ -84,13 +105,23 @@ export default {
       { name: 'Vanessa R.', preview: 'Vi o relatório, ficou bem claro', time: '17:22' },
       { name: 'Marcos T.', typing: true, time: '16:58' },
       { name: 'Cristina A.', preview: 'Podemos aumentar orçamento na campanha 2?', time: '16:35' },
-      { name: 'Pedro H.', preview: 'Gostei do teste A/B, o anúncio B performou bem', time: '16:10' },
-      { name: 'Sabrina L.', preview: 'Quero entender melhor o funil, vamos marcar?', time: '15:48' },
+      {
+        name: 'Pedro H.',
+        preview: 'Gostei do teste A/B, o anúncio B performou bem',
+        time: '16:10',
+      },
+      {
+        name: 'Sabrina L.',
+        preview: 'Quero entender melhor o funil, vamos marcar?',
+        time: '15:48',
+      },
     ],
 
     cta: {
       label: 'Quero minha conta de Ads sob gestão ativa',
-      href: buildWaLink('Olá! Vi a página de gestão de Google Ads e quero gestão ativa da minha conta.'),
+      href: buildWaLink(
+        'Olá! Vi a página de gestão de Google Ads e quero gestão ativa da minha conta.',
+      ),
     },
   },
 
@@ -194,7 +225,9 @@ export default {
       },
       cta: {
         label: 'Quero essa estrutura na minha conta',
-        href: buildWaLink('Olá! Vi a anatomia de campanha na página de gestão de Google Ads e quero essa estrutura na minha conta.'),
+        href: buildWaLink(
+          'Olá! Vi a anatomia de campanha na página de gestão de Google Ads e quero essa estrutura na minha conta.',
+        ),
       },
       note: 'A conta é sua, com acesso total o tempo todo. Sem contrato de fidelidade.',
     },
@@ -243,7 +276,12 @@ export default {
       mobile: '/funciona-bg-lp/bg-mobile.webp',
       desktop: '/funciona-bg-lp/bg-desktop.webp',
     },
-    cta: { label: 'Começar pelo diagnóstico', href: buildWaLink('Olá! Quero começar pelo diagnóstico gratuito da minha conta de Google Ads.') },
+    cta: {
+      label: 'Começar pelo diagnóstico',
+      href: buildWaLink(
+        'Olá! Quero começar pelo diagnóstico gratuito da minha conta de Google Ads.',
+      ),
+    },
   },
 
   faq: {
@@ -266,14 +304,20 @@ export default {
         a: 'Sim, a conta é sua, você tem acesso completo o tempo todo. Nós gerenciamos, você é dono dos dados e do histórico.',
       },
     ],
-    cta: { label: 'Perguntar no WhatsApp', href: buildWaLink('Olá! Tenho uma dúvida sobre gestão de Google Ads que não vi no FAQ.') },
+    cta: {
+      label: 'Perguntar no WhatsApp',
+      href: buildWaLink('Olá! Tenho uma dúvida sobre gestão de Google Ads que não vi no FAQ.'),
+    },
   },
 
   finale: {
     deviceImage: '/lp-institucional/cta-device.webp',
     headline: 'Descubra quanto do seu orçamento de Ads está sendo desperdiçado.',
     body: 'Em até 24 horas, analisamos sua conta atual e mostramos exatamente onde o investimento está vazando. Sem compromisso. Sem script de vendas.',
-    cta: { label: 'Solicitar diagnóstico no WhatsApp', href: buildWaLink('Olá. Quero o diagnóstico gratuito da minha conta de Google Ads.') },
+    cta: {
+      label: 'Solicitar diagnóstico no WhatsApp',
+      href: buildWaLink('Olá. Quero o diagnóstico gratuito da minha conta de Google Ads.'),
+    },
     badges: ['Sem compromisso', 'Resposta em até 24h', 'Sem script de vendas'],
   },
 

@@ -107,7 +107,16 @@ const CORES = {
 };
 
 const Glyph = forwardRef(function Glyph(
-  { name = 'ring', size = '0.8em', className = '', spin = false, glow = false, pulseDelay = 0, nudge = true, style },
+  {
+    name = 'ring',
+    size = '0.8em',
+    className = '',
+    spin = false,
+    glow = false,
+    pulseDelay = 0,
+    nudge = true,
+    style,
+  },
   ref,
 ) {
   // `useId()` devolve algo como `:r0:` — os dois-pontos são válidos num
@@ -140,6 +149,7 @@ const Glyph = forwardRef(function Glyph(
       {/* `overflow-visible` porque o `drop-shadow` do glow vaza da viewBox e
           seria cortado pelo clip padrão do <svg> em alguns engines. */}
       <svg
+        aria-hidden="true"
         viewBox="0 0 24 24"
         fill="none"
         strokeLinecap="round"
@@ -152,7 +162,14 @@ const Glyph = forwardRef(function Glyph(
         }}
       >
         <defs>
-          <linearGradient id={gradientId} gradientUnits="userSpaceOnUse" x1="12" y1="5" x2="12" y2="19">
+          <linearGradient
+            id={gradientId}
+            gradientUnits="userSpaceOnUse"
+            x1="12"
+            y1="5"
+            x2="12"
+            y2="19"
+          >
             {STROKE_STOPS.map((s) => (
               <stop key={s.offset} offset={s.offset} stopColor={s.color} />
             ))}

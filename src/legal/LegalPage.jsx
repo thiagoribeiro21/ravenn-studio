@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
 import { EASE_LUXE, GX, prefersReducedMotion } from '../lp/config/_base';
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -32,12 +32,18 @@ function fadeProps(reduce, delay = 0) {
 }
 
 export function P({ children }) {
-  return <p className="mt-4 font-satoshi text-[16px] leading-[1.7] text-rv-slate first:mt-0">{children}</p>;
+  return (
+    <p className="mt-4 font-satoshi text-[16px] leading-[1.7] text-rv-slate first:mt-0">
+      {children}
+    </p>
+  );
 }
 
 export function H3({ children }) {
   return (
-    <h3 className="mt-8 font-grotesk text-[19px] font-medium leading-snug text-rv-titanium first:mt-0">{children}</h3>
+    <h3 className="mt-8 font-grotesk text-[19px] font-medium leading-snug text-rv-titanium first:mt-0">
+      {children}
+    </h3>
   );
 }
 
@@ -45,8 +51,12 @@ export function UL({ items }) {
   return (
     <ul className="mt-4 space-y-2.5">
       {items.map((item, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: lista estática vinda de conteúdo legal, nunca reordena/filtra
         <li key={i} className="flex gap-3 font-satoshi text-[16px] leading-[1.7] text-rv-slate">
-          <span aria-hidden className="mt-[0.65em] h-1 w-1 shrink-0 rounded-full bg-rv-purple-400" />
+          <span
+            aria-hidden
+            className="mt-[0.65em] h-1 w-1 shrink-0 rounded-full bg-rv-purple-400"
+          />
           <span>{item}</span>
         </li>
       ))}
@@ -130,7 +140,9 @@ function TocMobile({ sections }) {
 function LegalFooter({ otherDoc }) {
   return (
     <footer className="border-t border-white/[0.06]">
-      <div className={`mx-auto flex max-w-6xl flex-col items-center gap-4 py-10 text-center md:flex-row md:justify-between md:text-left ${GX}`}>
+      <div
+        className={`mx-auto flex max-w-6xl flex-col items-center gap-4 py-10 text-center md:flex-row md:justify-between md:text-left ${GX}`}
+      >
         <p className="font-satoshi text-[14px] text-rv-faint">
           © {new Date().getFullYear()} Ravenn Studio. Todos os direitos reservados.
         </p>
@@ -157,7 +169,10 @@ export default function LegalPage({ title, lastUpdated, sections, otherDoc }) {
   const reduce = useMemo(() => prefersReducedMotion(), []);
 
   return (
-    <div className="min-h-dvh-fix scroll-smooth bg-rv-void font-grotesk text-rv-titanium" style={{ height: '100dvh', overflowY: 'auto' }}>
+    <div
+      className="min-h-dvh-fix scroll-smooth bg-rv-void font-grotesk text-rv-titanium"
+      style={{ height: '100dvh', overflowY: 'auto' }}
+    >
       <Header />
 
       <main className={`mx-auto max-w-6xl py-14 md:py-20 ${GX}`}>
@@ -165,7 +180,9 @@ export default function LegalPage({ title, lastUpdated, sections, otherDoc }) {
           <h1 className="font-grotesk text-[clamp(2rem,4vw,3rem)] font-light leading-[1.1] tracking-[-0.02em] text-rv-titanium">
             {title}
           </h1>
-          <p className="mt-4 font-satoshi text-[15px] text-rv-faint">Última atualização: {lastUpdated}</p>
+          <p className="mt-4 font-satoshi text-[15px] text-rv-faint">
+            Última atualização: {lastUpdated}
+          </p>
         </motion.div>
 
         <div className="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-16">
@@ -175,7 +192,12 @@ export default function LegalPage({ title, lastUpdated, sections, otherDoc }) {
             <TocMobile sections={sections} />
 
             {sections.map((s, i) => (
-              <motion.section key={s.id} id={s.id} className="scroll-mt-10 border-t border-white/[0.06] pt-10 first:border-t-0 first:pt-0" {...fadeProps(reduce, Math.min(i * 0.03, 0.2))}>
+              <motion.section
+                key={s.id}
+                id={s.id}
+                className="scroll-mt-10 border-t border-white/[0.06] pt-10 first:border-t-0 first:pt-0"
+                {...fadeProps(reduce, Math.min(i * 0.03, 0.2))}
+              >
                 <h2 className="font-grotesk text-[22px] font-medium leading-snug text-rv-titanium md:text-[24px]">
                   {s.heading}
                 </h2>

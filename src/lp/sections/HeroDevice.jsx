@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef } from 'react';
 import { animate, motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useEffect, useMemo, useRef } from 'react';
+import { EASE_LUXE, GX, prefersReducedMotion, TYPE } from '../config/_base';
 import Aurora from '../primitives/Aurora';
 import ParticleField from '../primitives/ParticleField';
-import { EASE_LUXE, GX, TYPE, prefersReducedMotion } from '../config/_base';
 
 function Fade({ children, delay = 0, y = 24, className = '' }) {
   return (
@@ -19,11 +19,14 @@ function Fade({ children, delay = 0, y = 24, className = '' }) {
 
 function Headline({ lines }) {
   return (
-    <h1 className={`font-grotesk font-light leading-[1.05] tracking-[-0.02em] text-rv-titanium ${TYPE.h1}`}>
+    <h1
+      className={`font-grotesk font-light leading-[1.05] tracking-[-0.02em] text-rv-titanium ${TYPE.h1}`}
+    >
       {lines.map((line, i) => {
         const accent = line.startsWith('_') && line.endsWith('_');
         const clean = accent ? line.slice(1, -1) : line;
         return (
+          // biome-ignore lint/suspicious/noArrayIndexKey: `lines` vem da config estática da LP, ordem fixa
           <span key={i} className={`block ${accent ? 'text-rv-purple-400' : ''}`}>
             {clean}
           </span>
@@ -155,7 +158,10 @@ function MagneticCta({ href, children, variant = 'solid', className = '' }) {
         className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
       />
       <span className="relative z-10">{children}</span>
-      <span aria-hidden className="relative z-10 inline-block transition-transform duration-300 group-hover:translate-x-1">
+      <span
+        aria-hidden
+        className="relative z-10 inline-block transition-transform duration-300 group-hover:translate-x-1"
+      >
         →
       </span>
     </motion.a>
@@ -185,7 +191,10 @@ function parseStat(raw) {
 }
 
 function formatStat(value, decimals) {
-  return value.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  return value.toLocaleString('pt-BR', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
 }
 
 /* v10 — "Apple Dark Mode": números sólidos e pesados (não mais o gradiente
@@ -196,14 +205,14 @@ function formatStat(value, decimals) {
    flex pra acomodar um irmão. */
 function StatNumber({ raw, active, reduce }) {
   const { value, decimals, suffix } = useMemo(() => parseStat(raw), [raw]);
-  const count = useMotionValue(reduce ? value ?? 0 : 0);
+  const count = useMotionValue(reduce ? (value ?? 0) : 0);
   const display = useTransform(count, (v) => formatStat(v, decimals));
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `count` é um MotionValue estável (useMotionValue), não precisa entrar nas deps
   useEffect(() => {
     if (!active || value === null || reduce) return undefined;
     const controls = animate(count, value, { duration: 2, ease: EASE_LUXE });
     return controls.stop;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active, value, reduce]);
 
   if (value === null) {
@@ -265,7 +274,9 @@ function StatsRow({ stats }) {
             transition={{ duration: 0.8, delay: 0.12 + i * 0.12, ease: EASE_LUXE }}
             className="group flex flex-col items-center gap-2 rounded-2xl px-3 py-4 text-center transition-colors duration-500 ease-out hover:bg-white/[0.02] md:items-start md:gap-2.5 md:px-10 md:py-2 md:text-left md:first:pl-0"
           >
-            <p className={`font-grotesk font-semibold leading-none tracking-tight text-rv-titanium ${TYPE.statNum}`}>
+            <p
+              className={`font-grotesk font-semibold leading-none tracking-tight text-rv-titanium ${TYPE.statNum}`}
+            >
               <StatNumber raw={s.big} active={active} reduce={reduce} />
             </p>
             {/* Sentence case (como escrito nos dados), não `uppercase`: o
@@ -275,7 +286,9 @@ function StatsRow({ stats }) {
                 traduzindo convenção do inglês, não como editorial. Sentence
                 case natural já bate com a voz do resto do site (subheadline
                 do hero também começa em minúscula, é frase corrida). */}
-            <p className={`max-w-[12rem] font-satoshi font-medium leading-snug text-rv-slate ${TYPE.statLabel}`}>
+            <p
+              className={`max-w-[12rem] font-satoshi font-medium leading-snug text-rv-slate ${TYPE.statLabel}`}
+            >
               {s.label}
             </p>
           </motion.div>
@@ -291,9 +304,17 @@ export default function HeroDevice({ data }) {
      viewport de 667px é 19% da tela gasta em respiro antes da primeira
      palavra — e era parte do que empurrava o mockup pra fora da dobra. */
   return (
-    <section id="hero" className={`relative flex min-h-[100dvh] flex-col overflow-hidden pt-20 pb-10 md:pt-32 ${GX}`}>
+    <section
+      id="hero"
+      className={`relative flex min-h-[100dvh] flex-col overflow-hidden pt-20 pb-10 md:pt-32 ${GX}`}
+    >
       <Aurora variant="hero" />
-      <ParticleField className="pointer-events-none absolute inset-0 z-0" scale={1.3} opacity={0.4} offsetY={-40} />
+      <ParticleField
+        className="pointer-events-none absolute inset-0 z-0"
+        scale={1.3}
+        opacity={0.4}
+        offsetY={-40}
+      />
 
       {/* item 1 — hero em coluna centralizada, não lado a lado com o device.
           `max-w-6xl` (era `max-w-4xl`, +256px de coluna): dá margem pro h1
@@ -338,7 +359,10 @@ export default function HeroDevice({ data }) {
         {/* Margens verticais menores só até `md` — no desktop o ritmo
             original continua intacto; no mobile cada folga dessas competia
             diretamente com a área do mockup. */}
-        <Fade delay={0.45} className="mt-7 flex flex-wrap items-center justify-center gap-3 md:mt-10 md:gap-4">
+        <Fade
+          delay={0.45}
+          className="mt-7 flex flex-wrap items-center justify-center gap-3 md:mt-10 md:gap-4"
+        >
           <MagneticCta href={data.ctaPrimary.href} variant="solid">
             {data.ctaPrimary.label}
           </MagneticCta>
@@ -375,8 +399,12 @@ export default function HeroDevice({ data }) {
             quer aqui agora. */}
         <div className="mx-auto flex w-full max-w-md items-center justify-between gap-5 rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md md:mx-0">
           <div className="text-left">
-            <p className="font-grotesk text-lg font-light text-rv-titanium">{data.scarcity.line1}</p>
-            <p className={`mt-0.5 font-satoshi text-rv-slate ${TYPE.cardDesc}`}>{data.scarcity.line2}</p>
+            <p className="font-grotesk text-lg font-light text-rv-titanium">
+              {data.scarcity.line1}
+            </p>
+            <p className={`mt-0.5 font-satoshi text-rv-slate ${TYPE.cardDesc}`}>
+              {data.scarcity.line2}
+            </p>
           </div>
           <a
             href={data.scarcity.cta.href}

@@ -33,7 +33,9 @@ export default {
       'Sites institucionais premium para clínicas, escritórios de advocacia e imobiliárias de alto padrão, construídos para transformar tráfego pago em reunião marcada, não em visita perdida.',
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
-      href: buildWaLink('Olá! Vi a página de sites institucionais da Ravenn e quero o diagnóstico gratuito.'),
+      href: buildWaLink(
+        'Olá! Vi a página de sites institucionais da Ravenn e quero o diagnóstico gratuito.',
+      ),
     },
     ctaSecondary: {
       label: 'Falar agora no WhatsApp',
@@ -50,7 +52,10 @@ export default {
     scarcity: {
       line1: 'Diagnóstico gratuito',
       line2: 'Sem compromisso',
-      cta: { label: 'Falar no WhatsApp', href: buildWaLink('Olá! Vi a página de sites institucionais e quero falar com vocês.') },
+      cta: {
+        label: 'Falar no WhatsApp',
+        href: buildWaLink('Olá! Vi a página de sites institucionais e quero falar com vocês.'),
+      },
     },
   },
 
@@ -59,9 +64,22 @@ export default {
     // último token (persist:true) é o par [glifo+palavra] que sobrevive ao
     // fade-out e voa pro canto inferior direito. Ver primitives/Glyph.jsx.
     headlineTokens: [
-      'Ninguém', { glyph: 'concentric' }, 'liga', 'para', 'quem', { glyph: 'ring' }, { br: true },
-      'parece', 'barato.', { br: true },
-      'Nem', 'para', 'quem', 'parece', { glyph: 'cross' }, { persist: true, glyph: 'diamond', text: 'amador.' },
+      'Ninguém',
+      { glyph: 'concentric' },
+      'liga',
+      'para',
+      'quem',
+      { glyph: 'ring' },
+      { br: true },
+      'parece',
+      'barato.',
+      { br: true },
+      'Nem',
+      'para',
+      'quem',
+      'parece',
+      { glyph: 'cross' },
+      { persist: true, glyph: 'diamond', text: 'amador.' },
     ],
     paragraph:
       'O paciente particular. O cliente corporativo. O comprador de alto padrão. Todos julgam sua credibilidade pelo site antes de qualquer contato. Decidem em segundos se voltam ou se fecham com o concorrente que parecia mais preparado.',
@@ -112,7 +130,9 @@ export default {
 
     cta: {
       label: 'Quero meu WhatsApp tocando',
-      href: buildWaLink('Olá! Vi a página de sites institucionais e quero um site que traga conversas no WhatsApp.'),
+      href: buildWaLink(
+        'Olá! Vi a página de sites institucionais e quero um site que traga conversas no WhatsApp.',
+      ),
     },
   },
 
@@ -173,7 +193,9 @@ export default {
         pain: 'O paciente particular julga a sua clínica pelo site antes de conhecer o seu trabalho.',
         solution:
           'Segurança clínica com estética de desejo. O paciente sente o padrão do consultório antes de agendar a primeira consulta.',
-        wa: buildWaLink('Olá! Vi o conceito para clínicas na página de sites institucionais e quero esse padrão no meu site.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito para clínicas na página de sites institucionais e quero esse padrão no meu site.',
+        ),
       },
       {
         nicho: 'Advocacia · Corporativo',
@@ -181,7 +203,9 @@ export default {
         pain: 'Nenhuma empresa contrata um escritório que parece amador no Google.',
         solution:
           'Sobriedade que impõe respeito: hierarquia clara, tipografia imponente e a credibilidade que o cliente corporativo exige antes da primeira reunião.',
-        wa: buildWaLink('Olá! Vi o conceito para advocacia na página de sites institucionais e quero esse padrão no meu site.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito para advocacia na página de sites institucionais e quero esse padrão no meu site.',
+        ),
       },
       {
         nicho: 'Imobiliário · Alto padrão',
@@ -189,7 +213,9 @@ export default {
         pain: 'Ninguém compra um imóvel de milhões numa vitrine de classificados.',
         solution:
           'Apresentação cinematográfica à altura do ativo: o imóvel extraordinário precisa parecer extraordinário em cada scroll.',
-        wa: buildWaLink('Olá! Vi o conceito para imobiliárias na página de sites institucionais e quero esse padrão no meu site.'),
+        wa: buildWaLink(
+          'Olá! Vi o conceito para imobiliárias na página de sites institucionais e quero esse padrão no meu site.',
+        ),
       },
     ],
   },
@@ -200,7 +226,12 @@ export default {
       { text: 'Engenharia de quem mede', tone: 'dim' },
       { text: 'cada milissegundo.', tone: 'dim' },
     ],
-    labels: ['Design autoral', 'Performance obsessiva', 'Arquitetura de conversão', 'Autoridade local'],
+    labels: [
+      'Design autoral',
+      'Performance obsessiva',
+      'Arquitetura de conversão',
+      'Autoridade local',
+    ],
   },
 
   audience: {
@@ -250,7 +281,10 @@ export default {
       mobile: '/funciona-bg-lp/bg-mobile.webp',
       desktop: '/funciona-bg-lp/bg-desktop.webp',
     },
-    cta: { label: 'Começar pelo diagnóstico', href: buildWaLink('Olá! Quero começar pelo diagnóstico gratuito.') },
+    cta: {
+      label: 'Começar pelo diagnóstico',
+      href: buildWaLink('Olá! Quero começar pelo diagnóstico gratuito.'),
+    },
   },
 
   faq: {
@@ -273,14 +307,20 @@ export default {
         a: 'Análise técnica de performance (Core Web Vitals), avaliação de design e credibilidade, e um mapa dos pontos onde seu site atual perde conversões. Entregue em até 24 horas, sem compromisso e sem script de vendas.',
       },
     ],
-    cta: { label: 'Perguntar no WhatsApp', href: buildWaLink('Olá! Tenho uma dúvida sobre sites institucionais que não vi no FAQ.') },
+    cta: {
+      label: 'Perguntar no WhatsApp',
+      href: buildWaLink('Olá! Tenho uma dúvida sobre sites institucionais que não vi no FAQ.'),
+    },
   },
 
   finale: {
     deviceImage: '/lp-institucional/cta-device.webp',
     headline: 'Descubra quanto o seu site está custando.',
     body: 'Em até 24 horas, analisamos a performance, o design e a capacidade de conversão da sua presença digital atual. Sem compromisso. Sem script de vendas.',
-    cta: { label: 'Solicitar diagnóstico no WhatsApp', href: buildWaLink('Olá. Quero o diagnóstico gratuito do meu site.') },
+    cta: {
+      label: 'Solicitar diagnóstico no WhatsApp',
+      href: buildWaLink('Olá. Quero o diagnóstico gratuito do meu site.'),
+    },
     // "Apenas 4 projetos por mês" removido daqui também — mesma afirmação
     // não verificada que saiu do badge do hero (item 2). O motivo vale
     // pra qualquer lugar da página, não só o hero.

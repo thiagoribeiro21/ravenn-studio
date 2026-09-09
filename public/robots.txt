@@ -1,4 +1,38 @@
+# Buscadores tradicionais
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Crawlers de IA / GEO — permitidos explicitamente de propósito: este site
+# quer ser citado por assistentes de IA, não só indexado por busca clássica.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+# Todo o resto
 User-agent: *
 Allow: /
 
-Sitemap: https://www.ravennstudio.com/sitemap.xml
+Sitemap: https://ravennstudio.com.br/sitemap.xml

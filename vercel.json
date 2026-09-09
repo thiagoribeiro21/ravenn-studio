@@ -1,9 +1,22 @@
 {
   "rewrites": [
+    { "source": "/sites-institucionais", "destination": "/sites-institucionais.html" },
+    { "source": "/landing-pages", "destination": "/landing-pages.html" },
+    { "source": "/agentes-ia", "destination": "/agentes-ia.html" },
+    { "source": "/sites-imersivos", "destination": "/sites-imersivos.html" },
+    { "source": "/gestao-google-ads", "destination": "/gestao-google-ads.html" },
+    { "source": "/lojas-virtuais", "destination": "/lojas-virtuais.html" },
+    { "source": "/politica-de-privacidade", "destination": "/politica-de-privacidade.html" },
+    { "source": "/termos-de-uso", "destination": "/termos-de-uso.html" },
     {
-      "source": "/sites-institucionais",
-      "destination": "/sites-institucionais.html"
+      "source": "/solucoes/sites-institucionais",
+      "destination": "/solucoes/sites-institucionais.html"
     },
+    { "source": "/solucoes/landing-pages", "destination": "/solucoes/landing-pages.html" },
+    { "source": "/solucoes/agentes-ia", "destination": "/solucoes/agentes-ia.html" },
+    { "source": "/solucoes/sites-imersivos", "destination": "/solucoes/sites-imersivos.html" },
+    { "source": "/solucoes/gestao-google-ads", "destination": "/solucoes/gestao-google-ads.html" },
+    { "source": "/solucoes/lojas-virtuais", "destination": "/solucoes/lojas-virtuais.html" },
     {
       "source": "/(.*)",
       "destination": "/index.html"

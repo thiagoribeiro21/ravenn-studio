@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
+import { EASE_LUXE, GX, prefersReducedMotion, RADIUS, TYPE } from '../config/_base';
 import Aurora from '../primitives/Aurora';
 import GradientBorder from '../primitives/GradientBorder';
-import { EASE_LUXE, GX, TYPE, RADIUS, prefersReducedMotion } from '../config/_base';
 
 /*
   Ato 9 — Finale, item 11 do refinamento v4 + ajuste posterior: card quase
@@ -39,7 +39,10 @@ function StarField() {
   const stars = STAR_SHADOW;
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute h-[2px] w-[2px] rounded-full bg-white" style={{ boxShadow: stars, opacity: 0.55 }} />
+      <div
+        className="absolute h-[2px] w-[2px] rounded-full bg-white"
+        style={{ boxShadow: stars, opacity: 0.55 }}
+      />
     </div>
   );
 }
@@ -84,7 +87,10 @@ function FloatingDevice({ className, imgClassName, src }) {
 
 export default function FinaleCta({ data }) {
   return (
-    <section id="finale" className={`relative overflow-hidden border-t border-white/[0.06] py-20 md:py-[120px] ${GX}`}>
+    <section
+      id="finale"
+      className={`relative overflow-hidden border-t border-white/[0.06] py-20 md:py-[120px] ${GX}`}
+    >
       <GradientBorder radius={RADIUS.lg} slow className="relative mx-auto max-w-[92vw] bg-rv-void">
         <div className="relative overflow-hidden" style={{ borderRadius: RADIUS.lg }}>
           <div className="absolute inset-0 bg-rv-void" />
@@ -149,13 +155,15 @@ export default function FinaleCta({ data }) {
                 className="mt-8 flex flex-wrap items-center justify-center gap-3 pb-16 md:justify-start md:pb-0"
               >
                 {data.badges.map((b) => (
-                  <li key={b} className={`rounded-full border border-white/15 bg-rv-void/40 px-5 py-2.5 font-satoshi text-rv-slate backdrop-blur-sm ${TYPE.cardDesc}`}>
+                  <li
+                    key={b}
+                    className={`rounded-full border border-white/15 bg-rv-void/40 px-5 py-2.5 font-satoshi text-rv-slate backdrop-blur-sm ${TYPE.cardDesc}`}
+                  >
                     {b}
                   </li>
                 ))}
               </motion.ul>
             </div>
-
           </div>
 
           {/* desktop — ancorado no canto inferior-direito do CARD de verdade

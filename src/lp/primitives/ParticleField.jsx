@@ -40,7 +40,13 @@ function blobRadius(angle, t, amp) {
   );
 }
 
-export default function ParticleField({ className = '', scale = 1, opacity = 1, offsetX = 0, offsetY = 0 }) {
+export default function ParticleField({
+  className = '',
+  scale = 1,
+  opacity = 1,
+  offsetX = 0,
+  offsetY = 0,
+}) {
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
   const particlesRef = useRef([]);
@@ -82,7 +88,7 @@ export default function ParticleField({ className = '', scale = 1, opacity = 1, 
     // fração do menor lado do canvas — recalculado por partícula no draw.
     particlesRef.current = Array.from({ length: PARTICLE_COUNT }, () => {
       const angle = rand(0, Math.PI * 2);
-      const f = Math.pow(Math.random(), 0.55); // mais denso perto do centro
+      const f = Math.random() ** 0.55; // mais denso perto do centro
       return {
         angle,
         f,
@@ -99,21 +105,33 @@ export default function ParticleField({ className = '', scale = 1, opacity = 1, 
       const rect = canvas.getBoundingClientRect();
       mouseRef.current = { x: (e.clientX - rect.left) * dpr, y: (e.clientY - rect.top) * dpr };
     };
-    const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
+    const onLeave = () => {
+      mouseRef.current = { x: -9999, y: -9999 };
+    };
     if (fine) {
       window.addEventListener('mousemove', onMove, { passive: true });
       window.addEventListener('mouseleave', onLeave);
     }
 
-    const io = new IntersectionObserver(([entry]) => { visibleRef.current = entry.isIntersecting; }, { threshold: 0 });
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visibleRef.current = entry.isIntersecting;
+      },
+      { threshold: 0 },
+    );
     io.observe(canvas);
 
-    const onVisibility = () => { if (document.visibilityState !== 'visible') visibleRef.current = false; };
+    const onVisibility = () => {
+      if (document.visibilityState !== 'visible') visibleRef.current = false;
+    };
     document.addEventListener('visibilitychange', onVisibility);
 
     const draw = (ts) => {
       rafRef.current = requestAnimationFrame(draw);
-      if (!visibleRef.current) { lastTsRef.current = ts; return; }
+      if (!visibleRef.current) {
+        lastTsRef.current = ts;
+        return;
+      }
 
       const dt = Math.min((ts - (lastTsRef.current || ts)) / 1000, 0.05);
       lastTsRef.current = ts;
@@ -168,9 +186,13 @@ export default function ParticleField({ className = '', scale = 1, opacity = 1, 
         // cor: núcleo violeta -> borda lilás, com boost quente no canto
         // superior-esquerdo do blob (ângulo ~225°).
         const edgeT = Math.min(1, p.f);
-        let color = lerp3(CORE, edgeT < 0.5 ? MID : EDGE, edgeT < 0.5 ? edgeT * 2 : (edgeT - 0.5) * 2);
+        let color = lerp3(
+          CORE,
+          edgeT < 0.5 ? MID : EDGE,
+          edgeT < 0.5 ? edgeT * 2 : (edgeT - 0.5) * 2,
+        );
         const hotAngle = Math.atan2(-0.7, -0.7); // ~225°
-        let angDiff = Math.abs(((p.angle - hotAngle + Math.PI) % (Math.PI * 2)) - Math.PI);
+        const angDiff = Math.abs(((p.angle - hotAngle + Math.PI) % (Math.PI * 2)) - Math.PI);
         const hotT = Math.max(0, 1 - angDiff / 1.1) * (1 - edgeT) * 0.7;
         if (hotT > 0) color = lerp3(color, HOT, hotT);
 
@@ -187,8 +209,10 @@ export default function ParticleField({ className = '', scale = 1, opacity = 1, 
         ctx.lineWidth = 1;
         for (let i = 0; i < pts.length; i += 3) {
           for (let j = i + 3; j < pts.length; j += 5) {
-            const a = pts[i], b = pts[j];
-            const dx = a.x - b.x, dy = a.y - b.y;
+            const a = pts[i],
+              b = pts[j];
+            const dx = a.x - b.x,
+              dy = a.y - b.y;
             const d = Math.sqrt(dx * dx + dy * dy);
             if (d < cd) {
               ctx.globalAlpha = (1 - d / cd) * 0.25 * opacity;

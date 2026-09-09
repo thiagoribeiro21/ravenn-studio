@@ -1,6 +1,11 @@
-import { useMemo, useRef } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
-import { SCRUB_SPRING, prefersReducedMotion, useIsDesktop, useSectionProgress } from '../config/_base';
+import { useMemo, useRef } from 'react';
+import {
+  prefersReducedMotion,
+  SCRUB_SPRING,
+  useIsDesktop,
+  useSectionProgress,
+} from '../config/_base';
 
 /* ══════════════════════════════════════════════════════════════════════════
    "Curtain reveal" — v4, Framer Motion (parallax contra o scroll) no lugar

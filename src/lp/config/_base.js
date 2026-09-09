@@ -1,5 +1,5 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
 import { cubicBezier, useMotionValue } from 'framer-motion';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 /* ── Defaults compartilhados entre todas as LPs clonadas de src/lp/ ──────── */
 
@@ -53,13 +53,13 @@ export const GX = 'px-[6vw]';
    Tracking já está correto em toda a página hoje (sempre `tracking-widest2`,
    nunca widest3/4) — não repetido aqui. */
 export const TYPE = {
-  eyebrow:   'text-[15px] md:text-[16px]',
+  eyebrow: 'text-[15px] md:text-[16px]',
   statLabel: 'text-[15px] md:text-[16px]',
-  body:      'text-[16px] md:text-[18px] leading-[1.6]',
-  cardDesc:  'text-[15px] md:text-[16px] leading-[1.55]',
-  button:    'text-[16px]',
-  statNum:   'text-[clamp(1.75rem,7vw,2.25rem)] md:text-[clamp(2.5rem,4vw,3.5rem)]',
-  h2:        'text-[clamp(2.5rem,5vw,4.5rem)]',
+  body: 'text-[16px] md:text-[18px] leading-[1.6]',
+  cardDesc: 'text-[15px] md:text-[16px] leading-[1.55]',
+  button: 'text-[16px]',
+  statNum: 'text-[clamp(1.75rem,7vw,2.25rem)] md:text-[clamp(2.5rem,4vw,3.5rem)]',
+  h2: 'text-[clamp(2.5rem,5vw,4.5rem)]',
   /* v14 — teto reduzido (era 6.5rem puro-vw) e híbrido vw+dvh, mesmo padrão
      já usado em `HEADLINE_SIZE` do ScrubStatement.jsx. `6.4vw` sozinho não
      sabe nada sobre altura disponível: em 1920×1080 ele batia no teto de
@@ -74,14 +74,14 @@ export const TYPE = {
      no pior caso, nunca mais 4. `_` no lugar de espaço porque isto é uma
      classe Tailwind arbitrária, não `style` inline — o parser JIT quebra
      em espaço solto. */
-  h1:        'text-[clamp(2.5rem,4.8vw_+_1.4dvh,5.8rem)]',
+  h1: 'text-[clamp(2.5rem,4.8vw_+_1.4dvh,5.8rem)]',
 };
 
 /* ── Raios e sombras padronizados (Regra transversal / item 11) ─────────── */
 export const RADIUS = { sm: 8, md: 18, lg: 28 }; // rounded-full fica à parte, categoria própria
 export const SHADOW = {
-  soft: '0 20px 50px -20px rgba(0,0,0,.6)',  // cards/mockups pequenos
-  deep: '0 40px 80px -20px rgba(0,0,0,.8)',  // devices/mockups grandes flutuantes
+  soft: '0 20px 50px -20px rgba(0,0,0,.6)', // cards/mockups pequenos
+  deep: '0 40px 80px -20px rgba(0,0,0,.8)', // devices/mockups grandes flutuantes
 };
 
 /* Padding vertical mínimo por ato (item 11). */
@@ -112,11 +112,17 @@ export function isSlowConnection() {
 let _webglSupport;
 export function hasWebGL() {
   if (_webglSupport !== undefined) return _webglSupport;
-  if (typeof document === 'undefined') return (_webglSupport = false);
+  if (typeof document === 'undefined') {
+    _webglSupport = false;
+    return _webglSupport;
+  }
 
   try {
     const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const gl =
+      canvas.getContext('webgl2') ||
+      canvas.getContext('webgl') ||
+      canvas.getContext('experimental-webgl');
     _webglSupport = !!gl;
   } catch {
     _webglSupport = false;

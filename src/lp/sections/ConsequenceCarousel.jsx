@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { EASE_LUXE, GX, prefersReducedMotion, SECTION_PAD, TYPE } from '../config/_base';
 import GlassCard from '../primitives/GlassCard';
-import { EASE_LUXE, GX, TYPE, SECTION_PAD, prefersReducedMotion } from '../config/_base';
 
 const AUTO_ADVANCE_MS = 4500;
 
@@ -35,14 +35,23 @@ export default function ConsequenceCarousel({ id, eyebrow, heading, items, bg, c
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.4 });
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      threshold: 0.4,
+    });
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
-  const prev = () => { setIndex((i) => (i - 1 + total) % total); setProgress(0); };
-  const next = () => { setIndex((i) => (i + 1) % total); setProgress(0); };
+  const prev = () => {
+    setIndex((i) => (i - 1 + total) % total);
+    setProgress(0);
+  };
+  const next = () => {
+    setIndex((i) => (i + 1) % total);
+    setProgress(0);
+  };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `progress`/`index` de propósito fora — reiniciariam o rAF a cada tick (loop já lê os dois via closure)
   useEffect(() => {
     if (prefersReducedMotion() || paused || !inView || total <= 1) return;
     let raf;
@@ -59,11 +68,14 @@ export default function ConsequenceCarousel({ id, eyebrow, heading, items, bg, c
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paused, inView, index, total]);
 
   return (
-    <section id={id} ref={sectionRef} className={`relative overflow-hidden border-t border-white/[0.06] ${SECTION_PAD} ${GX}`}>
+    <section
+      id={id}
+      ref={sectionRef}
+      className={`relative overflow-hidden border-t border-white/[0.06] ${SECTION_PAD} ${GX}`}
+    >
       <div aria-hidden className="absolute inset-0">
         {bg ? (
           <>
@@ -74,11 +86,23 @@ export default function ConsequenceCarousel({ id, eyebrow, heading, items, bg, c
                 verdade entre as versões, então precisa de `<source>`, não
                 de um único `<img>` escalado por CSS. */}
             {typeof bg === 'string' ? (
-              <img src={bg} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+              <img
+                src={bg}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
             ) : (
               <picture>
                 <source media="(min-width: 768px)" srcSet={bg.desktop} />
-                <img src={bg.mobile} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                <img
+                  src={bg.mobile}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
               </picture>
             )}
             {/* Overlay em DUAS camadas, pensado pra imagem em si (peça de
@@ -153,6 +177,7 @@ export default function ConsequenceCarousel({ id, eyebrow, heading, items, bg, c
           )}
         </div>
 
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: só pausa o autoplay no hover/foco dos filhos, não é ela própria um controle */}
         <div
           className="flex justify-center md:col-span-6 md:col-start-7"
           onMouseEnter={() => setPaused(true)}

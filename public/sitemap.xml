@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Só entram aqui URLs com robots "index" — as 6 LPs de tráfego pago
+  (agentes-ia.html, sites-institucionais.html etc.) são "noindex, follow"
+  de propósito (destino de campanha, não devem competir no índice orgânico
+  com as subpáginas de /solucoes/, que têm o mesmo conteúdo com header/
+  footer da home). Listar uma URL noindex no sitemap é uma contradição que
+  ferramentas de SEO sinalizam como erro — por isso ficam fora.
+
+  Todas as URLs usam o caminho "bonito" (sem .html), que é o mesmo
+  declarado em <link rel="canonical"> de cada página — os rewrites
+  correspondentes vivem em vercel.json.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://ravennstudio.com.br/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://ravennstudio.com.br/solucoes/sites-institucionais</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ravennstudio.com.br/solucoes/landing-pages</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ravennstudio.com.br/solucoes/agentes-ia</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ravennstudio.com.br/solucoes/sites-imersivos</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ravennstudio.com.br/solucoes/gestao-google-ads</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ravennstudio.com.br/solucoes/lojas-virtuais</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ravennstudio.com.br/politica-de-privacidade</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://ravennstudio.com.br/termos-de-uso</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+</urlset>

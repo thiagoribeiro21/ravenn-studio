@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/webp" href="/logo-ravenn/icone-ravenn.webp" />
 
   <!-- ── SEO Primário — subpágina de Landing Pages, header/footer da home
        (mesmo conteúdo de landing-pages.html, que fica noindex — ver nota
        lá). Esta é a versão indexável/compartilhável do serviço. ────────── -->
-  <title>Criação de Landing Pages para Google Ads em Niterói, RJ | Ravenn Studio</title>
-  <meta name="description" content="Landing pages de alta conversão para Google Ads: copywriting orientado a venda, design exclusivo sem templates e rastreamento configurado do zero. Entrega em 7 dias úteis." />
+  <title>Landing Pages para Google Ads em Niterói, RJ | Ravenn Studio</title>
+  <meta name="description" content="Landing pages de alta conversão para Google Ads: copywriting orientado a venda, design exclusivo e rastreamento configurado do zero. Entrega em 7 dias úteis." />
   <meta name="keywords" content="criação de landing page, landing page para google ads, landing page de alta conversão, criar landing page profissional, agência de landing page, landing page que converte" />
   <link rel="canonical" href="https://ravennstudio.com.br/solucoes/landing-pages" />
 
@@ -49,21 +50,76 @@
     "@type": "Service",
     "serviceType": "Criação de Landing Pages de Alta Conversão",
     "provider": {
-      "@type": "LocalBusiness",
-      "name": "Ravenn Studio",
-      "telephone": "+55-21-98921-1887",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Niterói",
-        "addressRegion": "RJ",
-        "addressCountry": "BR"
-      }
+      "@id": "https://ravennstudio.com.br/#business"
     },
     "areaServed": [
       { "@type": "City", "name": "Niterói" },
       { "@type": "State", "name": "Rio de Janeiro" }
     ],
     "description": "Landing pages de alta conversão para campanhas de Google Ads, com copywriting AIDA, design exclusivo e rastreamento configurado do zero."
+  }
+  </script>
+
+  <!-- ── Structured Data: FAQPage — mesmas perguntas/respostas da seção
+       "Perguntas diretas" (FaqPanel.jsx + config/landing-pages.js `faq`).
+       Alvo: featured snippets e citação direta por IA generativa. ────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Quanto custa uma landing page de alta conversão?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Cada projeto é orçado pelo escopo: número de seções, integrações e prazo. O diagnóstico gratuito define o escopo antes de qualquer proposta."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Em quanto tempo a página fica pronta?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "7 dias úteis entre o briefing e o lançamento, com 2 rodadas de revisão inclusas. Prazos maiores só em escopos fora do padrão."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Vocês cuidam da gestão dos anúncios também?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A landing page é o foco deste serviço, mas também oferecemos gestão de Google Ads à parte, caso você precise das duas pontas."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "A página já vem com rastreamento configurado?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sim, GA4 e UTMs configurados do zero antes do lançamento, pra você medir cada conversão desde o primeiro clique."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- ── Structured Data: WebPage + Speakable ─────────────────────────────
+       `speakable` aponta pros parágrafos BLUF da página (classe `rv-bluf`,
+       ver BentoValue.jsx/ConceptStack.jsx) — a resposta direta de 40-60
+       palavras logo abaixo de cada H2 informacional, pensada pra ser lida
+       isolada por um assistente de voz ou citada por um RAG sem precisar
+       do resto da página em volta. ───────────────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "url": "https://ravennstudio.com.br/solucoes/landing-pages",
+    "name": "Criação de Landing Pages para Google Ads em Niterói, RJ",
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": [".rv-bluf"]
+    }
   }
   </script>
 
@@ -83,6 +139,7 @@
   <noscript>
     <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=optional" rel="stylesheet" />
   </noscript>
+  <script defer src="/error-beacon.js"></script>
 </head>
 <body>
   <div id="root"></div>

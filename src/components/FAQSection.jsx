@@ -1,5 +1,5 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const FAQS = [
   {
@@ -28,30 +28,31 @@ function FAQItem({ item, isOpen, onToggle }) {
   return (
     <div style={{ borderBottom: '1px solid #1E1B4B' }}>
       <button
+        type="button"
         onClick={onToggle}
         style={{
-          display:         'flex',
-          alignItems:      'center',
-          justifyContent:  'space-between',
-          width:           '100%',
-          textAlign:       'left',
-          padding:         'clamp(20px, 3vh, 28px) 0',
-          background:      'none',
-          border:          'none',
-          cursor:          'pointer',
-          gap:             24,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          textAlign: 'left',
+          padding: 'clamp(20px, 3vh, 28px) 0',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          gap: 24,
         }}
         aria-expanded={isOpen}
       >
         <span
           style={{
-            fontSize:      'clamp(17px, 1.4vw, 20px)',
-            fontWeight:    400,
+            fontSize: 'clamp(17px, 1.4vw, 20px)',
+            fontWeight: 400,
             letterSpacing: '-0.01em',
-            lineHeight:    1.3,
-            color:         isOpen ? '#F8F9FA' : '#94A3B8',
-            transition:    'color 200ms ease',
-            fontFamily:    'inherit',
+            lineHeight: 1.3,
+            color: isOpen ? '#F8F9FA' : '#94A3B8',
+            transition: 'color 200ms ease',
+            fontFamily: 'inherit',
           }}
         >
           {item.q}
@@ -61,18 +62,18 @@ function FAQItem({ item, isOpen, onToggle }) {
         <span
           aria-hidden
           style={{
-            flexShrink:  0,
-            width:       28,
-            height:      28,
+            flexShrink: 0,
+            width: 28,
+            height: 28,
             borderRadius: '50%',
-            border:      `1px solid ${isOpen ? '#7C3AED' : '#1E1B4B'}`,
-            display:     'flex',
-            alignItems:  'center',
+            border: `1px solid ${isOpen ? '#7C3AED' : '#1E1B4B'}`,
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'center',
-            color:       isOpen ? '#A78BFA' : '#5B6472',
-            fontSize:    18,
-            lineHeight:  1,
-            transition:  'border-color 200ms ease, color 200ms ease',
+            color: isOpen ? '#A78BFA' : '#5B6472',
+            fontSize: 18,
+            lineHeight: 1,
+            transition: 'border-color 200ms ease, color 200ms ease',
           }}
         >
           {isOpen ? '−' : '+'}
@@ -91,12 +92,12 @@ function FAQItem({ item, isOpen, onToggle }) {
           >
             <p
               style={{
-                fontSize:   17,
+                fontSize: 17,
                 fontWeight: 400,
                 lineHeight: 1.78,
-                color:      '#94A3B8',
-                margin:     '0 0 clamp(20px, 3vh, 28px)',
-                maxWidth:   720,
+                color: '#94A3B8',
+                margin: '0 0 clamp(20px, 3vh, 28px)',
+                maxWidth: 720,
               }}
             >
               {item.a}
@@ -123,13 +124,13 @@ export default function FAQSection() {
         aria-hidden
         className="hidden lg:block"
         style={{
-          position:           'absolute',
-          inset:              0,
-          backgroundImage:    'url(/bg-faq-ravenn/431a9833-34aa-4eef-8da8-3f31568d5eae.webp)',
-          backgroundSize:     'cover',
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: 'url(/bg-faq-ravenn/431a9833-34aa-4eef-8da8-3f31568d5eae.webp)',
+          backgroundSize: 'cover',
           backgroundPosition: 'center right',
-          backgroundRepeat:   'no-repeat',
-          pointerEvents:      'none',
+          backgroundRepeat: 'no-repeat',
+          pointerEvents: 'none',
         }}
       />
 
@@ -138,13 +139,13 @@ export default function FAQSection() {
         aria-hidden
         className="lg:hidden"
         style={{
-          position:           'absolute',
-          inset:              0,
-          backgroundImage:    'url(/bg-faq-ravenn/259f0eba-dac6-4e8f-aee5-374b66a4aadb.webp)',
-          backgroundSize:     'cover',
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: 'url(/bg-faq-ravenn/259f0eba-dac6-4e8f-aee5-374b66a4aadb.webp)',
+          backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundRepeat:   'no-repeat',
-          pointerEvents:      'none',
+          backgroundRepeat: 'no-repeat',
+          pointerEvents: 'none',
         }}
       />
 
@@ -153,9 +154,10 @@ export default function FAQSection() {
         aria-hidden
         className="hidden lg:block"
         style={{
-          position:   'absolute',
-          inset:      0,
-          background: 'linear-gradient(to bottom, rgba(3,0,10,0.80) 0%, rgba(3,0,10,0.66) 50%, rgba(3,0,10,0.86) 100%)',
+          position: 'absolute',
+          inset: 0,
+          background:
+            'linear-gradient(to bottom, rgba(3,0,10,0.80) 0%, rgba(3,0,10,0.66) 50%, rgba(3,0,10,0.86) 100%)',
           pointerEvents: 'none',
         }}
       />
@@ -165,18 +167,19 @@ export default function FAQSection() {
         aria-hidden
         className="lg:hidden"
         style={{
-          position:   'absolute',
-          inset:      0,
-          background: 'linear-gradient(to bottom, rgba(3,0,10,0.88) 0%, rgba(3,0,10,0.78) 50%, rgba(3,0,10,0.92) 100%)',
+          position: 'absolute',
+          inset: 0,
+          background:
+            'linear-gradient(to bottom, rgba(3,0,10,0.88) 0%, rgba(3,0,10,0.78) 50%, rgba(3,0,10,0.92) 100%)',
           pointerEvents: 'none',
         }}
       />
 
       <div
         style={{
-          padding:  'clamp(72px, 9vw, 120px) clamp(32px, 5vw, 96px)',
+          padding: 'clamp(72px, 9vw, 120px) clamp(32px, 5vw, 96px)',
           position: 'relative',
-          zIndex:   1,
+          zIndex: 1,
         }}
       >
         {/* Cabeçalho */}
@@ -189,29 +192,30 @@ export default function FAQSection() {
         >
           <span
             style={{
-              fontSize:      15,
-              fontWeight:    500,
+              fontSize: 15,
+              fontWeight: 500,
               textTransform: 'uppercase',
               letterSpacing: '0.22em',
-              color:         '#5B6472',
-              display:       'block',
-              marginBottom:  20,
+              color: '#5B6472',
+              display: 'block',
+              marginBottom: 20,
             }}
           >
             — Perguntas Frequentes
           </span>
           <h2
             style={{
-              fontSize:      'clamp(28px, 3.8vw, 54px)',
-              fontWeight:    300,
+              fontSize: 'clamp(28px, 3.8vw, 54px)',
+              fontWeight: 300,
               letterSpacing: '-0.025em',
-              lineHeight:    1.06,
-              color:         '#F8F9FA',
-              margin:        0,
-              maxWidth:      560,
+              lineHeight: 1.06,
+              color: '#F8F9FA',
+              margin: 0,
+              maxWidth: 560,
             }}
           >
-            Tudo que você precisa<br />
+            Tudo que você precisa
+            <br />
             <span style={{ color: '#A78BFA' }}>saber antes de começar.</span>
           </h2>
         </motion.div>
@@ -224,16 +228,12 @@ export default function FAQSection() {
           viewport={{ once: false, amount: 0.1 }}
           style={{
             borderTop: '1px solid #1E1B4B',
-            maxWidth:  880,
+            maxWidth: 880,
           }}
         >
           {FAQS.map((item, i) => (
-            <FAQItem
-              key={i}
-              item={item}
-              isOpen={openIdx === i}
-              onToggle={() => toggle(i)}
-            />
+            // biome-ignore lint/suspicious/noArrayIndexKey: lista estática (FAQS), nunca reordena/filtra em runtime
+            <FAQItem key={i} item={item} isOpen={openIdx === i} onToggle={() => toggle(i)} />
           ))}
         </motion.div>
       </div>

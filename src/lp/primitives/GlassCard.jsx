@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { EASE_LUXE, TYPE, RADIUS, SHADOW } from '../config/_base';
+import { AnimatePresence, motion } from 'framer-motion';
+import { EASE_LUXE, RADIUS, SHADOW, TYPE } from '../config/_base';
 
 /*
   Card de vidro navegável — glassmorphism com contador `// 0N · 0T`,
@@ -20,10 +20,19 @@ export default function GlassCard({ index, total, title, body, tag, onPrev, onNe
   return (
     <div
       className="relative w-full max-w-xl overflow-hidden border border-white/10 p-8 md:p-10"
-      style={{ borderRadius: RADIUS.lg, background: 'rgba(255,255,255,0.035)', backdropFilter: 'blur(24px) saturate(1.3)', WebkitBackdropFilter: 'blur(24px) saturate(1.3)', boxShadow: SHADOW.soft }}
+      style={{
+        borderRadius: RADIUS.lg,
+        background: 'rgba(255,255,255,0.035)',
+        backdropFilter: 'blur(24px) saturate(1.3)',
+        WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
+        boxShadow: SHADOW.soft,
+      }}
     >
       <div className="flex items-center justify-between">
-        <span className={`font-satoshi font-medium uppercase tracking-widest2 text-rv-faint ${TYPE.eyebrow}`}>
+        <span
+          className={`font-satoshi font-medium uppercase tracking-widest2 text-rv-faint ${TYPE.eyebrow}`}
+        >
+          {/* biome-ignore lint/suspicious/noCommentText: "//" é rótulo visível (estética de code-comment), não um comentário esquecido */}
           // {String(index + 1).padStart(2, '0')} · {String(total).padStart(2, '0')}
         </span>
         <ConcentricGlyph />
@@ -39,11 +48,15 @@ export default function GlassCard({ index, total, title, body, tag, onPrev, onNe
           className="mt-6 min-h-[9rem]"
         >
           {tag && (
-            <span className={`mb-3 inline-block font-satoshi font-medium uppercase tracking-widest2 text-rv-purple-400 ${TYPE.eyebrow}`}>
+            <span
+              className={`mb-3 inline-block font-satoshi font-medium uppercase tracking-widest2 text-rv-purple-400 ${TYPE.eyebrow}`}
+            >
               {tag}
             </span>
           )}
-          <h3 className="font-grotesk text-2xl font-light leading-[1.18] text-rv-titanium md:text-3xl">{title}</h3>
+          <h3 className="font-grotesk text-2xl font-light leading-[1.18] text-rv-titanium md:text-3xl">
+            {title}
+          </h3>
           <p className={`mt-4 font-satoshi leading-relaxed text-rv-slate ${TYPE.body}`}>{body}</p>
         </motion.div>
       </AnimatePresence>
@@ -54,7 +67,10 @@ export default function GlassCard({ index, total, title, body, tag, onPrev, onNe
         <div className="mt-8 h-[2px] w-full overflow-hidden rounded-full bg-white/10">
           <div
             className="h-full rounded-full bg-rv-purple-400"
-            style={{ width: `${progress}%`, transition: progress === 0 ? 'none' : 'width 100ms linear' }}
+            style={{
+              width: `${progress}%`,
+              transition: progress === 0 ? 'none' : 'width 100ms linear',
+            }}
           />
         </div>
       )}

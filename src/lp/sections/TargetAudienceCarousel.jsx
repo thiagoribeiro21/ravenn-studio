@@ -1,6 +1,6 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
-import { EASE_LUXE, GX, SECTION_PAD, TYPE, prefersReducedMotion } from '../config/_base';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { EASE_LUXE, GX, prefersReducedMotion, SECTION_PAD, TYPE } from '../config/_base';
 
 /* ══════════════════════════════════════════════════════════════════════════
    Ato "Para quem é" — carrossel de cartões horizontais, réplica adaptada do
@@ -93,7 +93,13 @@ function Card({ slide, index, activeIndex, trackX, step, cardWidth, reduced }) {
     >
       <motion.img
         src={slide.image}
-        alt=""
+        /* Antes `alt=""`: tratava a foto como puramente decorativa, mas ela
+           ilustra um público-alvo real, não é textura de fundo. `title` do
+           slide já É a legenda visível deste card (ver abaixo) — repetir
+           como alt é o padrão correto, não redundância: dá contexto de
+           busca de imagem e mantém a mesma informação disponível pra quem
+           navega só pela árvore de acessibilidade. */
+        alt={slide.title}
         draggable={false}
         loading={index === 0 ? 'eager' : 'lazy'}
         decoding="async"
@@ -144,7 +150,8 @@ function Card({ slide, index, activeIndex, trackX, step, cardWidth, reduced }) {
         aria-hidden
         className="pointer-events-none absolute inset-0 md:hidden"
         style={{
-          background: 'linear-gradient(to bottom, rgba(3,0,10,0.1) 0%, rgba(3,0,10,0.55) 28%, rgba(3,0,10,0.88) 58%, rgba(3,0,10,0.96) 100%)',
+          background:
+            'linear-gradient(to bottom, rgba(3,0,10,0.1) 0%, rgba(3,0,10,0.55) 28%, rgba(3,0,10,0.88) 58%, rgba(3,0,10,0.96) 100%)',
         }}
       />
 
@@ -162,10 +169,15 @@ function Card({ slide, index, activeIndex, trackX, step, cardWidth, reduced }) {
           TEXT_SIDE[index % TEXT_SIDE.length] === 'right' ? 'justify-end' : 'justify-start'
         }`}
       >
-        <div className={`max-w-md ${TEXT_SIDE[index % TEXT_SIDE.length] === 'right' ? 'text-right' : 'text-left'}`}>
+        <div
+          className={`max-w-md ${TEXT_SIDE[index % TEXT_SIDE.length] === 'right' ? 'text-right' : 'text-left'}`}
+        >
           <h3
             className="font-grotesk font-medium leading-[1.1] text-rv-titanium"
-            style={{ fontSize: CARD_TITLE_SIZE, textShadow: '0 4px 28px rgba(0,0,0,0.75), 0 1px 3px rgba(0,0,0,0.9)' }}
+            style={{
+              fontSize: CARD_TITLE_SIZE,
+              textShadow: '0 4px 28px rgba(0,0,0,0.75), 0 1px 3px rgba(0,0,0,0.9)',
+            }}
           >
             {slide.title}
           </h3>
@@ -215,11 +227,23 @@ function ControlBar({ total, index, progress, playing, reduced, onSelect, onTogg
     <div className="mt-8 flex justify-center md:mt-10">
       <div
         className="flex items-center gap-3 rounded-full border border-white/10 px-5 py-3"
-        style={{ background: 'rgba(13,10,24,0.7)', backdropFilter: 'blur(28px)', WebkitBackdropFilter: 'blur(28px)' }}
+        style={{
+          background: 'rgba(13,10,24,0.7)',
+          backdropFilter: 'blur(28px)',
+          WebkitBackdropFilter: 'blur(28px)',
+        }}
       >
         <div className="flex items-center gap-2">
           {Array.from({ length: total }).map((_, i) => (
-            <DotButton key={i} index={i} active={i === index} progress={progress} onSelect={onSelect} reduced={reduced} />
+            <DotButton
+              // biome-ignore lint/suspicious/noArrayIndexKey: dots derivados de `total`, contagem fixa, sem reordenar
+              key={i}
+              index={i}
+              active={i === index}
+              progress={progress}
+              onSelect={onSelect}
+              reduced={reduced}
+            />
           ))}
         </div>
         {!reduced && (
@@ -294,6 +318,7 @@ export default function TargetAudienceCarousel({ data }) {
   // Recalcula a largura do cartão em px de verdade (85vw travado em 1024px)
   // e realinha a fileira pro índice atual sem animação — um resize não é
   // "navegação", não deveria disparar a mola de snap.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: roda só na montagem/resize; `trackX` é um MotionValue estável, `indexRef` é ref (lidos via closure)
   useLayoutEffect(() => {
     const measure = () => {
       const w = Math.min(window.innerWidth * 0.85, 1024);
@@ -302,14 +327,15 @@ export default function TargetAudienceCarousel({ data }) {
     };
     window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Visibilidade da seção — gate do autoplay, ver nota acima de `inViewRef`.
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return undefined;
-    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.4 });
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      threshold: 0.4,
+    });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -321,6 +347,7 @@ export default function TargetAudienceCarousel({ data }) {
   // (fora de vista) — sem isso, o primeiro `dt` calculado ao voltar pra tela
   // seria "agora menos o instante em que saiu de vista", um salto gigante que
   // pularia direto pro próximo slide em vez de continuar de onde parou.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `progress` é MotionValue estável e `goTo`/refs são lidos via closure no loop de rAF; `step` de propósito fora pra não reiniciar o rAF a cada passo
   useEffect(() => {
     if (reduced) return undefined;
     let raf;
@@ -342,7 +369,6 @@ export default function TargetAudienceCarousel({ data }) {
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reduced, step]);
 
   function handleDragStart() {
@@ -371,7 +397,10 @@ export default function TargetAudienceCarousel({ data }) {
   // a garantia de empilhamento. `bg-rv-void` (#03000A) já presente é o que
   // faz essa cobertura ser opaca de verdade, não só por ordem de pintura.
   return (
-    <section ref={sectionRef} className={`relative z-20 overflow-hidden border-t border-white/[0.06] bg-rv-void ${SECTION_PAD}`}>
+    <section
+      ref={sectionRef}
+      className={`relative z-20 overflow-hidden border-t border-white/[0.06] bg-rv-void ${SECTION_PAD}`}
+    >
       {/* v2 — de volta a alinhado à esquerda (não centralizado), mas com o
           `paddingLeft` do CARTÃO (`edgeInset`), não o gutter padrão da
           página (`${GX}`, 6vw simétrico). Os dois só coincidem quando

@@ -19,7 +19,9 @@ export function isIntroDone() {
 export function markIntroDone() {
   if (done) return;
   done = true;
-  listeners.forEach((fn) => fn());
+  listeners.forEach((fn) => {
+    fn();
+  });
   listeners.clear();
 }
 

@@ -1,0 +1,15 @@
+# Third-party skill bundles vendored under .claude/ (~95MB, not part of this
+# app — unrelated starter templates for design/3D skills). Not gitignored
+# (they're intentionally untracked local tooling), but irrelevant to the
+# Ravenn Studio architecture graph.
+.claude/
+
+# Confirmed dead/unused at the root: not referenced by any Vite entry
+# (vite.config.js) or by src/**. Only ui_kits/website/index.html points at
+# styles.css/tokens/, and that file itself isn't a build entry. The live
+# app's stylesheet is src/index.css.
+styles.css
+tokens/
+ui_kits/
+reference/
+_ds_bundle.js

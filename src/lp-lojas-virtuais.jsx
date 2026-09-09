@@ -6,5 +6,5 @@ import './index.css';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <LPLojasVirtuais />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

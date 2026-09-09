@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useInView, useMotionValue } from 'framer-motion';
 import gsap from 'gsap';
-import { EASE_LUXE, GX, SECTION_PAD, TYPE, prefersReducedMotion } from '../config/_base';
+import { useEffect, useRef, useState } from 'react';
+import { EASE_LUXE, GX, prefersReducedMotion, SECTION_PAD, TYPE } from '../config/_base';
 
 /* ══════════════════════════════════════════════════════════════════════════
    Ato 5 — v8. Redesign "página de produto": a seção deixa de ser um bloco
@@ -152,8 +152,10 @@ function AmbientStage({ tint, reduce }) {
           className="pointer-events-none absolute inset-x-0 top-[16%] h-[62%]"
           style={{
             backgroundColor: `rgba(${tint},0.1)`,
-            maskImage: 'radial-gradient(ellipse 50% 46% at 50% 46%, #000 0%, rgba(0,0,0,0.4) 40%, transparent 74%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 50% 46% at 50% 46%, #000 0%, rgba(0,0,0,0.4) 40%, transparent 74%)',
+            maskImage:
+              'radial-gradient(ellipse 50% 46% at 50% 46%, #000 0%, rgba(0,0,0,0.4) 40%, transparent 74%)',
+            WebkitMaskImage:
+              'radial-gradient(ellipse 50% 46% at 50% 46%, #000 0%, rgba(0,0,0,0.4) 40%, transparent 74%)',
           }}
           animate={{ opacity: [0.6, 1, 0.6] }}
           transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
@@ -359,7 +361,8 @@ function ShowcaseFrame({ item, reduce, frameRef, inView, aspect }) {
       ref={frameRef}
       className="relative rounded-[22px] p-px"
       style={{
-        background: 'linear-gradient(160deg, rgba(255,255,255,0.2), rgba(124,58,237,0.16) 45%, rgba(255,255,255,0.03))',
+        background:
+          'linear-gradient(160deg, rgba(255,255,255,0.2), rgba(124,58,237,0.16) 45%, rgba(255,255,255,0.03))',
         boxShadow: '0 70px 140px -45px rgba(0,0,0,0.95), 0 0 0 1px rgba(0,0,0,0.4)',
       }}
     >
@@ -444,7 +447,7 @@ function ConceptTabs({ items, active, progress, onSelect, reduce }) {
     if (!track || !activeEl) return;
     const trackRect = track.getBoundingClientRect();
     const elRect = activeEl.getBoundingClientRect();
-    const delta = (elRect.left + elRect.width / 2) - (trackRect.left + trackRect.width / 2);
+    const delta = elRect.left + elRect.width / 2 - (trackRect.left + trackRect.width / 2);
     track.scrollBy({ left: delta, behavior: reduce ? 'auto' : 'smooth' });
   }, [active, reduce]);
 
@@ -483,7 +486,10 @@ function ConceptTabs({ items, active, progress, onSelect, reduce }) {
               }`}
               style={
                 isActive
-                  ? { boxShadow: '0 0 0 1px rgba(167,139,250,0.12), 0 10px 30px -12px rgba(124,58,237,0.55)' }
+                  ? {
+                      boxShadow:
+                        '0 0 0 1px rgba(167,139,250,0.12), 0 10px 30px -12px rgba(124,58,237,0.55)',
+                    }
                   : undefined
               }
             >
@@ -548,7 +554,10 @@ function ConceptInfo({ item }) {
             className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
           />
           <span className="relative z-10">Quero este padrão no meu negócio</span>
-          <span aria-hidden className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">
+          <span
+            aria-hidden
+            className="relative z-10 transition-transform duration-300 group-hover:translate-x-1"
+          >
             →
           </span>
         </a>
@@ -627,7 +636,10 @@ export default function ConceptStack({ data }) {
   }, [reduce, total, progress]);
 
   return (
-    <section id="conceitos" className={`relative overflow-hidden border-t border-white/[0.06] bg-rv-void ${SECTION_PAD} ${GX}`}>
+    <section
+      id="conceitos"
+      className={`relative overflow-hidden border-t border-white/[0.06] bg-rv-void ${SECTION_PAD} ${GX}`}
+    >
       <AmbientStage tint={tint} reduce={reduce} />
 
       <span
@@ -664,13 +676,18 @@ export default function ConceptStack({ data }) {
 
           {/* Antes era código morto no config (ver nota 3 no topo do arquivo).
               É o texto que remove a dúvida "isso é case real ou conceito?" —
-              atrito clássico de conversão, respondido antes de ser feito. */}
+              atrito clássico de conversão, respondido antes de ser feito.
+              `rv-bluf`: hook de CSS selector pro `speakable` do JSON-LD —
+              zero efeito visual, só marca este parágrafo (mesma função em
+              BentoValue.jsx) como resposta direta pra quem consome a
+              página via leitura de trecho (featured snippet/assistente de
+              voz), não só quem lê a tela inteira. */}
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.9, delay: 0.2, ease: EASE_LUXE }}
-            className={`mx-auto mt-6 max-w-2xl font-satoshi text-rv-slate ${TYPE.body}`}
+            className={`rv-bluf mx-auto mt-6 max-w-2xl font-satoshi text-rv-slate ${TYPE.body}`}
           >
             {data.intro}
           </motion.p>
@@ -684,7 +701,13 @@ export default function ConceptStack({ data }) {
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
-          <ConceptTabs items={data.items} active={active} progress={progress} onSelect={goTo} reduce={reduce} />
+          <ConceptTabs
+            items={data.items}
+            active={active}
+            progress={progress}
+            onSelect={goTo}
+            reduce={reduce}
+          />
 
           {/* Sangria no mobile — o `px-[6vw]` da seção (GX) deixava o palco
               pequeno demais numa tela de celular, ainda mais com a moldura
@@ -707,7 +730,9 @@ export default function ConceptStack({ data }) {
             <motion.div
               aria-hidden
               className="pointer-events-none absolute inset-x-[8%] -bottom-10 h-28"
-              animate={{ background: `radial-gradient(ellipse 55% 100% at 50% 0%, rgba(${tint},0.4), transparent 72%)` }}
+              animate={{
+                background: `radial-gradient(ellipse 55% 100% at 50% 0%, rgba(${tint},0.4), transparent 72%)`,
+              }}
               transition={{ duration: 1.2, ease: EASE_LUXE }}
               style={{ filter: 'blur(34px)' }}
             />

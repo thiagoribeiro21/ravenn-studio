@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { EASE_LUXE, GX, SECTION_PAD, TYPE, prefersReducedMotion } from '../config/_base';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { EASE_LUXE, GX, prefersReducedMotion, SECTION_PAD, TYPE } from '../config/_base';
 
 /* ══════════════════════════════════════════════════════════════════════════
    CampaignAnatomy — v2. Substitui ConceptStack + PillarsShaped, só na LP de
@@ -131,6 +131,7 @@ function FunnelChart({ stages, activeIndex, onHover, reduce }) {
             quanto mais filtrado, mais "quente" o público. É informação
             codificada em cor, não decoração. */}
         {stages.map((_, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: `stages` é constante estática do módulo, ordem fixa
           <linearGradient key={i} id={`${uid}-band-${i}`} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#4C1D95" stopOpacity={0.28 + i * 0.11} />
             <stop offset="50%" stopColor="#7C3AED" stopOpacity={0.34 + i * 0.13} />
@@ -162,11 +163,8 @@ function FunnelChart({ stages, activeIndex, onHover, reduce }) {
         const g = bandGeometry(i, total);
         const isActive = i === activeIndex;
         return (
-          <g
-            key={stage.title}
-            onMouseEnter={() => onHover(i)}
-            style={{ cursor: 'default' }}
-          >
+          // biome-ignore lint/a11y/noStaticElementInteractions: hover só realça a faixa do funil, sem consequência funcional
+          <g key={stage.title} onMouseEnter={() => onHover(i)} style={{ cursor: 'default' }}>
             <motion.path
               d={g.d}
               fill={isActive ? `url(#${uid}-active)` : `url(#${uid}-band-${i})`}
@@ -258,7 +256,13 @@ function StageCard({ stage, index, isActive, onActive, onHover, reduce }) {
           ? 'border-rv-purple/40 bg-white/[0.045]'
           : 'border-white/[0.08] bg-white/[0.015] hover:border-white/20'
       }`}
-      style={isActive ? { boxShadow: '0 0 0 1px rgba(167,139,250,0.10), 0 18px 50px -24px rgba(124,58,237,0.7)' } : undefined}
+      style={
+        isActive
+          ? {
+              boxShadow: '0 0 0 1px rgba(167,139,250,0.10), 0 18px 50px -24px rgba(124,58,237,0.7)',
+            }
+          : undefined
+      }
     >
       <div className="flex items-center gap-3">
         <span
@@ -305,7 +309,9 @@ function MetricChip({ variant, label, value }) {
   return (
     <div
       className={`flex flex-1 items-center gap-4 rounded-2xl border px-5 py-4 ${
-        isVanity ? 'border-white/[0.08] bg-white/[0.015]' : 'border-rv-purple/35 bg-rv-purple/[0.07]'
+        isVanity
+          ? 'border-white/[0.08] bg-white/[0.015]'
+          : 'border-rv-purple/35 bg-rv-purple/[0.07]'
       }`}
       style={isVanity ? undefined : { boxShadow: '0 0 34px -14px rgba(124,58,237,0.85)' }}
     >
@@ -352,11 +358,15 @@ function Closing({ closing, reduce }) {
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-[70%]"
-        style={{ background: 'radial-gradient(ellipse 62% 100% at 50% 0%, rgba(124,58,237,0.28), transparent 72%)' }}
+        style={{
+          background:
+            'radial-gradient(ellipse 62% 100% at 50% 0%, rgba(124,58,237,0.28), transparent 72%)',
+        }}
       />
 
       <p className="relative z-10 font-grotesk text-[clamp(1.9rem,3.4vw,3.1rem)] font-light leading-[1.12] tracking-[-0.025em]">
         {closing.lines.map((line, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: `closing.lines` vem da config estática da LP, ordem fixa
           <span key={i} className={line.tone === 'bright' ? 'text-rv-titanium' : 'text-rv-slate'}>
             {line.text}{' '}
           </span>
@@ -365,8 +375,16 @@ function Closing({ closing, reduce }) {
 
       {closing.chips && (
         <div className="relative z-10 mx-auto mt-10 flex max-w-2xl flex-col gap-3 md:flex-row md:gap-4">
-          <MetricChip variant="vanity" label={closing.chips.vanity.label} value={closing.chips.vanity.value} />
-          <MetricChip variant="real" label={closing.chips.real.label} value={closing.chips.real.value} />
+          <MetricChip
+            variant="vanity"
+            label={closing.chips.vanity.label}
+            value={closing.chips.vanity.value}
+          />
+          <MetricChip
+            variant="real"
+            label={closing.chips.real.label}
+            value={closing.chips.real.value}
+          />
         </div>
       )}
 
@@ -382,7 +400,10 @@ function Closing({ closing, reduce }) {
             className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
           />
           <span className="relative z-10">{closing.cta.label}</span>
-          <span aria-hidden className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">
+          <span
+            aria-hidden
+            className="relative z-10 transition-transform duration-300 group-hover:translate-x-1"
+          >
             →
           </span>
         </a>
@@ -433,7 +454,10 @@ export default function CampaignAnatomy({ data }) {
        wash usa `inset-x-0` (já contido na largura da seção) e o glow do
        funil é `drop-shadow` de poucos pixels — não risco real de barra de
        rolagem horizontal. */
-    <section id="conceitos" className={`relative border-t border-white/[0.06] bg-rv-void ${SECTION_PAD} ${GX}`}>
+    <section
+      id="conceitos"
+      className={`relative border-t border-white/[0.06] bg-rv-void ${SECTION_PAD} ${GX}`}
+    >
       {/* wash superior — costura com a seção anterior, mesma dose discreta
           que SilentInbox.jsx usa no topo dele */}
       <div

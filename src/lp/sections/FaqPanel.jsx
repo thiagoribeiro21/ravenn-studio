@@ -1,6 +1,15 @@
-import { useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useSpring, useTransform } from 'framer-motion';
-import { EASE_LUXE, GX, RADIUS, SCRUB_SPRING, SECTION_PAD, TYPE, prefersReducedMotion, useSectionProgress } from '../config/_base';
+import { useMemo, useRef, useState } from 'react';
+import {
+  EASE_LUXE,
+  GX,
+  prefersReducedMotion,
+  RADIUS,
+  SCRUB_SPRING,
+  SECTION_PAD,
+  TYPE,
+  useSectionProgress,
+} from '../config/_base';
 
 /*
   Item 9 do refinamento v3 — glassmorphism reforçado (valores exatos em
@@ -91,7 +100,12 @@ export default function FaqPanel({ data }) {
 
       <motion.div
         className="relative z-10 grid gap-12 md:grid-cols-12 md:gap-[2vw]"
-        style={{ y: contentY, opacity: contentOpacity, scale: contentScale, willChange: 'transform, opacity' }}
+        style={{
+          y: contentY,
+          opacity: contentOpacity,
+          scale: contentScale,
+          willChange: 'transform, opacity',
+        }}
       >
         <div className="md:col-span-5">
           <div className="md:sticky md:top-32">
@@ -154,7 +168,10 @@ export default function FaqPanel({ data }) {
                   <span
                     aria-hidden
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 text-lg text-rv-slate transition-[transform,border-color] duration-300"
-                    style={{ transform: isOpen ? 'rotate(45deg)' : 'none', borderColor: isOpen ? 'rgba(167,139,250,0.5)' : undefined }}
+                    style={{
+                      transform: isOpen ? 'rotate(45deg)' : 'none',
+                      borderColor: isOpen ? 'rgba(167,139,250,0.5)' : undefined,
+                    }}
                   >
                     +
                   </span>
@@ -165,10 +182,17 @@ export default function FaqPanel({ data }) {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ height: { duration: 0.4, ease: EASE_LUXE }, opacity: { duration: 0.3, delay: isOpen ? 0.08 : 0 } }}
+                      transition={{
+                        height: { duration: 0.4, ease: EASE_LUXE },
+                        opacity: { duration: 0.3, delay: isOpen ? 0.08 : 0 },
+                      }}
                       className="overflow-hidden"
                     >
-                      <p className={`pb-7 font-satoshi leading-relaxed text-rv-slate ${TYPE.cardDesc}`}>{item.a}</p>
+                      <p
+                        className={`pb-7 font-satoshi leading-relaxed text-rv-slate ${TYPE.cardDesc}`}
+                      >
+                        {item.a}
+                      </p>
                     </motion.div>
                   )}
                 </AnimatePresence>
