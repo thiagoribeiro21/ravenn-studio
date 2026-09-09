@@ -1,4 +1,4 @@
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.js';
@@ -79,6 +79,33 @@ export function ParticleMorpher({ shapes, activeIndex }) {
     activeRef.current = activeIndex;
   }, [activeIndex]);
 
+  /* Repulsão só vale quando o ponteiro está REALMENTE sobre o canvas.
+     `state.pointer` do R3F nasce em (0,0) — que em NDC é o centro da tela, não
+     "nenhum lugar". Como o raio da câmera sempre acerta o plano XY, a repulsão
+     ficava ligada no centro do objeto desde o primeiro frame e só saía de lá se
+     o visitante passasse o mouse por cima: a forma aparecia inflada e oca (um
+     balão) em vez do desenho real. Sem mouse (mobile inclusive), o padrão certo
+     é não ter repulsão nenhuma. */
+  const domElement = useThree((s) => s.gl.domElement);
+  const pointerOver = useRef(false);
+
+  useEffect(() => {
+    const enable = () => {
+      pointerOver.current = true;
+    };
+    const disable = () => {
+      pointerOver.current = false;
+    };
+    domElement.addEventListener('pointermove', enable);
+    domElement.addEventListener('pointerleave', disable);
+    domElement.addEventListener('pointercancel', disable);
+    return () => {
+      domElement.removeEventListener('pointermove', enable);
+      domElement.removeEventListener('pointerleave', disable);
+      domElement.removeEventListener('pointercancel', disable);
+    };
+  }, [domElement]);
+
   useFrame((state, dt) => {
     const cap = Math.min(dt, 0.05); // cap de segurança: evita explosão de física em tabs hidden
 
@@ -97,7 +124,8 @@ export function ParticleMorpher({ shapes, activeIndex }) {
       my = 1e6,
       mz = 0; // padrão: longe de tudo → sem repulsão
 
-    const hit = state.raycaster.ray.intersectPlane(_plane.current, _mouseW.current);
+    const hit =
+      pointerOver.current && state.raycaster.ray.intersectPlane(_plane.current, _mouseW.current);
     if (hit && groupRef.current) {
       _invMat.current.copy(groupRef.current.matrixWorld).invert();
       _mouseL.current.copy(_mouseW.current).applyMatrix4(_invMat.current);
@@ -185,6 +213,183 @@ export function ParticleMorpher({ shapes, activeIndex }) {
   );
 }
 
+// ── Builders: formas customizadas por serviço ─────────────────────────────────
+// `sampleWeighted` distribui o orçamento de N partículas por PESO em vez de
+// área de superfície pura — numa forma composta (torre em degraus, flecha
+// com aletas, núcleo com dendritos), a peça fina perde feio numa amostragem
+// por área e desaparece do ponto de vista. Cada peça declara seu peso
+// relativo e recebe uma fatia proporcional de pontos, garantindo que ela
+// permaneça legível na nuvem de partículas.
+function sampleWeighted(parts, n) {
+  const total = parts.reduce((s, p) => s + p.weight, 0);
+  const out = new Float32Array(n * 3);
+  let offset = 0;
+  parts.forEach((p, idx) => {
+    const isLast = idx === parts.length - 1;
+    const count = isLast ? n - offset : Math.round((n * p.weight) / total);
+    if (count > 0) out.set(sampleShape(p.geometry, count), offset * 3);
+    offset += count;
+  });
+  return out;
+}
+
+// Recentraliza uma geometry no eixo Y — perfis de Lathe assimétricos (mais
+// "massa" numa ponta que na outra) nascem descentrados; sem isso o objeto
+// parece derivar pro canto durante o morph em vez de girar no próprio eixo.
+function centerY(geometry) {
+  geometry.computeBoundingBox();
+  const c = new THREE.Vector3();
+  geometry.boundingBox.getCenter(c);
+  geometry.translate(0, -c.y, 0);
+  return geometry;
+}
+
+// Regras de desenho descobertas testando no navegador — o material dos pontos
+// não tem sombreamento e usa `depthWrite: false`, então a nuvem é vista "em
+// raio-X" (pontos de trás não são ocultados pelos da frente). Consequências:
+//   • degrau/quina em parede lisa NÃO aparece — vira borrão. Detalhe interno
+//     é perdido; só silhueta global e elementos separados por VAZIO se leem.
+//   • anel/toro fino lê muito bem (contorno limpo, interior vazio).
+//   • ponta densa (esfera pequena com muitos pontos) vira um "nó" nítido.
+//   • seção quadrada (radialSegments: 4) muda de largura ao girar em Y, então
+//     a peça "respira" e mostra o giro; um Lathe redondo fica visualmente
+//     estático porque é simétrico no eixo de rotação.
+
+// 01 Sites Institucionais — obelisco: base, fuste afunilado e pirâmide, tudo
+// de seção quadrada. Monumento = autoridade e permanência, que é a promessa
+// do serviço ("presença que impõe respeito antes da primeira reunião").
+function buildObelisk(n) {
+  const plinth = new THREE.CylinderGeometry(0.6, 0.64, 0.28, 4);
+  plinth.translate(0, -1.41, 0);
+
+  const shaft = new THREE.CylinderGeometry(0.27, 0.45, 2.3, 4);
+  shaft.translate(0, -0.12, 0);
+
+  const pyramidion = new THREE.ConeGeometry(0.27, 0.5, 4);
+  pyramidion.translate(0, 1.28, 0);
+
+  return sampleWeighted(
+    [
+      { geometry: plinth, weight: 0.7 },
+      { geometry: shaft, weight: 2.6 },
+      { geometry: pyramidion, weight: 0.7 },
+    ],
+    n,
+  );
+}
+
+// 02 Landing Pages — funil literal: boca muito aberta que despenca num gargalo
+// fino e reto. O gargalo é o que faz ler como "funil" e não como taça, e é
+// exatamente a metáfora do serviço (tráfego entra largo, sai convertido).
+function buildFunnel(n) {
+  const profile = [
+    new THREE.Vector2(0.07, -1.45),
+    new THREE.Vector2(0.07, -0.9),
+    new THREE.Vector2(0.15, -0.72),
+    new THREE.Vector2(0.45, -0.32),
+    new THREE.Vector2(0.88, 0.28),
+    new THREE.Vector2(1.28, 0.88),
+    new THREE.Vector2(1.48, 1.22),
+  ];
+  return sampleShape(centerY(new THREE.LatheGeometry(profile, 44)), n);
+}
+
+// 03 Sites Experienciais — nó toroidal, a forma-assinatura de demo WebGL/
+// Three.js (que é literalmente o que o serviço vende). Fita bem fina pros
+// laços do nó se cruzarem visivelmente em vez de fundirem numa bola.
+function buildKnot(n) {
+  return sampleShape(new THREE.TorusKnotGeometry(0.95, 0.1, 260, 12, 2, 3), n);
+}
+
+// 04 Lojas Virtuais — gema lapidada (mesa plana no topo, coroa e pavilhão em
+// ponta). Vitrine e valor do produto; a mesa plana é o que denuncia "pedra
+// lapidada" em vez de losango genérico.
+function buildGem(n) {
+  const pavilion = new THREE.ConeGeometry(1.3, 1.5, 8);
+  pavilion.rotateX(Math.PI); // ponta pra baixo
+  pavilion.translate(0, -0.35, 0);
+
+  const girdle = new THREE.CylinderGeometry(1.3, 1.3, 0.12, 8);
+  girdle.translate(0, 0.46, 0);
+
+  const crown = new THREE.CylinderGeometry(0.52, 1.3, 0.56, 8);
+  crown.translate(0, 0.8, 0);
+
+  return sampleWeighted(
+    [
+      { geometry: pavilion, weight: 1.7 },
+      { geometry: girdle, weight: 0.35 },
+      { geometry: crown, weight: 1.15 },
+    ],
+    n,
+  );
+}
+
+// 05 Google Ads — mira/giroscópio: três anéis ortogonais em torno de um núcleo
+// denso. Segmentação e alvo certeiro, e como dois anéis ficam de pé, eles
+// varrem de frente pra perfil enquanto o grupo gira — o ícone mais "vivo" do
+// conjunto, que combina com o serviço mais dinâmico.
+function buildReticle(n) {
+  const ringXY = new THREE.TorusGeometry(1.25, 0.035, 8, 120);
+  const ringYZ = new THREE.TorusGeometry(1.25, 0.035, 8, 120).rotateY(Math.PI / 2);
+  const ringXZ = new THREE.TorusGeometry(1.25, 0.035, 8, 120).rotateX(Math.PI / 2);
+  const core = new THREE.SphereGeometry(0.2, 16, 16);
+
+  return sampleWeighted(
+    [
+      { geometry: ringXY, weight: 1 },
+      { geometry: ringYZ, weight: 1 },
+      { geometry: ringXZ, weight: 1 },
+      { geometry: core, weight: 0.5 },
+    ],
+    n,
+  );
+}
+
+// 06 Agentes de IA — rede neural: núcleo, axônios finos saindo pros 12 vértices
+// de um icosaedro e um nó sináptico denso na ponta de cada um (direções fixas,
+// sem Math.random — visual determinístico). As pontas densas são o que faz
+// isso ler como "rede" e não como bola espinhenta.
+function buildNeuralNet(n) {
+  const coreR = 0.58;
+  const t = (1 + Math.sqrt(5)) / 2;
+  const rawDirs = [
+    [-1, t, 0],
+    [1, t, 0],
+    [-1, -t, 0],
+    [1, -t, 0],
+    [0, -1, t],
+    [0, 1, t],
+    [0, -1, -t],
+    [0, 1, -t],
+    [t, 0, -1],
+    [t, 0, 1],
+    [-t, 0, -1],
+    [-t, 0, 1],
+  ];
+  const UP = new THREE.Vector3(0, 1, 0);
+  const parts = [{ geometry: new THREE.IcosahedronGeometry(coreR, 3), weight: 2.6 }];
+
+  rawDirs.forEach(([x, y, z], i) => {
+    const dir = new THREE.Vector3(x, y, z).normalize();
+    const len = 0.62 + 0.22 * Math.sin(i * 2.4);
+    const quat = new THREE.Quaternion().setFromUnitVectors(UP, dir);
+
+    const axon = new THREE.CylinderGeometry(0.025, 0.025, len, 6);
+    axon.translate(0, len / 2, 0);
+    axon.applyQuaternion(quat);
+    axon.translate(dir.x * coreR, dir.y * coreR, dir.z * coreR);
+    parts.push({ geometry: axon, weight: 0.3 });
+
+    const tip = coreR + len;
+    const node = new THREE.SphereGeometry(0.095, 12, 12);
+    node.translate(dir.x * tip, dir.y * tip, dir.z * tip);
+    parts.push({ geometry: node, weight: 0.42 });
+  });
+
+  return sampleWeighted(parts, n);
+}
+
 // ── Scene: pré-computa as 6 geometrias de partículas ──────────────────────────
 // Uma shape por serviço de CapabilitiesSection.SERVICES, na mesma ordem —
 // activeIndex é o índice do array, então as duas listas precisam ter o
@@ -193,18 +398,12 @@ export function ParticleMorpher({ shapes, activeIndex }) {
 function Scene({ activeIndex }) {
   const shapes = useMemo(
     () => [
-      // 01 Sites Institucionais — prisma alto (torre/arranha-céu = autoridade)
-      sampleShape(new THREE.CylinderGeometry(0.55, 0.85, 3, 6, 1), N),
-      // 02 Landing Pages — cone largo no topo (funil de conversão)
-      sampleShape(new THREE.ConeGeometry(1.4, 2.2, 32).rotateX(Math.PI), N),
-      // 03 Sites Experienciais — nó fluido (vórtice imersivo)
-      sampleShape(new THREE.TorusKnotGeometry(0.85, 0.28, 200, 32), N),
-      // 04 Lojas Virtuais — disco achatado (shape herdado do serviço anterior)
-      sampleShape(new THREE.CylinderGeometry(1.5, 1.5, 0.18, 40), N),
-      // 05 Google Ads — dardo fino de baixo poligonagem (seta de precisão)
-      sampleShape(new THREE.ConeGeometry(0.55, 2.6, 4), N),
-      // 06 Agentes de IA — esfera lisa (núcleo neural)
-      sampleShape(new THREE.SphereGeometry(1.5, 32, 32), N),
+      buildObelisk(N), // 01 Sites Institucionais — monumento/autoridade
+      buildFunnel(N), // 02 Landing Pages — funil de conversão
+      buildKnot(N), // 03 Sites Experienciais — nó toroidal (assinatura WebGL)
+      buildGem(N), // 04 Lojas Virtuais — gema lapidada (vitrine/valor)
+      buildReticle(N), // 05 Google Ads — mira de três anéis
+      buildNeuralNet(N), // 06 Agentes de IA — rede neural com nós
     ],
     [],
   );
