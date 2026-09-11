@@ -60,7 +60,7 @@ export default function Preloader() {
       className="fixed inset-0 z-[100] flex items-end justify-between bg-rv-void px-[6vw] pb-10 will-change-transform"
     >
       <span className={`font-satoshi uppercase tracking-widest2 text-rv-faint ${TYPE.eyebrow}`}>
-        Ravenn Studio
+        Revana Studio
       </span>
       <span
         ref={numRef}

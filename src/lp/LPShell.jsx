@@ -136,10 +136,10 @@ export default function LPShell({ config }) {
             ].join(', '),
           }}
         >
-          <a href="#hero" aria-label="Ravenn Studio — início">
+          <a href="#hero" aria-label="Revana Studio — início">
             <img
               src={config.meta.logo}
-              alt="Ravenn Studio"
+              alt="Revana Studio"
               width={800}
               height={274}
               className="h-7 w-auto md:h-8"
@@ -260,7 +260,7 @@ export default function LPShell({ config }) {
           >
             <img
               src={config.meta.logo}
-              alt="Ravenn Studio"
+              alt="Revana Studio"
               width={800}
               height={274}
               loading="lazy"

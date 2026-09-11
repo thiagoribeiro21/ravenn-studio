@@ -1,7 +1,7 @@
 // Pub-sub bridging IntroReveal (the curtain) to whatever content should only
 // start its own entrance animation once the curtain has fully opened —
 // avoids threading a prop through App -> SiteShell -> HeroSection.
-const SESSION_KEY = 'ravenn-intro-shown';
+const SESSION_KEY = 'revana-intro-shown';
 
 function computeInitialDone() {
   if (typeof window === 'undefined') return true;

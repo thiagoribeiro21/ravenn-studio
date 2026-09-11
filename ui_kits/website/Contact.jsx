@@ -1,6 +1,6 @@
-// Ravenn Studio — contact section + footer
+// Revana Studio — contact section + footer
 function Contact() {
-  const { Button, Input, Select, Eyebrow, Logo, Checkbox } = window.RavennStudioDesignSystem_41bd5d;
+  const { Button, Input, Select, Eyebrow, Logo, Checkbox } = window.RevanaStudioDesignSystem_41bd5d;
   const [sent, setSent] = React.useState(false);
   const [nda, setNda] = React.useState(false);
 
@@ -18,7 +18,7 @@ function Contact() {
               Tell us about the work. We reply to every serious enquiry within one business day.
             </p>
             <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <a href="mailto:studio@ravenn.co" style={{ fontSize: 15, color: 'var(--text-body)' }}>studio@ravenn.co</a>
+              <a href="mailto:contato@revanastudio.com.br" style={{ fontSize: 15, color: 'var(--text-body)' }}>contato@revanastudio.com.br</a>
               <span style={{ fontSize: 13, color: 'var(--text-faint)', letterSpacing: '0.08em' }}>WORLDWIDE · REMOTE-FIRST</span>
             </div>
           </div>
@@ -26,7 +26,7 @@ function Contact() {
           <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-3)', padding: 'clamp(28px,3vw,40px)' }}>
             {sent ? (
               <div style={{ minHeight: 360, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: 16 }}>
-                <img src="../../assets/logos/raven-logo.svg" alt="" style={{ height: 64, opacity: 0.9 }} />
+                <img src="../../assets/logos/revana-logo.svg" alt="" style={{ height: 64, opacity: 0.9 }} />
                 <h3 style={{ fontSize: 24, color: 'var(--text-heading)' }}>Enquiry received</h3>
                 <p style={{ fontSize: 14, color: 'var(--text-body)', maxWidth: 280 }}>Thank you. A studio principal will be in touch within one business day.</p>
                 <Button variant="ghost" size="sm" onClick={() => setSent(false)}>Send another</Button>
@@ -47,13 +47,13 @@ function Contact() {
 
       <footer style={{ borderTop: '1px solid var(--border)', padding: 'clamp(40px,5vw,64px) clamp(24px,5vw,64px)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 24 }}>
-          <Logo iconSrc="../../assets/logos/raven-logo.svg" size="sm" />
+          <Logo iconSrc="../../assets/logos/revana-logo.svg" size="sm" />
           <div style={{ display: 'flex', gap: 28 }}>
             {['LinkedIn', 'Dribbble', 'X', 'Journal'].map((l) => (
               <a key={l} style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'var(--text-faint)', cursor: 'pointer' }}>{l}</a>
             ))}
           </div>
-          <span style={{ fontSize: 11, color: 'var(--text-faint)', letterSpacing: '0.12em' }}>© MMXXV RAVENN STUDIO</span>
+          <span style={{ fontSize: 11, color: 'var(--text-faint)', letterSpacing: '0.12em' }}>© MMXXV REVANA STUDIO</span>
         </div>
       </footer>
     </React.Fragment>

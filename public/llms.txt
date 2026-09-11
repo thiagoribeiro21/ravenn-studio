@@ -1,35 +1,35 @@
-# Ravenn Studio
+# Revana Studio
 
-> Ravenn Studio projeta arquitetura de conversão: landing pages e sites premium de alta conversão com estética dark luxury (fundo quase preto, acentos violeta, motion cinematográfico), construídos sob obsessão por performance — PageSpeed 90+ garantido mesmo com WebGL/3D — para negócios locais de alto ticket e produtos digitais.
+> Revana Studio projeta arquitetura de conversão: landing pages e sites premium de alta conversão com estética dark luxury (fundo quase preto, acentos violeta, motion cinematográfico), construídos sob obsessão por performance — PageSpeed 90+ garantido mesmo com WebGL/3D — para negócios locais de alto ticket e produtos digitais.
 
-Ravenn Studio é uma agência boutique de web design e automação de IA, fundada em 2024, sediada em Niterói (RJ) e atendendo todo o Brasil remotamente. O trabalho combina design 100% autoral (zero templates, zero WordPress) com engenharia de performance obsessiva: cada site é medido em Core Web Vitals antes de ser considerado pronto, mesmo quando usa cenas 3D em Three.js/WebGL. A estética assinatura — dark luxury, tipografia editorial, gradientes violeta, glassmorphism — é a mesma em todo o site institucional e em cada landing page de campanha, funcionando como assinatura de marca reconhecível. O público típico são negócios locais de alto ticket (clínicas, escritórios de advocacia, imobiliárias de alto padrão, e-commerce de nicho) e produtos digitais que dependem de conversão real, não de tráfego de vaidade — cada página é construída como arquitetura de conversão, não como vitrine estática: estrutura AIDA, prova social, e um único caminho de ação (WhatsApp) sem distrações.
+Revana Studio é uma agência boutique de web design e automação de IA, fundada em 2024, sediada em Niterói (RJ) e atendendo todo o Brasil remotamente. O trabalho combina design 100% autoral (zero templates, zero WordPress) com engenharia de performance obsessiva: cada site é medido em Core Web Vitals antes de ser considerado pronto, mesmo quando usa cenas 3D em Three.js/WebGL. A estética assinatura — dark luxury, tipografia editorial, gradientes violeta, glassmorphism — é a mesma em todo o site institucional e em cada landing page de campanha, funcionando como assinatura de marca reconhecível. O público típico são negócios locais de alto ticket (clínicas, escritórios de advocacia, imobiliárias de alto padrão, e-commerce de nicho) e produtos digitais que dependem de conversão real, não de tráfego de vaidade — cada página é construída como arquitetura de conversão, não como vitrine estática: estrutura AIDA, prova social, e um único caminho de ação (WhatsApp) sem distrações.
 
 Especializada em seis frentes: sites institucionais de alta autoridade, landing pages de alta conversão para tráfego pago, sites experienciais e imersivos com WebGL/Three.js, lojas virtuais de alta performance, gestão de Google Ads orientada por custo de aquisição real, e agentes de IA para atendimento automatizado 24 horas via WhatsApp.
 
 ## Serviços
 
-- [Sites Institucionais](https://ravennstudio.com.br/solucoes/sites-institucionais): presença digital de alta autoridade — SEO técnico local, Google Business Profile otimizado, PageSpeed 90+ e Core Web Vitals no padrão Google, schema markup para rich results.
-- [Landing Pages](https://ravennstudio.com.br/solucoes/landing-pages): páginas de alta conversão para campanhas de Google Ads — copywriting AIDA, design exclusivo sem templates, GA4 e UTMs configurados do zero, entrega em 7 dias úteis.
-- [Sites Experienciais e Imersivos](https://ravennstudio.com.br/solucoes/sites-imersivos): sites com cenas 3D em WebGL/Three.js, animações cinematográficas sincronizadas ao scroll e direção de arte exclusiva, mantendo 60fps e PageSpeed alto mesmo com gráficos avançados.
-- [Lojas Virtuais](https://ravennstudio.com.br/solucoes/lojas-virtuais): e-commerce mobile-first de alta performance — checkout em até 3 etapas, Pix/cartão/boleto integrados, gestão de estoque, PageSpeed 90+ para reduzir abandono de carrinho.
-- [Gestão de Google Ads](https://ravennstudio.com.br/solucoes/gestao-google-ads): gestão de campanhas orientada por custo de aquisição real — estrutura de campanha por intenção de compra, teste A/B contínuo, rastreamento de conversão até a venda, sem contrato de fidelidade.
-- [Agentes de IA e Automação de Atendimento](https://ravennstudio.com.br/solucoes/agentes-ia): agentes de IA treinados por negócio para WhatsApp Business API — atendem, qualificam leads e agendam 24 horas por dia, com automações via n8n integradas a CRM e agenda.
+- [Sites Institucionais](https://revanastudio.com.br/solucoes/sites-institucionais): presença digital de alta autoridade — SEO técnico local, Google Business Profile otimizado, PageSpeed 90+ e Core Web Vitals no padrão Google, schema markup para rich results.
+- [Landing Pages](https://revanastudio.com.br/solucoes/landing-pages): páginas de alta conversão para campanhas de Google Ads — copywriting AIDA, design exclusivo sem templates, GA4 e UTMs configurados do zero, entrega em 7 dias úteis.
+- [Sites Experienciais e Imersivos](https://revanastudio.com.br/solucoes/sites-imersivos): sites com cenas 3D em WebGL/Three.js, animações cinematográficas sincronizadas ao scroll e direção de arte exclusiva, mantendo 60fps e PageSpeed alto mesmo com gráficos avançados.
+- [Lojas Virtuais](https://revanastudio.com.br/solucoes/lojas-virtuais): e-commerce mobile-first de alta performance — checkout em até 3 etapas, Pix/cartão/boleto integrados, gestão de estoque, PageSpeed 90+ para reduzir abandono de carrinho.
+- [Gestão de Google Ads](https://revanastudio.com.br/solucoes/gestao-google-ads): gestão de campanhas orientada por custo de aquisição real — estrutura de campanha por intenção de compra, teste A/B contínuo, rastreamento de conversão até a venda, sem contrato de fidelidade.
+- [Agentes de IA e Automação de Atendimento](https://revanastudio.com.br/solucoes/agentes-ia): agentes de IA treinados por negócio para WhatsApp Business API — atendem, qualificam leads e agendam 24 horas por dia, com automações via n8n integradas a CRM e agenda.
 
 ## Políticas
 
-- [Política de Privacidade](https://ravennstudio.com.br/politica-de-privacidade): coleta e tratamento de dados pessoais, conforme a LGPD (Lei nº 13.709/2018).
-- [Termos de Uso](https://ravennstudio.com.br/termos-de-uso): condições de uso do site, propriedade intelectual e responsabilidades.
+- [Política de Privacidade](https://revanastudio.com.br/politica-de-privacidade): coleta e tratamento de dados pessoais, conforme a LGPD (Lei nº 13.709/2018).
+- [Termos de Uso](https://revanastudio.com.br/termos-de-uso): condições de uso do site, propriedade intelectual e responsabilidades.
 
 ## Contato
 
-- E-mail: contato@ravennstudio.com
-- Telefone / WhatsApp: +55 21 98921-1887
-- Site: https://ravennstudio.com.br
+- E-mail: contato@revanastudio.com.br
+- Telefone / WhatsApp: +55 21 99079-3718
+- Site: https://revanastudio.com.br
 - Endereço: Niterói, RJ, Brasil
 
 ## Notes
 
 - Este arquivo segue o formato llms.txt (https://llmstxt.org/) para orientar agentes de IA sobre o conteúdo do site.
-- Não há API pública. Todas as informações factuais sobre serviços, portfólio, processo e contato estão nas páginas listadas acima e na página inicial (https://ravennstudio.com.br).
+- Não há API pública. Todas as informações factuais sobre serviços, portfólio, processo e contato estão nas páginas listadas acima e na página inicial (https://revanastudio.com.br).
 - Além das seis páginas de serviço acima, o domínio também hospeda landing pages dedicadas a campanhas de tráfego pago (Google Ads) com o mesmo conteúdo de cada serviço — essas URLs são marcadas como "noindex" e propositalmente omitidas aqui; as páginas em /solucoes/ acima são a versão canônica e indexável de cada serviço.
 - Todo o contato comercial (orçamento, diagnóstico gratuito, dúvidas) é feito via WhatsApp ou e-mail, não há checkout ou API transacional no site.

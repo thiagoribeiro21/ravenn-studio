@@ -1,9 +1,9 @@
-/* Ravenn Studio — Component Bundle
+/* Revana Studio — Component Bundle
    All design system components as React.createElement calls.
-   Exports to window.RavennStudioDesignSystem_41bd5d */
+   Exports to window.RevanaStudioDesignSystem_41bd5d */
 (function () {
   'use strict';
-  var NS = 'RavennStudioDesignSystem_41bd5d';
+  var NS = 'RevanaStudioDesignSystem_41bd5d';
   var R = window.React;
   var ce = R.createElement;
   var useState = R.useState;
@@ -391,9 +391,9 @@
     ['layout','iconSrc','size','showStudio','style'].forEach(function(k){delete rest[k];});
 
     var sizes = {
-      sm: { raven: 13, studio: 7, icon: 22, gap: 12 },
-      md: { raven: 18, studio: 9, icon: 30, gap: 16 },
-      lg: { raven: 26, studio: 12, icon: 44, gap: 20 },
+      sm: { revana: 13, studio: 7, icon: 22, gap: 12 },
+      md: { revana: 18, studio: 9, icon: 30, gap: 16 },
+      lg: { revana: 26, studio: 12, icon: 44, gap: 20 },
     };
     var s = sizes[size] || sizes.md;
     var vertical = layout === 'vertical';
@@ -401,10 +401,10 @@
     var word = ce('span', { style: { display: 'inline-flex', flexDirection: 'column', lineHeight: 1, alignItems: vertical ? 'center' : 'flex-start' } },
       ce('span', {
         style: {
-          fontFamily: 'var(--font-sans)', fontWeight: 'var(--fw-medium)', fontSize: s.raven,
+          fontFamily: 'var(--font-sans)', fontWeight: 'var(--fw-medium)', fontSize: s.revana,
           letterSpacing: '0.4em', textIndent: '0.4em', color: 'var(--rv-titanium)', textTransform: 'uppercase',
         },
-      }, 'Ravenn'),
+      }, 'Revana'),
       showStudio ? ce('span', {
         style: {
           marginTop: 5, fontFamily: 'var(--font-sans)', fontWeight: 'var(--fw-regular)', fontSize: s.studio,
@@ -416,7 +416,7 @@
     return ce('span', Object.assign({
       style: Object.assign({ display: 'inline-flex', flexDirection: vertical ? 'column' : 'row', alignItems: 'center', gap: s.gap }, style),
     }, rest),
-      iconSrc ? ce('img', { src: iconSrc, alt: 'Ravenn Studio', style: { height: vertical ? s.icon * 1.4 : s.icon, width: 'auto', display: 'block' } }) : null,
+      iconSrc ? ce('img', { src: iconSrc, alt: 'Revana Studio', style: { height: vertical ? s.icon * 1.4 : s.icon, width: 'auto', display: 'block' } }) : null,
       word
     );
   }

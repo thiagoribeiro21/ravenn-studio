@@ -9,12 +9,12 @@ import { isHomePage } from '../utils/isHomePage';
 // (já na home) ou pra `/` + âncora (em qualquer subpágina de serviço, que
 // reaproveita este mesmo Footer como chrome — ver SolutionPageShell.jsx). ──
 const NAV_LINKS = [
-  { label: 'Início', href: '#hero', title: 'Voltar ao início — Ravenn Studio' },
-  { label: 'Portfólio', href: '#portfolio', title: 'Ver projetos e cases da Ravenn Studio' },
-  { label: 'Serviços', href: '#services', title: 'Ver os serviços da Ravenn Studio' },
-  { label: 'Método', href: '#processo', title: 'Conhecer o processo de trabalho da Ravenn Studio' },
-  { label: 'FAQ', href: '#faq', title: 'Perguntas frequentes sobre a Ravenn Studio' },
-  { label: 'Contato', href: '#contact', title: 'Falar com a Ravenn Studio' },
+  { label: 'Início', href: '#hero', title: 'Voltar ao início — Revana Studio' },
+  { label: 'Portfólio', href: '#portfolio', title: 'Ver projetos e cases da Revana Studio' },
+  { label: 'Serviços', href: '#services', title: 'Ver os serviços da Revana Studio' },
+  { label: 'Método', href: '#processo', title: 'Conhecer o processo de trabalho da Revana Studio' },
+  { label: 'FAQ', href: '#faq', title: 'Perguntas frequentes sobre a Revana Studio' },
+  { label: 'Contato', href: '#contact', title: 'Falar com a Revana Studio' },
 ];
 
 /* ── Serviços — ERA `href: '#services'` nos 6, sempre, mesmo destino ──────
@@ -63,16 +63,16 @@ const CORE_SERVICES = [
 // ── Contato ───────────────────────────────────────────────────────────────
 const CONTACT_LINKS = [
   {
-    label: 'contato@ravennstudio.com',
-    href: 'mailto:contato@ravennstudio.com',
-    title: 'Enviar e-mail para a Ravenn Studio',
+    label: 'contato@revanastudio.com.br',
+    href: 'mailto:contato@revanastudio.com.br',
+    title: 'Enviar e-mail para a Revana Studio',
   },
   {
     label: 'WhatsApp',
-    href: 'https://wa.me/5521989211887',
-    title: 'Falar com a Ravenn Studio pelo WhatsApp',
+    href: 'https://wa.me/5521990793718',
+    title: 'Falar com a Revana Studio pelo WhatsApp',
   },
-  { label: '+55 21 98921-1887', href: 'tel:+5521989211887', title: 'Ligar para a Ravenn Studio' },
+  { label: '+55 21 99079-3718', href: 'tel:+5521990793718', title: 'Ligar para a Revana Studio' },
 ];
 
 // ── Variante padrão do sistema de animação global ────────────────────────────
@@ -157,12 +157,12 @@ export default function Footer() {
             <motion.div variants={fadeUp} className="lg:col-span-5 flex flex-col gap-10">
               <a
                 href={resolveHref('#hero')}
-                aria-label="Ravenn Studio — início"
+                aria-label="Revana Studio — início"
                 style={{ lineHeight: 0, display: 'inline-block' }}
               >
                 <img
-                  src="/logo-ravenn/logo-ravenn-studio-horizontal.webp"
-                  alt="Ravenn Studio"
+                  src="/logo-revana/logo-revana-studio-horizontal.webp"
+                  alt="Revana Studio"
                   width={200}
                   height={50}
                   style={{ height: 88, width: 'auto', objectFit: 'contain', opacity: 0.85 }}
@@ -257,7 +257,7 @@ export default function Footer() {
         </div>
 
         {/*
-        ── RAVENN monumental ────────────────────────────────────────────────────
+        ── REVANA monumental ────────────────────────────────────────────────────
         z-0: fica atrás do sub-footer (z-10) que vem logo após no DOM.
         Gradiente vertical topo→base: as letras surgem discretamente no topo
         e se dissolvem em transparente na base — sem corte duro.
@@ -299,13 +299,13 @@ export default function Footer() {
               paintOrder: 'stroke fill',
             }}
           >
-            RAVENN
+            REVANA
           </motion.span>
         </motion.div>
 
         {/*
         ── Sub-footer ──────────────────────────────────────────────────────────
-        position: relative + z-index: 10 → flutua sobre o RAVENN (z-0).
+        position: relative + z-index: 10 → flutua sobre o REVANA (z-0).
         marginTop: -4vw → puxa o sub-footer para dentro da área do texto
         gigante, criando o efeito de moldura de fechamento da página.
 
@@ -322,7 +322,7 @@ export default function Footer() {
           style={{ zIndex: 10, marginTop: '-4vw' }}
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 w-full text-[15px] text-white/40 font-mono">
-            <span>© 2026 RAVENN STUDIO. Todos os direitos reservados.</span>
+            <span>© 2026 REVANA STUDIO. Todos os direitos reservados.</span>
             <div className="flex gap-6">
               {[
                 { label: 'Política de Privacidade', href: '/politica-de-privacidade.html' },

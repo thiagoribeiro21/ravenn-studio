@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 
 /* ── Defaults compartilhados entre todas as LPs clonadas de src/lp/ ──────── */
 
-export const WA_PHONE = '5521989211887';
+export const WA_PHONE = '5521990793718';
 
 /**
  * Monta um link wa.me com mensagem pré-preenchida. Cada seção passa sua

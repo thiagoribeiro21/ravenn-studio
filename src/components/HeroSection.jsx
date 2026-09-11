@@ -145,7 +145,7 @@ export default function HeroSection() {
             Solicitar Diagnóstico Gratuito
           </a>
           <a
-            href="https://wa.me/5521989211887?text=Olá%2C%20gostaria%20de%20agendar%20um%20diagnóstico%20gratuito."
+            href="https://wa.me/5521990793718?text=Olá%2C%20gostaria%20de%20agendar%20um%20diagnóstico%20gratuito."
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:inline-flex"

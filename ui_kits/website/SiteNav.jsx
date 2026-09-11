@@ -1,6 +1,6 @@
-// Ravenn Studio — site navigation bar
+// Revana Studio — site navigation bar
 function SiteNav({ active, onNav }) {
-  const { Button, Logo } = window.RavennStudioDesignSystem_41bd5d;
+  const { Button, Logo } = window.RevanaStudioDesignSystem_41bd5d;
   const [scrolled, setScrolled] = React.useState(false);
   React.useEffect(() => {
     const el = document.querySelector('#rv-scroll');
@@ -31,7 +31,7 @@ function SiteNav({ active, onNav }) {
       }}
     >
       <div style={{ cursor: 'pointer' }} onClick={() => onNav('top')}>
-        <Logo iconSrc="../../assets/logos/raven-logo.svg" size="sm" />
+        <Logo iconSrc="../../assets/logos/revana-logo.svg" size="sm" />
       </div>
 
       <nav style={{ display: 'flex', gap: 36 }}>

@@ -10,7 +10,7 @@ import { EASE_LUXE, GX, prefersReducedMotion } from '../lp/config/_base';
    longo, e cada uma dessas coisas é peso (JS, CPU, bateria) que uma página
    jurídica não deveria pagar. O visual (fundo `rv-void`, tipografia
    grotesk/satoshi, tokens de cor) é o MESMO da marca porque a página
-   continua sendo Ravenn Studio — só a mecânica por trás é mais simples.
+   continua sendo Revana Studio — só a mecânica por trás é mais simples.
 
    `overflow-y:auto` direto na raiz (em vez de `data-lp-scroller` + Lenis):
    `index.css` zera overflow em html/body globalmente (todo entry point do
@@ -68,10 +68,10 @@ function Header() {
   return (
     <header className="border-b border-white/[0.06]">
       <div className={`mx-auto flex max-w-6xl items-center justify-between py-5 ${GX}`}>
-        <a href="/" aria-label="Voltar à página inicial — Ravenn Studio">
+        <a href="/" aria-label="Voltar à página inicial — Revana Studio">
           <img
-            src="/logo-ravenn/logo-ravenn-studio-horizontal.webp"
-            alt="Ravenn Studio"
+            src="/logo-revana/logo-revana-studio-horizontal.webp"
+            alt="Revana Studio"
             width={200}
             height={50}
             className="h-7 w-auto opacity-90"
@@ -144,7 +144,7 @@ function LegalFooter({ otherDoc }) {
         className={`mx-auto flex max-w-6xl flex-col items-center gap-4 py-10 text-center md:flex-row md:justify-between md:text-left ${GX}`}
       >
         <p className="font-satoshi text-[14px] text-rv-faint">
-          © {new Date().getFullYear()} Ravenn Studio. Todos os direitos reservados.
+          © {new Date().getFullYear()} Revana Studio. Todos os direitos reservados.
         </p>
         <div className="flex items-center gap-6">
           <a
@@ -154,10 +154,10 @@ function LegalFooter({ otherDoc }) {
             {otherDoc.label}
           </a>
           <a
-            href="mailto:contato@ravennstudio.com"
+            href="mailto:contato@revanastudio.com.br"
             className="font-satoshi text-[14px] text-rv-slate transition-colors duration-300 hover:text-rv-titanium"
           >
-            contato@ravennstudio.com
+            contato@revanastudio.com.br
           </a>
         </div>
       </div>

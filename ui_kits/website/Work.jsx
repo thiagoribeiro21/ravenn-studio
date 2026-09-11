@@ -1,6 +1,6 @@
-// Ravenn Studio — selected work section
+// Revana Studio — selected work section
 function Work() {
-  const { Eyebrow, Badge } = window.RavennStudioDesignSystem_41bd5d;
+  const { Eyebrow, Badge } = window.RevanaStudioDesignSystem_41bd5d;
   const projects = [
     { client: 'Meridian Capital', cat: 'Institutional Website', year: '2025', tag: 'Finance' },
     { client: 'Atelier Noir', cat: 'Brand + Commerce', year: '2025', tag: 'Luxury' },
@@ -25,7 +25,7 @@ function Work() {
 }
 
 function WorkRow({ client, cat, year, tag, first }) {
-  const { Badge } = window.RavennStudioDesignSystem_41bd5d;
+  const { Badge } = window.RevanaStudioDesignSystem_41bd5d;
   const [hover, setHover] = React.useState(false);
   return (
     <div

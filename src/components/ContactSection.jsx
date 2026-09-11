@@ -146,8 +146,8 @@ const CONTACT_INFO = [
       </svg>
     ),
     label: 'E-mail',
-    value: 'contato@ravennstudio.com',
-    href: 'mailto:contato@ravennstudio.com',
+    value: 'contato@revanastudio.com.br',
+    href: 'mailto:contato@revanastudio.com.br',
   },
   {
     icon: (
@@ -166,8 +166,8 @@ const CONTACT_INFO = [
       </svg>
     ),
     label: 'Telefone',
-    value: '+55 21 98921-1887',
-    href: 'tel:+5521989211887',
+    value: '+55 21 99079-3718',
+    href: 'tel:+5521990793718',
   },
   {
     icon: (
@@ -200,11 +200,11 @@ export default function ContactSection() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Orçamento – ${form.service || 'Ravenn Studio'}`);
+    const subject = encodeURIComponent(`Orçamento – ${form.service || 'Revana Studio'}`);
     const body = encodeURIComponent(
       `Nome: ${form.name}\nEmail: ${form.email}\nTelefone: ${form.phone}\nServiço: ${form.service}\n\n${form.message}`,
     );
-    window.location.href = `mailto:contato@ravennstudio.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:contato@revanastudio.com.br?subject=${subject}&body=${body}`;
     setSent(true);
   };
 

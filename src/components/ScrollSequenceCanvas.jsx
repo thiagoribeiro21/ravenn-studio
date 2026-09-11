@@ -3,11 +3,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMenu } from '../context/MenuContext';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
-const VIDEO_SRC = '/raven-loop-fly.webm'; // usado só no overlay leve do mobile
+const VIDEO_SRC = '/revana-loop-fly.webm'; // usado só no overlay leve do mobile
 const TOTAL_FRAMES = 121;
 
 const pad = (n) => String(n).padStart(3, '0');
-const getUrl = (n) => `/raven-novos-frames/frame_${pad(n)}.webp`;
+const getUrl = (n) => `/revana-novos-frames/frame_${pad(n)}.webp`;
 
 // Fade de opacidade do próprio corvo (canvas) conforme o scroll avança —
 // começa a sumir logo cedo (8% do progresso), mas só chega a 0 em 100%,
@@ -215,7 +215,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
         }}
       >
         <img
-          src="/bg-teste-ravenn.webp"
+          src="/bg-teste-revana.webp"
           alt=""
           style={{
             position: 'absolute',
@@ -267,7 +267,7 @@ export default function ScrollSequenceCanvas({ endRef }) {
     >
       {/* Camada base estática — fica parada enquanto o scroll-sequence se move */}
       <img
-        src="/hero-raven-bg/hero-desktop.webp"
+        src="/hero-revana-bg/hero-desktop.webp"
         alt=""
         style={{
           position: 'absolute',
