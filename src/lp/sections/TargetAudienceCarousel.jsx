@@ -408,7 +408,7 @@ export default function TargetAudienceCarousel({ data }) {
           largura (a maioria), `edgeInset` é MAIOR que 6vw, então usar `${GX}`
           aqui deixava o título nascendo mais à esquerda que o próprio
           cartão. `max-w-6xl` (era `max-w-3xl`) é folga suficiente pra "Para
-          quem é o Padrão Ravenn." não quebrar linha em nenhuma largura de
+          quem é o Padrão Revana." não quebrar linha em nenhuma largura de
           desktop razoável — é um teto de segurança pra monitor ultrawide,
           não uma restrição real no tamanho normal. */}
       <div className={GX} style={{ paddingLeft: edgeInset }}>

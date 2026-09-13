@@ -35,19 +35,19 @@ const PRINCIPLES = [
     num: '001',
     label: 'Ser encontrado primeiro é vender mais',
     body: 'Soluções de inteligência artificial para empresas e criação de sites de alta conversão começam pelo mesmo ponto: visibilidade. Otimizamos cada detalhe técnico para sua empresa aparecer nas buscas que o seu cliente usa antes de ligar para o concorrente.',
-    image: '/hover-reveal-ravenn/item-001-ser-encontrado-primeiro.webp',
+    image: '/hover-reveal-revana/item-001-ser-encontrado-primeiro.webp',
   },
   {
     num: '002',
     label: 'Design que fecha negócios antes da proposta',
     body: 'A presença digital da sua marca faz uma promessa silenciosa antes de você abrir a boca. Construímos sites premium que transmitem autoridade visual imediata e transformam o primeiro clique em confiança. Cada elemento visual serve para converter.',
-    image: '/hover-reveal-ravenn/item-002-design-que-fecha-negocios.webp',
+    image: '/hover-reveal-revana/item-002-design-que-fecha-negocios.webp',
   },
   {
     num: '003',
     label: 'Automação que substitui o esforço repetitivo',
     body: 'Agentes de IA para WhatsApp e automação de atendimento para clínicas e serviços que trabalham enquanto você dorme. Seu negócio responde, qualifica e agenda sem depender de horário comercial ou de um funcionário disponível no momento certo.',
-    image: '/hover-reveal-ravenn/item-003-automacao-que-substitui-esforco.webp',
+    image: '/hover-reveal-revana/item-003-automacao-que-substitui-esforco.webp',
   },
 ];
 

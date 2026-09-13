@@ -1,7 +1,7 @@
 # Third-party skill bundles vendored under .claude/ (~95MB, not part of this
 # app — unrelated starter templates for design/3D skills). Not gitignored
 # (they're intentionally untracked local tooling), but irrelevant to the
-# Ravenn Studio architecture graph.
+# Revana Studio architecture graph.
 .claude/
 
 # Confirmed dead/unused at the root: not referenced by any Vite entry

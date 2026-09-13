@@ -1,4 +1,4 @@
-# AGENTS.md — Ravenn Studio
+# AGENTS.md — Revana Studio
 
 Regras de arquitetura e operação para qualquer agente de IA (Claude Code, Codex,
 Cursor, etc.) trabalhando neste repositório. Leia isto antes de tocar em código.
@@ -8,7 +8,7 @@ em andamento.
 
 ## O que é este projeto
 
-Site institucional + 6 landing pages da Ravenn Studio (agência de web design em
+Site institucional + 6 landing pages da Revana Studio (agência de web design em
 Niterói/RJ). Multi-page build via Vite — **não é um SPA com router**: cada
 página é um entry point HTML separado, cada um bootando sua própria árvore
 React independente.

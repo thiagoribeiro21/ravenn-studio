@@ -15,7 +15,7 @@ const FAQS = [
     a: 'Sim. Todos os projetos incluem 30 dias de suporte pós-lançamento. Planos de manutenção mensal (atualizações, backups, monitoramento de performance) estão disponíveis e são apresentados ao final do projeto.',
   },
   {
-    q: 'A Ravenn Studio atende fora da Região Oceânica?',
+    q: 'A Revana Studio atende fora da Região Oceânica?',
     a: 'Atendemos clientes em todo o Brasil de forma remota. Nossa especialidade e foco de SEO local está na Região Oceânica, mas o nosso design e desenvolvimento atendem qualquer mercado ou nicho.',
   },
   {
@@ -126,7 +126,7 @@ export default function FAQSection() {
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: 'url(/bg-faq-ravenn/431a9833-34aa-4eef-8da8-3f31568d5eae.webp)',
+          backgroundImage: 'url(/bg-faq-revana/431a9833-34aa-4eef-8da8-3f31568d5eae.webp)',
           backgroundSize: 'cover',
           backgroundPosition: 'center right',
           backgroundRepeat: 'no-repeat',
@@ -141,7 +141,7 @@ export default function FAQSection() {
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: 'url(/bg-faq-ravenn/259f0eba-dac6-4e8f-aee5-374b66a4aadb.webp)',
+          backgroundImage: 'url(/bg-faq-revana/259f0eba-dac6-4e8f-aee5-374b66a4aadb.webp)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

@@ -1,6 +1,6 @@
-// Ravenn Studio — hero section
+// Revana Studio — hero section
 function Hero({ onNav }) {
-  const { Button, Eyebrow, Badge } = window.RavennStudioDesignSystem_41bd5d;
+  const { Button, Eyebrow, Badge } = window.RevanaStudioDesignSystem_41bd5d;
   return (
     <section
       style={{
@@ -29,7 +29,7 @@ function Hero({ onNav }) {
       />
       {/* Faint raven watermark */}
       <img
-        src="../../assets/logos/raven-logo.svg"
+        src="../../assets/logos/revana-logo.svg"
         alt=""
         style={{ position: 'absolute', right: 'clamp(24px,8vw,160px)', top: '50%', transform: 'translateY(-50%)', height: 'min(64vh, 560px)', opacity: 0.05, pointerEvents: 'none' }}
       />

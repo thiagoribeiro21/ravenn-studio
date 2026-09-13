@@ -35,4 +35,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://ravennstudio.com.br/sitemap.xml
+Sitemap: https://revanastudio.com.br/sitemap.xml

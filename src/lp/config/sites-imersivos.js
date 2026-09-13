@@ -14,7 +14,7 @@ import { buildWaLink } from './_base';
    própria página. Esta LP não roda mais em Google Ads.
    ══════════════════════════════════════════════════════════════════════ */
 
-const LOGO_H = '/logo-ravenn/logo-ravenn-studio-horizontal.webp';
+const LOGO_H = '/logo-revana/logo-revana-studio-horizontal.webp';
 
 export default {
   meta: {
@@ -39,7 +39,7 @@ export default {
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
       href: buildWaLink(
-        'Olá! Vi a página de sites imersivos da Ravenn e quero o diagnóstico gratuito.',
+        'Olá! Vi a página de sites imersivos da Revana e quero o diagnóstico gratuito.',
       ),
     },
     ctaSecondary: {
@@ -92,7 +92,7 @@ export default {
     ghosts: ['Saiu sem rolar até o fim', 'Não lembrou da marca', 'Fechou a aba em segundos'],
     emptyState: 'Nenhuma mensagem nova',
 
-    gainLabel: 'Padrão Ravenn',
+    gainLabel: 'Padrão Revana',
     gainCaption:
       'Mesmo anúncio, mesmo orçamento, mesmo clique. Só que agora ele cai numa experiência que prende a atenção e vira conversa no seu WhatsApp.',
     chats: [
@@ -307,7 +307,7 @@ export default {
   },
 
   footer: {
-    marqueeText: 'RAVENN STUDIO',
+    marqueeText: 'REVANA STUDIO',
     line: 'Sites experienciais e imersivos · Niterói, RJ',
   },
 };

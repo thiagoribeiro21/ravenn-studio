@@ -17,7 +17,7 @@ import { buildWaLink } from './_base';
    caminho de vídeo falso só pra cair no mesmo fallback.
    ══════════════════════════════════════════════════════════════════════ */
 
-const LOGO_H = '/logo-ravenn/logo-ravenn-studio-horizontal.webp';
+const LOGO_H = '/logo-revana/logo-revana-studio-horizontal.webp';
 
 export default {
   meta: {
@@ -42,7 +42,7 @@ export default {
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
       href: buildWaLink(
-        'Olá! Vi a página de lojas virtuais da Ravenn e quero o diagnóstico gratuito.',
+        'Olá! Vi a página de lojas virtuais da Revana e quero o diagnóstico gratuito.',
       ),
     },
     ctaSecondary: {
@@ -94,7 +94,7 @@ export default {
     ghosts: ['Abandonou o carrinho', 'Não tirou a dúvida', 'Comprou em outra loja'],
     emptyState: 'Nenhuma mensagem nova',
 
-    gainLabel: 'Padrão Ravenn',
+    gainLabel: 'Padrão Revana',
     gainCaption:
       'Mesma dúvida, mesmo carrinho. Só que agora tem um WhatsApp visível oferecendo ajuda no momento certo, e o carrinho vira pedido confirmado.',
     chats: [
@@ -296,7 +296,7 @@ export default {
   },
 
   footer: {
-    marqueeText: 'RAVENN STUDIO',
+    marqueeText: 'REVANA STUDIO',
     line: 'Lojas virtuais de alta performance · Niterói, RJ',
   },
 };

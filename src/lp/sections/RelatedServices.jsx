@@ -29,7 +29,7 @@ export default function RelatedServices() {
         id="related-services-heading"
         className="font-grotesk text-sm font-medium uppercase tracking-widest2 text-rv-slate"
       >
-        Outras soluções Ravenn Studio
+        Outras soluções Revana Studio
       </h2>
 
       <ul className="mt-7 flex flex-wrap gap-3">

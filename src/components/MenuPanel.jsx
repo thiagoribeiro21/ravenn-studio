@@ -4,7 +4,7 @@ import { useMenu } from '../context/MenuContext';
 import { SERVICES, solucaoHref } from '../utils/services';
 
 const WA_LINK =
-  'https://wa.me/5521989211887?text=Olá%2C%20quero%20agendar%20um%20diagnóstico%20gratuito%20com%20a%20Ravenn%20Studio.';
+  'https://wa.me/5521990793718?text=Olá%2C%20quero%20agendar%20um%20diagnóstico%20gratuito%20com%20a%20Revana%20Studio.';
 
 /* Antes todos os 6 apontavam pra `#services` (a seção de serviços da PRÓPRIA
    home) — agora vão direto pra subpágina de cada serviço
@@ -423,7 +423,7 @@ export default function MenuPanel() {
             }}
           />
           <a
-            href="mailto:contato@ravennstudio.com"
+            href="mailto:contato@revanastudio.com.br"
             style={{
               display: 'block',
               fontSize: 15,
@@ -441,7 +441,7 @@ export default function MenuPanel() {
               e.currentTarget.style.color = 'rgba(255,255,255,0.40)';
             }}
           >
-            contato@ravennstudio.com
+            contato@revanastudio.com.br
           </a>
           <a
             href={WA_LINK}
@@ -463,7 +463,7 @@ export default function MenuPanel() {
               e.currentTarget.style.color = 'rgba(255,255,255,0.40)';
             }}
           >
-            WhatsApp: +55 21 98921-1887
+            WhatsApp: +55 21 99079-3718
           </a>
         </motion.div>
       </div>

@@ -17,7 +17,7 @@ import { buildWaLink } from './_base';
    público continuam pendentes, com placeholder em `/placeholder-agentes-ia/`.
    ══════════════════════════════════════════════════════════════════════ */
 
-const LOGO_H = '/logo-ravenn/logo-ravenn-studio-horizontal.webp';
+const LOGO_H = '/logo-revana/logo-revana-studio-horizontal.webp';
 const PH = '/placeholder-agentes-ia';
 
 export default {
@@ -55,7 +55,7 @@ export default {
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
       href: buildWaLink(
-        'Olá! Vi a página de agentes de IA da Ravenn e quero o diagnóstico gratuito.',
+        'Olá! Vi a página de agentes de IA da Revana e quero o diagnóstico gratuito.',
       ),
     },
     ctaSecondary: {
@@ -107,7 +107,7 @@ export default {
     ghosts: ['Sem resposta em 40 minutos', 'Foi para o concorrente', 'Desistiu de esperar'],
     emptyState: 'Nenhuma mensagem nova',
 
-    gainLabel: 'Padrão Ravenn',
+    gainLabel: 'Padrão Revana',
     gainCaption:
       'O agente responde no primeiro minuto, qualquer hora do dia. Quando sua equipe chega, o lead já está qualificado, só falta fechar.',
     chats: [
@@ -311,7 +311,7 @@ export default {
   },
 
   footer: {
-    marqueeText: 'RAVENN STUDIO',
+    marqueeText: 'REVANA STUDIO',
     line: 'Agentes de IA para WhatsApp · Niterói, RJ',
   },
 };

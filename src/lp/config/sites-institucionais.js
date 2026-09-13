@@ -8,7 +8,7 @@ import { buildWaLink } from './_base';
    completo por ato.
    ══════════════════════════════════════════════════════════════════════ */
 
-const LOGO_H = '/logo-ravenn/logo-ravenn-studio-horizontal.webp';
+const LOGO_H = '/logo-revana/logo-revana-studio-horizontal.webp';
 
 export default {
   meta: {
@@ -34,7 +34,7 @@ export default {
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
       href: buildWaLink(
-        'Olá! Vi a página de sites institucionais da Ravenn e quero o diagnóstico gratuito.',
+        'Olá! Vi a página de sites institucionais da Revana e quero o diagnóstico gratuito.',
       ),
     },
     ctaSecondary: {
@@ -110,7 +110,7 @@ export default {
     ghosts: ['Saiu sem falar com você', 'Foi para o concorrente', 'Fechou a aba em segundos'],
     emptyState: 'Nenhuma mensagem nova',
 
-    gainLabel: 'Padrão Ravenn',
+    gainLabel: 'Padrão Revana',
     gainCaption:
       'Mesmo anúncio, mesmo orçamento, mesmo clique. Só que agora ele cai num site feito pra fechar e vira conversa no seu WhatsApp.',
     /* 6 conversas (era 3) — pedido explícito de "parecer um WhatsApp
@@ -236,7 +236,7 @@ export default {
 
   audience: {
     eyebrow: 'Para quem é',
-    heading: 'Para quem é o Padrão Ravenn.',
+    heading: 'Para quem é o Padrão Revana.',
     slides: [
       {
         title: 'Para quem cobra pelo padrão que entrega.',
@@ -328,7 +328,7 @@ export default {
   },
 
   footer: {
-    marqueeText: 'RAVENN STUDIO',
+    marqueeText: 'REVANA STUDIO',
     line: 'Agência de design premium · Criação de sites em Niterói, RJ',
   },
 };

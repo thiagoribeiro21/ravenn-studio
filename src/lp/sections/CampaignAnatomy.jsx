@@ -226,7 +226,7 @@ function FunnelChart({ stages, activeIndex, onHover, reduce }) {
 /* Card de estágio — o `leak` é o elemento de conversão da seção: diz o que
    se perde SEM aquela camada. Fica num bloco visualmente distinto (borda
    esquerda âmbar, não violeta) porque é conteúdo de outra natureza — o
-   resto da página é o que a Ravenn entrega; isto é o risco de não ter. */
+   resto da página é o que a Revana entrega; isto é o risco de não ter. */
 function StageCard({ stage, index, isActive, onActive, onHover, reduce }) {
   const ref = useRef(null);
 

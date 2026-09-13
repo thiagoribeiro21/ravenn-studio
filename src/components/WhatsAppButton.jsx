@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
 const WA_LINK =
-  'https://wa.me/5521989211887?text=Olá%2C%20vim%20pelo%20site%20da%20Ravenn%20Studio%20e%20gostaria%20de%20agendar%20um%20diagnóstico%20gratuito%20para%20meu%20negócio.';
+  'https://wa.me/5521990793718?text=Olá%2C%20vim%20pelo%20site%20da%20Revana%20Studio%20e%20gostaria%20de%20agendar%20um%20diagnóstico%20gratuito%20para%20meu%20negócio.';
 
 /* `link` é opcional — quem não passar nada mantém o comportamento original
    (site principal). As LPs em src/lp/ passam sua própria mensagem por
@@ -12,7 +12,7 @@ export default function WhatsAppButton({ link = WA_LINK }) {
       href={link}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Falar com a Ravenn Studio no WhatsApp"
+      aria-label="Falar com a Revana Studio no WhatsApp"
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay: 2.4, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}

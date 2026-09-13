@@ -14,7 +14,7 @@ import { buildWaLink } from './_base';
    `/para-quem-e-lps/`.
    ══════════════════════════════════════════════════════════════════════ */
 
-const LOGO_H = '/logo-ravenn/logo-ravenn-studio-horizontal.webp';
+const LOGO_H = '/logo-revana/logo-revana-studio-horizontal.webp';
 
 export default {
   meta: {
@@ -39,7 +39,7 @@ export default {
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
       href: buildWaLink(
-        'Olá! Vi a página de gestão de Google Ads da Ravenn e quero o diagnóstico gratuito.',
+        'Olá! Vi a página de gestão de Google Ads da Revana e quero o diagnóstico gratuito.',
       ),
     },
     ctaSecondary: {
@@ -97,7 +97,7 @@ export default {
     ],
     emptyState: 'Nenhuma mensagem nova',
 
-    gainLabel: 'Padrão Ravenn',
+    gainLabel: 'Padrão Revana',
     gainCaption:
       'Mesmo orçamento, gestão ativa toda semana. Segmentação por intenção de compra, rastreamento configurado, e cada venda rastreada até o clique que a originou.',
     chats: [
@@ -322,7 +322,7 @@ export default {
   },
 
   footer: {
-    marqueeText: 'RAVENN STUDIO',
+    marqueeText: 'REVANA STUDIO',
     line: 'Gestão de Google Ads · Niterói, RJ',
   },
 };

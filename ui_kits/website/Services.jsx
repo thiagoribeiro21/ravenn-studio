@@ -1,6 +1,6 @@
-// Ravenn Studio — services section
+// Revana Studio — services section
 function Services() {
-  const { Card, Eyebrow } = window.RavennStudioDesignSystem_41bd5d;
+  const { Card, Eyebrow } = window.RevanaStudioDesignSystem_41bd5d;
   const services = [
     { n: '01', t: 'Institutional Websites', d: 'Bespoke, high-end corporate sites engineered to project market authority and convert discerning audiences.' },
     { n: '02', t: 'Workflow Automation', d: 'Intelligent internal systems that remove friction, compress timelines and let teams operate above their weight.' },

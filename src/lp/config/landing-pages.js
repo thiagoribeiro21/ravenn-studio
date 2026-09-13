@@ -18,7 +18,7 @@ import { buildWaLink } from './_base';
    convertidos pra `.webp`), não mais o rótulo SVG genérico.
    ══════════════════════════════════════════════════════════════════════ */
 
-const LOGO_H = '/logo-ravenn/logo-ravenn-studio-horizontal.webp';
+const LOGO_H = '/logo-revana/logo-revana-studio-horizontal.webp';
 const PH = '/placeholder-landing-pages';
 const PRINTS = '/prints-lp-cconceito';
 
@@ -48,7 +48,7 @@ export default {
     ctaPrimary: {
       label: 'Solicitar diagnóstico gratuito',
       href: buildWaLink(
-        'Olá! Vi a página de landing pages da Ravenn e quero o diagnóstico gratuito.',
+        'Olá! Vi a página de landing pages da Revana e quero o diagnóstico gratuito.',
       ),
     },
     ctaSecondary: {
@@ -112,7 +112,7 @@ export default {
     ghosts: ['Fechou a aba em segundos', 'Voltou pro Google', 'Foi para o concorrente'],
     emptyState: 'Nenhuma mensagem nova',
 
-    gainLabel: 'Padrão Ravenn',
+    gainLabel: 'Padrão Revana',
     gainCaption:
       'Mesmo anúncio, mesmo orçamento, mesmo clique. Só que agora ele cai numa página feita pra converter, e vira lead no seu WhatsApp.',
     chats: [
@@ -333,7 +333,7 @@ export default {
   },
 
   footer: {
-    marqueeText: 'RAVENN STUDIO',
+    marqueeText: 'REVANA STUDIO',
     line: 'Landing pages para Google Ads · Niterói, RJ',
   },
 };

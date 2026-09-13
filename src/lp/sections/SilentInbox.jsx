@@ -934,7 +934,7 @@ export default function SilentInbox({ data }) {
                 (gradiente em vez de cor chapada) e um leve `y` na troca (o
                 "antes" sobe e se desfaz, o "depois" nasce um pouco abaixo e
                 assenta — não é mais um crossfade plano). O chip "Padrão
-                Ravenn" foi além: a cor de marca (violeta) virou a
+                Revana" foi além: a cor de marca (violeta) virou a
                 protagonista dele — antes era inteiramente verde-WhatsApp,
                 o que lia como "chegou mensagem" mas não como "o padrão da
                 CASA está aparecendo". Agora o violeta lidera (fundo, borda

@@ -330,8 +330,8 @@ export default function IntroReveal() {
 
               {/* Ícone: materializa do borrão, nítido e sólido */}
               <motion.img
-                src="/logo-ravenn/icone-ravenn.webp"
-                alt="Ravenn Studio"
+                src="/logo-revana/icone-revana.webp"
+                alt="Revana Studio"
                 initial={{ opacity: 0, scale: 1.35, filter: 'blur(18px)' }}
                 animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
                 transition={{ duration: T_ICON_DUR, delay: T_ICON_DELAY, ease: SNAP }}
@@ -367,8 +367,8 @@ export default function IntroReveal() {
                     'linear-gradient(75deg, transparent 40%, rgba(76,29,149,0.4) 46%, rgba(237,233,254,0.95) 50%, rgba(76,29,149,0.4) 54%, transparent 60%)',
                   backgroundSize: '300% 300%',
                   backgroundRepeat: 'no-repeat',
-                  WebkitMaskImage: 'url(/logo-ravenn/icone-ravenn.webp)',
-                  maskImage: 'url(/logo-ravenn/icone-ravenn.webp)',
+                  WebkitMaskImage: 'url(/logo-revana/icone-revana.webp)',
+                  maskImage: 'url(/logo-revana/icone-revana.webp)',
                   WebkitMaskSize: 'contain',
                   maskSize: 'contain',
                   WebkitMaskRepeat: 'no-repeat',

@@ -1,6 +1,6 @@
-/* Ravenn Studio — Spacing & Layout
+/* Revana Studio — Spacing & Layout
    Generous, architectural negative space. 4px base grid; lean on the larger
-   steps — Ravenn layouts breathe. */
+   steps — Revana layouts breathe. */
 :root {
   --sp-0: 0;
   --sp-1: 0.25rem; /* 4  */

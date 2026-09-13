@@ -9,16 +9,16 @@ const sections = [
     body: (
       <>
         <P>
-          A Ravenn Studio ("Ravenn Studio", "nós") respeita a privacidade de quem visita nosso site
+          A Revana Studio ("Revana Studio", "nós") respeita a privacidade de quem visita nosso site
           e entra em contato com a nossa equipe. Esta Política de Privacidade explica, de forma
           clara, quais dados coletamos, por que coletamos, como usamos, com quem podemos
           compartilhar e quais direitos você tem sobre eles, em conformidade com a Lei Geral de
           Proteção de Dados Pessoais (Lei nº 13.709/2018 — LGPD) e demais legislações aplicáveis.
         </P>
         <P>
-          Esta política vale para o site institucional (ravennstudio.com.br) e para todas as landing
+          Esta política vale para o site institucional (revanastudio.com.br) e para todas as landing
           pages publicadas em campanhas de anúncios (Google Ads, Meta Ads) que levam de volta a este
-          domínio ou a subdomínios controlados pela Ravenn Studio.
+          domínio ou a subdomínios controlados pela Revana Studio.
         </P>
         <P>
           Ao navegar em nosso site ou enviar seus dados por qualquer canal (formulário, WhatsApp,
@@ -85,7 +85,7 @@ const sections = [
           'Prestar os serviços contratados, quando há uma relação comercial formalizada;',
           'Melhorar a experiência de navegação, o desempenho e o conteúdo do site;',
           'Medir a eficiência de campanhas de marketing e anúncios (Google Ads, Meta Ads) e otimizar seu custo de aquisição;',
-          'Exibir remarketing — anúncios da Ravenn Studio para quem já visitou o site, em outras plataformas;',
+          'Exibir remarketing — anúncios da Revana Studio para quem já visitou o site, em outras plataformas;',
           'Cumprir obrigações legais e regulatórias, quando exigido.',
         ]}
       />
@@ -172,7 +172,7 @@ const sections = [
     body: (
       <>
         <P>
-          A Ravenn Studio <strong className="text-rv-titanium">não vende</strong> seus dados
+          A Revana Studio <strong className="text-rv-titanium">não vende</strong> seus dados
           pessoais a terceiros. Compartilhamos dados apenas com prestadores de serviço que nos
           ajudam a operar o site e a conduzir nossas atividades, sempre na medida necessária para a
           finalidade em questão:
@@ -251,8 +251,11 @@ const sections = [
         />
         <P>
           Para exercer qualquer um desses direitos, entre em contato pelo e-mail{' '}
-          <a href="mailto:contato@ravennstudio.com" className="text-rv-purple-400 hover:underline">
-            contato@ravennstudio.com
+          <a
+            href="mailto:contato@revanastudio.com.br"
+            className="text-rv-purple-400 hover:underline"
+          >
+            contato@revanastudio.com.br
           </a>
           . Responderemos dentro de um prazo razoável, conforme previsto na legislação.
         </P>
@@ -278,8 +281,8 @@ const sections = [
       <P>
         Para questões relacionadas ao tratamento de dados pessoais, exercício de direitos ou dúvidas
         sobre esta política, entre em contato com nosso encarregado pelo e-mail{' '}
-        <a href="mailto:contato@ravennstudio.com" className="text-rv-purple-400 hover:underline">
-          contato@ravennstudio.com
+        <a href="mailto:contato@revanastudio.com.br" className="text-rv-purple-400 hover:underline">
+          contato@revanastudio.com.br
         </a>
         .
       </P>
@@ -305,10 +308,10 @@ const sections = [
         13.709/2018 (LGPD). Fica eleito o foro da Comarca de Niterói, Rio de Janeiro, para dirimir
         eventuais controvérsias, com renúncia a qualquer outro, por mais privilegiado que seja.
         Dúvidas sobre esta política podem ser enviadas para{' '}
-        <a href="mailto:contato@ravennstudio.com" className="text-rv-purple-400 hover:underline">
-          contato@ravennstudio.com
+        <a href="mailto:contato@revanastudio.com.br" className="text-rv-purple-400 hover:underline">
+          contato@revanastudio.com.br
         </a>{' '}
-        — Ravenn Studio, CNPJ 61.019.754/0001-88, Niterói/RJ.
+        — Revana Studio, CNPJ 61.019.754/0001-88, Niterói/RJ.
       </P>
     ),
   },

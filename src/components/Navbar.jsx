@@ -144,8 +144,8 @@ export default function Navbar() {
           style={{ display: 'flex', alignItems: 'center', lineHeight: 0 }}
         >
           <img
-            src="/logo-ravenn/logo-ravenn-studio-horizontal.webp"
-            alt="Ravenn Studio"
+            src="/logo-revana/logo-revana-studio-horizontal.webp"
+            alt="Revana Studio"
             width={200}
             height={50}
             style={{
