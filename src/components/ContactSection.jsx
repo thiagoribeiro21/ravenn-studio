@@ -503,7 +503,7 @@ export default function ContactSection() {
                   tag="input"
                   type="tel"
                   name="phone"
-                  placeholder="(11) 99999-9999"
+                  placeholder="(21) 99999-9999"
                   value={form.phone}
                   onChange={onChange}
                 />
